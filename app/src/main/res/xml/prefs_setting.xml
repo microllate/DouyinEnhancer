@@ -26,6 +26,17 @@
     </PreferenceCategory>
 
     <PreferenceCategory
+        android:key="pref_category_backup"
+        android:title="@string/pref_category_backup">
+        <Preference
+            android:key="export_config"
+            android:title="@string/pref_backup_export_title"/>
+        <Preference
+            android:key="import_config"
+            android:title="@string/pref_backup_import_title"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory
         android:key="pref_category_misc"
         android:title="@string/pref_category_misc">
         <SwitchPreference
