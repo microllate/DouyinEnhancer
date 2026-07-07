@@ -155,11 +155,19 @@ message Aweme {
   optional Method is_live            = 10;
   optional Method is_multi_image     = 11;
   optional Method get_video          = 12;
+  optional Field  images             = 13;
 }
 
 message Video {
-  optional Class  class          = 1;
-  optional Method get_play_addr  = 2;
+  optional Class  class         = 1;
+  optional Method get_play_addr = 2;
+}
+
+message ImageUrlStruct {
+  optional Class class                            = 1;
+  optional Field watermark_free_download_url_list = 2;
+  optional Field url_list                         = 3;
+  optional Field download_url_list                = 4;
 }
 
 message FeedResponseHandler {
@@ -175,6 +183,12 @@ message CommentLongPressWhiteListProvider {
 message MiscDownloadAddrUtil {
   optional Class  class                          = 1;
   optional Method get_suffix_scene_download_addr = 2;
+}
+
+message DownloadAction {
+  optional Class  class          = 1;
+  optional Method start_download = 2;
+  optional Field  aweme          = 3;
 }
 
 message HookInfo {
@@ -207,4 +221,6 @@ message HookInfo {
   optional CommentAudioStruct                comment_audio_struct                   = 25;
   optional ListenerProviderParam             listener_provider_param                = 26;
   optional MiscDownloadAddrUtil              misc_download_addr_util                = 27;
+  optional DownloadAction                    download_action                        = 29;
+  optional ImageUrlStruct                    image_url_struct                       = 30;
 }

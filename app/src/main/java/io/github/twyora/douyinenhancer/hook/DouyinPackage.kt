@@ -94,9 +94,11 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
     val user = UserModule()
     val aweme = AwemeModule()
     val video = VideoModule()
+    val imageUrlStruct = ImageUrlStructModule()
     val feedResponseHandler = FeedResponseHandlerModule()
     val commentLongPressWhiteListProvider = CommentLongPressWhiteListProviderModule()
     val miscDownloadAddrUtil = MiscDownloadAddrUtilModule()
+    val downloadAction = DownloadActionModule()
 
     inner class CommentImageStructModule {
         val selfClass by weak {
@@ -422,6 +424,8 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
             hookInfo.aweme.getVideo.nameOrNull,
             hookInfo.aweme.getVideo.parameters.valuesListOrNull
         )
+
+        fun images() = Field(hookInfo.aweme.images.nameOrNull)
     }
 
     inner class VideoModule {
@@ -433,6 +437,25 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
         fun getPlayAddr() = Method(
             hookInfo.video.getPlayAddr.nameOrNull,
             hookInfo.video.getPlayAddr.parameters.valuesListOrNull
+        )
+    }
+
+    inner class ImageUrlStructModule {
+        val selfClass by weak {
+            hookInfo.imageUrlStruct.class_.nameOrNull
+                ?.toClass(classLoader)
+        }
+
+        fun watermarkFreeDownloadUrlList() = Field(
+            hookInfo.imageUrlStruct.watermarkFreeDownloadUrlList.nameOrNull
+        )
+
+        fun urlList() = Field(
+            hookInfo.imageUrlStruct.urlList.nameOrNull
+        )
+
+        fun downloadUrlList() = Field(
+            hookInfo.imageUrlStruct.downloadUrlList.nameOrNull
         )
     }
 
@@ -470,6 +493,20 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
             hookInfo.miscDownloadAddrUtil.getSuffixSceneDownloadAddr.nameOrNull,
             hookInfo.miscDownloadAddrUtil.getSuffixSceneDownloadAddr.parameters.valuesListOrNull
         )
+    }
+
+    inner class DownloadActionModule {
+        val selfClass by weak {
+            hookInfo.downloadAction.class_.nameOrNull
+                ?.toClass(classLoader)
+        }
+
+        fun startDownload() = Method(
+            hookInfo.downloadAction.startDownload.nameOrNull,
+            hookInfo.downloadAction.startDownload.parameters.valuesListOrNull
+        )
+
+        fun aweme() = Field(hookInfo.downloadAction.aweme.nameOrNull)
     }
 
     companion object {
@@ -1394,6 +1431,9 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                     getVideo = method {
                         name = "getVideo"
                     }
+                    images = field {
+                        name = "images"
+                    }
                 }
 
                 video = video {
@@ -1571,6 +1611,66 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                         }
                     }.onFailure {
                         YLog.error("$TAG: Unable to populate config", it)
+                    }
+                }
+
+                downloadAction = downloadAction {
+                    runCatching {
+                        val downloadActionClsName = "com.ss.android.ugc.aweme.share.improve.action.DownloadAction"
+                        val resolvedClass = downloadActionClsName
+                            .toClass(hostAppClassLoader)
+                            .resolve()
+
+                        val startDownloadMethod = resolvedClass.firstMethodOrNull {
+                            modifiers(Modifiers.PUBLIC, Modifiers.FINAL)
+                            parameters(
+                                "com.ss.android.ugc.aweme.sharer.ui.SharePackage"
+                            )
+                        }?.self
+
+                        val awemeField = resolvedClass.firstFieldOrNull {
+                            type = "com.ss.android.ugc.aweme.feed.model.Aweme"
+                        }?.self
+
+                        if (startDownloadMethod == null || awemeField == null) {
+                            YLog.error(
+                                "$TAG: Unable to populate ${this::class.simpleName} config, possibly due to unfound obfuscated methods or fields"
+                            )
+                            return@downloadAction
+                        }
+
+                        class_ = class_ {
+                            name = downloadActionClsName
+                        }
+                        startDownload = method {
+                            name = startDownloadMethod.name
+                            parameters = MethodKt.parameters {
+                                values.clear()
+                                startDownloadMethod.parameterTypes.forEach { paramType ->
+                                    values.add(paramType.name)
+                                }
+                            }
+                        }
+                        aweme = field {
+                            name = awemeField.name
+                        }
+                    }.onFailure {
+                        YLog.error("$TAG: Unable to populate config", it)
+                    }
+                }
+
+                imageUrlStruct = imageUrlStruct {
+                    class_ = class_ {
+                        name = "com.ss.ugc.aweme.ImageUrlStruct"
+                    }
+                    watermarkFreeDownloadUrlList = field {
+                        name = "watermarkFreeDownloadUrlList"
+                    }
+                    urlList = field {
+                        name = "urlList"
+                    }
+                    downloadUrlList = field {
+                        name = "downloadUrlList"
                     }
                 }
             }
