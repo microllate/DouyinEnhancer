@@ -19,6 +19,7 @@ import java.io.FileOutputStream
 import java.lang.reflect.Modifier
 import kotlin.time.measureTimedValue
 import org.luckypray.dexkit.DexKitBridge
+import org.luckypray.dexkit.query.matchers.base.OpCodesMatcher
 
 val Configs.Class.nameOrNull
     get() =
@@ -92,8 +93,10 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
     val douYinSettingNewVersionActivity = DouYinSettingNewVersionActivityModule()
     val user = UserModule()
     val aweme = AwemeModule()
+    val video = VideoModule()
     val feedResponseHandler = FeedResponseHandlerModule()
     val commentLongPressWhiteListProvider = CommentLongPressWhiteListProviderModule()
+    val miscDownloadAddrUtil = MiscDownloadAddrUtilModule()
 
     inner class CommentImageStructModule {
         val selfClass by weak {
@@ -414,6 +417,23 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
             hookInfo.aweme.isMultiImage.nameOrNull,
             hookInfo.aweme.isMultiImage.parameters.valuesListOrNull
         )
+
+        fun getVideo() = Method(
+            hookInfo.aweme.getVideo.nameOrNull,
+            hookInfo.aweme.getVideo.parameters.valuesListOrNull
+        )
+    }
+
+    inner class VideoModule {
+        val selfClass by weak {
+            hookInfo.video.class_.nameOrNull
+                ?.toClass(classLoader)
+        }
+
+        fun getPlayAddr() = Method(
+            hookInfo.video.getPlayAddr.nameOrNull,
+            hookInfo.video.getPlayAddr.parameters.valuesListOrNull
+        )
     }
 
     inner class FeedResponseHandlerModule {
@@ -437,6 +457,18 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
         fun buildWhiteList() = Method(
             hookInfo.commentLongPressWhiteListProvider.buildWhiteList.nameOrNull,
             hookInfo.commentLongPressWhiteListProvider.buildWhiteList.parameters.valuesListOrNull
+        )
+    }
+
+    inner class MiscDownloadAddrUtilModule {
+        val selfClass by weak {
+            hookInfo.miscDownloadAddrUtil.class_.nameOrNull
+                ?.toClass(classLoader)
+        }
+
+        fun getSuffixSceneDownloadAddr() = Method(
+            hookInfo.miscDownloadAddrUtil.getSuffixSceneDownloadAddr.nameOrNull,
+            hookInfo.miscDownloadAddrUtil.getSuffixSceneDownloadAddr.parameters.valuesListOrNull
         )
     }
 
@@ -1359,6 +1391,50 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                     isMultiImage = method {
                         name = "isMultiImage"
                     }
+                    getVideo = method {
+                        name = "getVideo"
+                    }
+                }
+
+                video = video {
+                    runCatching {
+                        val getPlayAddrMethodData = bridge.findMethod {
+                            matcher {
+                                declaredClass = "com.ss.android.ugc.aweme.feed.model.Video"
+                                returnType = "com.ss.android.ugc.aweme.feed.model.VideoUrlModel"
+                                usingFields {
+                                    add {
+                                        name = "_playAddr"
+                                    }
+                                    add {
+                                        name = "_playAddrH265"
+                                    }
+                                }
+                            }
+                        }.singleOrNull { methodData ->
+                            methodData.usingFields.none {
+                                it.field.fieldName == "ratio"
+                            }
+                        } ?: run {
+                            YLog.error(
+                                "$TAG: Unable to populate ${this::class.simpleName} config, possibly due to unfound obfuscated methods"
+                            )
+                            return@video
+                        }
+
+                        class_ = class_ {
+                            name = getPlayAddrMethodData.className
+                        }
+                        getPlayAddr = method {
+                            name = getPlayAddrMethodData.methodName
+                            parameters = MethodKt.parameters {
+                                values.clear()
+                                values.addAll(getPlayAddrMethodData.paramTypeNames)
+                            }
+                        }
+                    }.onFailure {
+                        YLog.error("$TAG: Unable to populate config", it)
+                    }
                 }
 
                 feedResponseHandler = feedResponseHandler {
@@ -1442,6 +1518,55 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                             parameters = MethodKt.parameters {
                                 values.clear()
                                 values.addAll(buildWhiteListMethodData.paramTypeNames)
+                            }
+                        }
+                    }.onFailure {
+                        YLog.error("$TAG: Unable to populate config", it)
+                    }
+                }
+
+                miscDownloadAddrUtil = miscDownloadAddrUtil {
+                    runCatching {
+                        val getSuffixSceneDownloadAddrMethodData = bridge.findMethod {
+                            matcher {
+                                modifiers = Modifier.PUBLIC or Modifier.STATIC or Modifier.FINAL
+                                returnType {
+                                    descriptor = "Lcom/ss/android/ugc/aweme/feed/model/VideoUrlModel;"
+                                }
+                                params {
+                                    add("com.ss.android.ugc.aweme.feed.model.Aweme")
+                                }
+                                opCodes(
+                                    OpCodesMatcher().opNames(
+                                        listOf("const-class")
+                                    )
+                                )
+                                invokeMethods {
+                                    add {
+                                        descriptor =
+                                            "Lcom/ss/android/ugc/aweme/feed/model/Aweme;->getVideo()Lcom/ss/android/ugc/aweme/feed/model/Video;"
+                                    }
+                                    add {
+                                        descriptor =
+                                            "Lcom/bytedance/mt/protector/impl/GsonProtectorUtils;->fromJson(Lcom/google/gson/Gson;Ljava/lang/String;Ljava/lang/Class;)Ljava/lang/Object;"
+                                    }
+                                }
+                            }
+                        }.singleOrNull() ?: run {
+                            YLog.error(
+                                "$TAG: Unable to populate ${this::class.simpleName} config, possibly due to unfound obfuscated methods"
+                            )
+                            return@miscDownloadAddrUtil
+                        }
+
+                        class_ = class_ {
+                            name = getSuffixSceneDownloadAddrMethodData.className
+                        }
+                        getSuffixSceneDownloadAddr = method {
+                            name = getSuffixSceneDownloadAddrMethodData.methodName
+                            parameters = MethodKt.parameters {
+                                values.clear()
+                                values.addAll(getSuffixSceneDownloadAddrMethodData.paramTypeNames)
                             }
                         }
                     }.onFailure {

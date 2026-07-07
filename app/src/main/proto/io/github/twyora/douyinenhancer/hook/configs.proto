@@ -154,6 +154,12 @@ message Aweme {
   optional Field  groupon_large_card = 9;
   optional Method is_live            = 10;
   optional Method is_multi_image     = 11;
+  optional Method get_video          = 12;
+}
+
+message Video {
+  optional Class  class          = 1;
+  optional Method get_play_addr  = 2;
 }
 
 message FeedResponseHandler {
@@ -164,6 +170,11 @@ message FeedResponseHandler {
 message CommentLongPressWhiteListProvider {
   optional Class  class          = 1;
   optional Method buildWhiteList = 2;
+}
+
+message MiscDownloadAddrUtil {
+  optional Class  class                          = 1;
+  optional Method get_suffix_scene_download_addr = 2;
 }
 
 message HookInfo {
@@ -190,8 +201,10 @@ message HookInfo {
   optional DouYinSettingNewVersionActivity   dou_yin_setting_new_version_activity   = 20;
   optional User                              user                                   = 21;
   optional Aweme                             aweme                                  = 22;
+  optional Video                             video                                  = 28;
   optional FeedResponseHandler               feed_response_handler                  = 23;
   optional CommentLongPressWhiteListProvider comment_long_press_white_list_provider = 24;
   optional CommentAudioStruct                comment_audio_struct                   = 25;
   optional ListenerProviderParam             listener_provider_param                = 26;
+  optional MiscDownloadAddrUtil              misc_download_addr_util                = 27;
 }
