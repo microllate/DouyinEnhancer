@@ -7,6 +7,7 @@ import io.github.twyora.douyinenhancer.config.key.SaveKey
 import io.github.twyora.douyinenhancer.hook.utils.getField
 import io.github.twyora.douyinenhancer.hook.utils.resolveMethod
 
+@HookOnMainProcess
 object CommentImageHooker : YukiBaseHooker() {
     private val TAG = this::class.simpleName
 

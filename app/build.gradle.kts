@@ -33,7 +33,7 @@ android {
      */
     val isKeyStoreAvailable = try {
         gropify.keystore.path.isNotBlank() && gropify.keystore.password.isNotBlank() && gropify.key.alias.isNotBlank() &&
-            gropify.key.password.isNotBlank()
+                gropify.key.password.isNotBlank()
     } catch (_: Exception) {
         false
     }
@@ -150,6 +150,9 @@ protobuf {
 }
 
 dependencies {
+    implementation(project(":annotation"))
+    ksp(project(":processor"))
+
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core.ktx)
     implementation(libs.material)

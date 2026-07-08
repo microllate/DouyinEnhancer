@@ -14,6 +14,7 @@ import io.github.twyora.douyinenhancer.hook.utils.invokeMethod
 import io.github.twyora.douyinenhancer.hook.utils.resolveMethod
 import io.github.twyora.douyinenhancer.ui.SettingsDialog
 
+@HookOnMainProcess
 object SettingsHooker : YukiBaseHooker() {
     private val TAG = this::class.simpleName
 
