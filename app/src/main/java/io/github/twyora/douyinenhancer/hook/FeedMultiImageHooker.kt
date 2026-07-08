@@ -66,6 +66,15 @@ object FeedMultiImageHooker : YukiBaseHooker() {
                     }
                 }
             }
+
+            packageInstance.abTestServiceImpl.selfClass?.resolveMethod(
+                packageInstance.abTestServiceImpl.enableSaveImageToVideoLocalWaterMask()
+            )?.hook {
+                before {
+                    YLog.debug("$TAG: enableSaveImageToVideoLocalWaterMask: false")
+                    resultFalse()
+                }
+            }
         }
     }
 }

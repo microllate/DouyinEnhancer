@@ -99,6 +99,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
     val commentLongPressWhiteListProvider = CommentLongPressWhiteListProviderModule()
     val miscDownloadAddrUtil = MiscDownloadAddrUtilModule()
     val downloadAction = DownloadActionModule()
+    val abTestServiceImpl = ABTestServiceImplModule()
 
     inner class CommentImageStructModule {
         val selfClass by weak {
@@ -507,6 +508,18 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
         )
 
         fun aweme() = Field(hookInfo.downloadAction.aweme.nameOrNull)
+    }
+
+    inner class ABTestServiceImplModule {
+        val selfClass by weak {
+            hookInfo.abTestServiceImpl.class_.nameOrNull
+                ?.toClass(classLoader)
+        }
+
+        fun enableSaveImageToVideoLocalWaterMask() = Method(
+            hookInfo.abTestServiceImpl.enableSaveImageToVideoLocalWaterMask.nameOrNull,
+            hookInfo.abTestServiceImpl.enableSaveImageToVideoLocalWaterMask.parameters.valuesListOrNull
+        )
     }
 
     companion object {
@@ -1671,6 +1684,15 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                     }
                     downloadUrlList = field {
                         name = "downloadUrlList"
+                    }
+                }
+
+                abTestServiceImpl = aBTestServiceImpl {
+                    class_ = class_ {
+                        name = "com.ss.android.ugc.aweme.servicimpl.ABTestServiceImpl"
+                    }
+                    enableSaveImageToVideoLocalWaterMask = method {
+                        name = "enableSaveImageToVideoLocalWaterMask"
                     }
                 }
             }
