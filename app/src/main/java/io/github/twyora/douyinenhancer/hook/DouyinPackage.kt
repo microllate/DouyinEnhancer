@@ -11,6 +11,7 @@ import com.highcapable.kavaref.KavaRef.Companion.resolve
 import com.highcapable.kavaref.condition.type.Modifiers
 import com.highcapable.kavaref.extension.toClass
 import com.highcapable.yukihookapi.hook.log.YLog
+import io.github.twyora.douyinenhancer.BuildConfig
 import io.github.twyora.douyinenhancer.generated.AppProperties
 import io.github.twyora.douyinenhancer.hook.utils.weak
 import java.io.File
@@ -491,8 +492,8 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                 if (hookInfo.lastUpdateTime >= moduleLastUpdateTime &&
                     hookInfo.lastUpdateTime >= hostAppLastUpdateTime &&
                     hookInfo.hostVersionCode == hostAppVersionCode &&
-                    hookInfo.moduleVersionCode == AppProperties.PROJECT_VERSION_CODE &&
-                    hookInfo.moduleVersionName == AppProperties.PROJECT_VERSION_NAME
+                    hookInfo.moduleVersionCode == BuildConfig.VERSION_CODE &&
+                    hookInfo.moduleVersionName == BuildConfig.VERSION_NAME
                 ) {
                     return hookInfo
                 } else {
@@ -532,8 +533,8 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                             ).lastUpdateTime
                     }.getOrDefault(hostAppPackageInfo.lastUpdateTime)
                 )
-            moduleVersionCode = AppProperties.PROJECT_VERSION_CODE
-            moduleVersionName = AppProperties.PROJECT_VERSION_NAME
+            moduleVersionCode = BuildConfig.VERSION_CODE
+            moduleVersionName = BuildConfig.VERSION_NAME
             hostVersionCode = hostAppPackageInfo.versionCode
             generation = 0
 

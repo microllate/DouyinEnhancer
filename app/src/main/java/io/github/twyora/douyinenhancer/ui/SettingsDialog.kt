@@ -13,6 +13,7 @@ import android.widget.Toast
 import androidx.core.content.edit
 import com.highcapable.yukihookapi.hook.factory.injectModuleAppResources
 import com.highcapable.yukihookapi.hook.log.YLog
+import io.github.twyora.douyinenhancer.BuildConfig
 import io.github.twyora.douyinenhancer.R
 import io.github.twyora.douyinenhancer.config.FastKVConfigManager
 import io.github.twyora.douyinenhancer.config.key.MiscKey
@@ -54,7 +55,7 @@ class SettingsDialog(context: Context) : AlertDialog.Builder(context) {
                 }
             }
 
-            findPreference("version")?.summary = AppProperties.PROJECT_VERSION_NAME
+            findPreference("version")?.summary = BuildConfig.VERSION_NAME
             findPreference("version")?.onPreferenceClickListener = this
             findPreference("recommend_feed_filter")?.onPreferenceClickListener = this
         }
