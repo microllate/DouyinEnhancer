@@ -1,29 +1,32 @@
-package io.github.twyora.douyinenhancer.hook
+package io.github.twyora.douyinenhancer.hook.comment
 
 import android.content.Context
 import android.graphics.Bitmap
 import android.media.MediaExtractor
 import android.media.MediaFormat
 import android.media.MediaMetadataRetriever
+import android.net.Uri
 import android.os.Build
 import android.webkit.MimeTypeMap
-import com.highcapable.kavaref.KavaRef.Companion.asResolver
+import com.highcapable.kavaref.KavaRef.asResolver
 import com.highcapable.yukihookapi.hook.core.YukiMemberHookCreator
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.log.YLog
 import com.shakster.gifkt.GifEncoder
 import io.github.twyora.douyinenhancer.config.FastKVConfigManager
 import io.github.twyora.douyinenhancer.config.key.SaveKey
-import io.github.twyora.douyinenhancer.hook.utils.FileTypeDetector
-import io.github.twyora.douyinenhancer.hook.utils.HookTransaction
-import io.github.twyora.douyinenhancer.hook.utils.getField
-import io.github.twyora.douyinenhancer.hook.utils.getStaticField
-import io.github.twyora.douyinenhancer.hook.utils.invokeMethod
-import io.github.twyora.douyinenhancer.hook.utils.invokeStaticMethod
-import io.github.twyora.douyinenhancer.hook.utils.resolveMethod
-import io.github.twyora.douyinenhancer.hook.utils.setField
+import io.github.twyora.douyinenhancer.hook.DouyinPackage
+import io.github.twyora.douyinenhancer.hook.HookOnMainProcess
+import io.github.twyora.douyinenhancer.utils.FileTypeDetector
+import io.github.twyora.douyinenhancer.utils.HookTransaction
+import io.github.twyora.douyinenhancer.utils.getField
+import io.github.twyora.douyinenhancer.utils.getStaticField
+import io.github.twyora.douyinenhancer.utils.invokeMethod
+import io.github.twyora.douyinenhancer.utils.invokeStaticMethod
+import io.github.twyora.douyinenhancer.utils.resolveMethod
+import io.github.twyora.douyinenhancer.utils.setField
 import java.io.File
-import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Duration.milliseconds
 import kotlinx.io.Sink
 import kotlinx.io.buffered
 import kotlinx.io.files.Path
@@ -324,9 +327,9 @@ object CommentEmojiHooker : YukiBaseHooker() {
         packageInstance.ugFileUtils.selfClass
             ?.resolveMethod(packageInstance.ugFileUtils.createUri())?.hook {
                 after {
-                    val uriRet = result as? android.net.Uri
+                    val uriRet = result as? Uri
                     // original createUri succeeded — nothing to fix
-                    if (uriRet != null && uriRet != android.net.Uri.EMPTY) {
+                    if (uriRet != null && uriRet != Uri.EMPTY) {
                         return@after
                     }
 
@@ -363,7 +366,7 @@ object CommentEmojiHooker : YukiBaseHooker() {
 
                     val finalUri =
                         DouyinPackage.instance.ugFileUtils.selfClass
-                            ?.invokeStaticMethod<android.net.Uri>(
+                            ?.invokeStaticMethod<Uri>(
                                 DouyinPackage.instance.ugFileUtils.getImageUri(),
                                 context,
                                 fileName,
@@ -376,7 +379,7 @@ object CommentEmojiHooker : YukiBaseHooker() {
 
                     // also write into the caller's out-parameter array
                     @Suppress("UNCHECKED_CAST")
-                    val uriArr = args[2] as? Array<android.net.Uri> ?: return@after
+                    val uriArr = args[2] as? Array<Uri> ?: return@after
                     if (uriArr.isNotEmpty()) {
                         uriArr[0] = finalUri
                     }

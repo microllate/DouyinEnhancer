@@ -1,13 +1,15 @@
-package io.github.twyora.douyinenhancer.hook
+package io.github.twyora.douyinenhancer.hook.feed
 
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.log.YLog
 import io.github.twyora.douyinenhancer.config.FastKVConfigManager
 import io.github.twyora.douyinenhancer.config.key.MiscKey
 import io.github.twyora.douyinenhancer.config.key.RecommendedFeedFilterKey
-import io.github.twyora.douyinenhancer.hook.utils.getField
-import io.github.twyora.douyinenhancer.hook.utils.invokeMethod
-import io.github.twyora.douyinenhancer.hook.utils.resolveMethod
+import io.github.twyora.douyinenhancer.hook.DouyinPackage
+import io.github.twyora.douyinenhancer.hook.HookOnMainProcess
+import io.github.twyora.douyinenhancer.utils.getField
+import io.github.twyora.douyinenhancer.utils.invokeMethod
+import io.github.twyora.douyinenhancer.utils.resolveMethod
 
 @HookOnMainProcess
 object RecommendedFeedHooker : YukiBaseHooker() {

@@ -13,7 +13,9 @@ import com.highcapable.kavaref.extension.toClass
 import com.highcapable.yukihookapi.hook.log.YLog
 import io.github.twyora.douyinenhancer.BuildConfig
 import io.github.twyora.douyinenhancer.generated.AppProperties
-import io.github.twyora.douyinenhancer.hook.utils.weak
+import io.github.twyora.douyinenhancer.utils.Field
+import io.github.twyora.douyinenhancer.utils.Method
+import io.github.twyora.douyinenhancer.utils.weak
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
@@ -52,10 +54,6 @@ val Configs.Method.Parameters.valuesListOrNull
         }
 
 class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
-    data class Field(val name: String?)
-
-    data class Method(val name: String?, val parameters: List<String>?)
-
     init {
         instance = this
     }
@@ -537,6 +535,12 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
             moduleVersionName = BuildConfig.VERSION_NAME
             hostVersionCode = hostAppPackageInfo.versionCode
             generation = 0
+
+            try {
+                System.loadLibrary("dexkit")
+            } catch (e: Throwable) {
+                YLog.error("Failed to load DexKit native library: ${e.message}")
+            }
 
             DexKitBridge.create(context.applicationInfo.sourceDir).use { bridge ->
                 commentImageStruct =
