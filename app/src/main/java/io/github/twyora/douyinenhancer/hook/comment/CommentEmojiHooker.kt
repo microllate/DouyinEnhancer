@@ -26,11 +26,11 @@ import io.github.twyora.douyinenhancer.utils.invokeStaticMethod
 import io.github.twyora.douyinenhancer.utils.resolveMethod
 import io.github.twyora.douyinenhancer.utils.setField
 import java.io.File
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.io.Sink
 import kotlinx.io.buffered
 import kotlinx.io.files.Path
 import kotlinx.io.files.SystemFileSystem
-import kotlin.time.Duration.Companion.milliseconds
 
 @HookOnMainProcess
 object CommentEmojiHooker : YukiBaseHooker() {
