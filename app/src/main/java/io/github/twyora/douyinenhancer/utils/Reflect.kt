@@ -1,4 +1,4 @@
-package io.github.twyora.douyinenhancer.hook.utils
+package io.github.twyora.douyinenhancer.utils
 
 import com.highcapable.kavaref.KavaRef.Companion.asResolver
 import com.highcapable.kavaref.KavaRef.Companion.resolve

@@ -17,9 +17,8 @@ import io.github.twyora.douyinenhancer.BuildConfig
 import io.github.twyora.douyinenhancer.R
 import io.github.twyora.douyinenhancer.config.FastKVConfigManager
 import io.github.twyora.douyinenhancer.config.key.MiscKey
-import io.github.twyora.douyinenhancer.generated.AppProperties
 import io.github.twyora.douyinenhancer.hook.DouyinPackage
-import io.github.twyora.douyinenhancer.hook.utils.setField
+import io.github.twyora.douyinenhancer.utils.setField
 import kotlin.system.exitProcess
 
 /**

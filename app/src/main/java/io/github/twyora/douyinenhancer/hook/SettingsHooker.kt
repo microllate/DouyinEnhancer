@@ -9,9 +9,9 @@ import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.factory.injectModuleAppResources
 import com.highcapable.yukihookapi.hook.log.YLog
 import io.github.twyora.douyinenhancer.R
-import io.github.twyora.douyinenhancer.hook.utils.getField
-import io.github.twyora.douyinenhancer.hook.utils.invokeMethod
-import io.github.twyora.douyinenhancer.hook.utils.resolveMethod
+import io.github.twyora.douyinenhancer.utils.getField
+import io.github.twyora.douyinenhancer.utils.invokeMethod
+import io.github.twyora.douyinenhancer.utils.resolveMethod
 import io.github.twyora.douyinenhancer.ui.SettingsDialog
 
 @HookOnMainProcess

@@ -13,7 +13,7 @@ import com.highcapable.kavaref.extension.toClass
 import com.highcapable.yukihookapi.hook.log.YLog
 import io.github.twyora.douyinenhancer.BuildConfig
 import io.github.twyora.douyinenhancer.generated.AppProperties
-import io.github.twyora.douyinenhancer.hook.utils.weak
+import io.github.twyora.douyinenhancer.utils.weak
 import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream

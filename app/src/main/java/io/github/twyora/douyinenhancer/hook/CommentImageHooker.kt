@@ -4,8 +4,8 @@ import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.log.YLog
 import io.github.twyora.douyinenhancer.config.FastKVConfigManager
 import io.github.twyora.douyinenhancer.config.key.SaveKey
-import io.github.twyora.douyinenhancer.hook.utils.getField
-import io.github.twyora.douyinenhancer.hook.utils.resolveMethod
+import io.github.twyora.douyinenhancer.utils.getField
+import io.github.twyora.douyinenhancer.utils.resolveMethod
 
 @HookOnMainProcess
 object CommentImageHooker : YukiBaseHooker() {

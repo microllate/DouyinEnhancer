@@ -1,4 +1,4 @@
-package io.github.twyora.douyinenhancer.hook.utils
+package io.github.twyora.douyinenhancer.utils
 
 import java.io.File
 
