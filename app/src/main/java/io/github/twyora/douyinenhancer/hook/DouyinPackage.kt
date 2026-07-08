@@ -477,7 +477,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                     runCatching {
                         context.packageManager
                             .getPackageInfo(
-                                AppProperties.PROJECT_NAMESPACE,
+                                AppProperties.PROJECT_APPLICATION_ID,
                                 0
                             ).lastUpdateTime
                     }.getOrDefault(hostAppLastUpdateTime)
