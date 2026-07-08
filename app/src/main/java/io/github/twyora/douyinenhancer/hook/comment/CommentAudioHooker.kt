@@ -1,4 +1,4 @@
-package io.github.twyora.douyinenhancer.hook
+package io.github.twyora.douyinenhancer.hook.comment
 
 import android.content.Context
 import android.net.Uri
@@ -7,6 +7,8 @@ import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.log.YLog
 import io.github.twyora.douyinenhancer.config.FastKVConfigManager
 import io.github.twyora.douyinenhancer.config.key.SaveKey
+import io.github.twyora.douyinenhancer.hook.DouyinPackage
+import io.github.twyora.douyinenhancer.hook.HookOnMainProcess
 import io.github.twyora.douyinenhancer.utils.FileTypeDetector
 import io.github.twyora.douyinenhancer.utils.HookTransaction
 import io.github.twyora.douyinenhancer.utils.getField

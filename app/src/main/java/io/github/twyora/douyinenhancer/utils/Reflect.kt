@@ -139,11 +139,9 @@ fun Class<*>.resolveField(field: Field): FieldResolver<*>? {
         }
 }
 
-inline fun <reified T> Any.invokeMethod(method: Method, vararg args: Any?): T? =
-    this.resolveMethod(method)?.invoke(*args) as? T
+inline fun <reified T> Any.invokeMethod(method: Method, vararg args: Any?): T? = this.resolveMethod(method)?.invoke(*args) as? T
 
-inline fun <reified T> Class<*>.invokeStaticMethod(method: Method, vararg args: Any?): T? =
-    this.resolveMethod(method)?.invoke(*args) as? T
+inline fun <reified T> Class<*>.invokeStaticMethod(method: Method, vararg args: Any?): T? = this.resolveMethod(method)?.invoke(*args) as? T
 
 inline fun <reified T> Any.getField(field: Field): T? = this.resolveField(field)?.get() as? T
 
