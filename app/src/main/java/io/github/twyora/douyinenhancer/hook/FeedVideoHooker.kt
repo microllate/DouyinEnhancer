@@ -6,7 +6,7 @@ import io.github.twyora.douyinenhancer.hook.utils.getField
 import io.github.twyora.douyinenhancer.hook.utils.invokeMethod
 import io.github.twyora.douyinenhancer.hook.utils.resolveMethod
 
-object VideoDownloadHooker : YukiBaseHooker() {
+object FeedVideoHooker : YukiBaseHooker() {
     private val TAG = this::class.simpleName
 
     override fun onHook() {

@@ -55,7 +55,7 @@ object HookEntry : IYukiHookXposedInit {
                         loadApp(hooker = CommentImageHooker)
                         loadApp(hooker = CommentEmojiHooker)
                         loadApp(hooker = CommentAudioHooker)
-                        loadApp(hooker = VideoDownloadHooker)
+                        loadApp(hooker = FeedVideoHooker)
                         loadApp(hooker = FeedMultiImageHooker)
                         loadApp(hooker = RecommendedFeedHooker)
                     }
