@@ -7,7 +7,5 @@ import com.google.devtools.ksp.processing.SymbolProcessorProvider
 
 @AutoService(SymbolProcessorProvider::class)
 class HookOnMainProcessProcessorProvider : SymbolProcessorProvider {
-    override fun create(environment: SymbolProcessorEnvironment): SymbolProcessor {
-        return HookOnMainProcessProcessor(environment.codeGenerator)
-    }
+    override fun create(environment: SymbolProcessorEnvironment): SymbolProcessor = HookOnMainProcessProcessor(environment.codeGenerator)
 }
