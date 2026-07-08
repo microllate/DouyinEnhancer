@@ -8,7 +8,7 @@ import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.os.Build
 import android.webkit.MimeTypeMap
-import com.highcapable.kavaref.KavaRef.asResolver
+import com.highcapable.kavaref.KavaRef.Companion.asResolver
 import com.highcapable.yukihookapi.hook.core.YukiMemberHookCreator
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.log.YLog
@@ -26,7 +26,7 @@ import io.github.twyora.douyinenhancer.utils.invokeStaticMethod
 import io.github.twyora.douyinenhancer.utils.resolveMethod
 import io.github.twyora.douyinenhancer.utils.setField
 import java.io.File
-import kotlin.time.Duration.milliseconds
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.io.Sink
 import kotlinx.io.buffered
 import kotlinx.io.files.Path
