@@ -28,24 +28,22 @@ object CommentAudioHooker : YukiBaseHooker() {
             return
         }
 
-        withProcess(name = mainProcessName) {
-            val transaction = HookTransaction(TAG)
+        val transaction = HookTransaction(TAG)
 
-            transaction.add(::installForceSaveImageVisibleHook.name) {
-                installForceSaveImageVisibleHook()
-            }
-            transaction.add(::installAddSaveImageToWhiteListHook.name) {
-                installAddSaveImageToWhiteListHook()
-            }
-            transaction.add(::installInjectAudioUrlOnSaveClickHook.name) {
-                installInjectAudioUrlOnSaveClickHook()
-            }
-            transaction.add(::installSaveDownloadedAudioHook.name) {
-                installSaveDownloadedAudioHook()
-            }
-
-            transaction.commit()
+        transaction.add(::installForceSaveImageVisibleHook.name) {
+            installForceSaveImageVisibleHook()
         }
+        transaction.add(::installAddSaveImageToWhiteListHook.name) {
+            installAddSaveImageToWhiteListHook()
+        }
+        transaction.add(::installInjectAudioUrlOnSaveClickHook.name) {
+            installInjectAudioUrlOnSaveClickHook()
+        }
+        transaction.add(::installSaveDownloadedAudioHook.name) {
+            installSaveDownloadedAudioHook()
+        }
+
+        transaction.commit()
     }
 
     private fun installForceSaveImageVisibleHook(): YukiMemberHookCreator.MemberHookCreator.Result? {

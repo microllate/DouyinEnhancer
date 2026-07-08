@@ -18,22 +18,20 @@ object CommentImageHooker : YukiBaseHooker() {
             return
         }
 
-        withProcess(mainProcessName) {
-            val packageInstance = DouyinPackage.instance
+        val packageInstance = DouyinPackage.instance
 
-            packageInstance.commentImageStruct.selfClass?.resolveMethod(packageInstance.commentImageStruct.getDownloadUrl())?.hook {
-                before {
-                    val originUrl =
-                        instance.getField<Any?>(packageInstance.commentImageStruct.originUrl())
-                    if (originUrl != null) {
-                        result = originUrl
-                    }
+        packageInstance.commentImageStruct.selfClass?.resolveMethod(packageInstance.commentImageStruct.getDownloadUrl())?.hook {
+            before {
+                val originUrl =
+                    instance.getField<Any?>(packageInstance.commentImageStruct.originUrl())
+                if (originUrl != null) {
+                    result = originUrl
                 }
-            } ?: run {
-                YLog.warn(
-                    "$TAG: Target method not found, watermark-free comment image download is not active"
-                )
             }
+        } ?: run {
+            YLog.warn(
+                "$TAG: Target method not found, watermark-free comment image download is not active"
+            )
         }
     }
 }
