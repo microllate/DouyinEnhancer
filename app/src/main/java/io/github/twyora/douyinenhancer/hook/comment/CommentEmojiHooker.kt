@@ -41,33 +41,31 @@ object CommentEmojiHooker : YukiBaseHooker() {
             return
         }
 
-        withProcess(mainProcessName) {
-            val transaction = HookTransaction(TAG)
-            // Force "save to album" button visible for emoji comments.
-            transaction.add(::installSaveEmojiToAlbumButtonHook.name) {
-                installSaveEmojiToAlbumButtonHook()
-            }
-            // Before the save button's download callback fires, inject emoji URLs into
-            // comment.imageList[0].downloadUrl so the downloader picks them up.
-            // Without it: the downloader fetches nothing because imageList is empty.
-            transaction.add(::installClickSaveEmojiToAlbumButtonCallbackHook.name) {
-                installClickSaveEmojiToAlbumButtonCallbackHook()
-            }
-            // Intercept emoji download completion: detect real file type, convert video
-            // to GIF if needed, copy to album, show result toast, skip original handler
-            // — otherwise every downloaded emoji is saved as .png with MIME image/png.
-            transaction.add(::installEmojiDownloadedCallbackHook.name) {
-                installEmojiDownloadedCallbackHook()
-            }
-            // Fix MediaStore URI creation for converted GIF files: internal logic has a
-            // file-extension whitelist, so non-whitelisted extensions (e.g. gif) fail
-            // createUri and cannot be saved to external storage — this hook falls back
-            // to getImageUri manually and writes into output array.
-            transaction.add(::installCreateUriHook.name) {
-                installCreateUriHook()
-            }
-            transaction.commit()
+        val transaction = HookTransaction(TAG)
+        // Force "save to album" button visible for emoji comments.
+        transaction.add(::installSaveEmojiToAlbumButtonHook.name) {
+            installSaveEmojiToAlbumButtonHook()
         }
+        // Before the save button's download callback fires, inject emoji URLs into
+        // comment.imageList[0].downloadUrl so the downloader picks them up.
+        // Without it: the downloader fetches nothing because imageList is empty.
+        transaction.add(::installClickSaveEmojiToAlbumButtonCallbackHook.name) {
+            installClickSaveEmojiToAlbumButtonCallbackHook()
+        }
+        // Intercept emoji download completion: detect real file type, convert video
+        // to GIF if needed, copy to album, show result toast, skip original handler
+        // — otherwise every downloaded emoji is saved as .png with MIME image/png.
+        transaction.add(::installEmojiDownloadedCallbackHook.name) {
+            installEmojiDownloadedCallbackHook()
+        }
+        // Fix MediaStore URI creation for converted GIF files: internal logic has a
+        // file-extension whitelist, so non-whitelisted extensions (e.g. gif) fail
+        // createUri and cannot be saved to external storage — this hook falls back
+        // to getImageUri manually and writes into output array.
+        transaction.add(::installCreateUriHook.name) {
+            installCreateUriHook()
+        }
+        transaction.commit()
     }
 
     private fun installSaveEmojiToAlbumButtonHook(): YukiMemberHookCreator.MemberHookCreator.Result? {
