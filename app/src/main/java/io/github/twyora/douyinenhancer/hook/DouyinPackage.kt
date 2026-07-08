@@ -13,6 +13,8 @@ import com.highcapable.kavaref.extension.toClass
 import com.highcapable.yukihookapi.hook.log.YLog
 import io.github.twyora.douyinenhancer.BuildConfig
 import io.github.twyora.douyinenhancer.generated.AppProperties
+import io.github.twyora.douyinenhancer.utils.Field
+import io.github.twyora.douyinenhancer.utils.Method
 import io.github.twyora.douyinenhancer.utils.weak
 import java.io.File
 import java.io.FileInputStream
@@ -52,10 +54,6 @@ val Configs.Method.Parameters.valuesListOrNull
         }
 
 class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
-    data class Field(val name: String?)
-
-    data class Method(val name: String?, val parameters: List<String>?)
-
     init {
         instance = this
     }
