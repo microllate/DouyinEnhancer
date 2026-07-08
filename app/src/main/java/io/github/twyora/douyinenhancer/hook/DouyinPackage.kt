@@ -538,6 +538,12 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
             hostVersionCode = hostAppPackageInfo.versionCode
             generation = 0
 
+            try {
+                System.loadLibrary("dexkit")
+            } catch (e: Throwable) {
+                YLog.error("Failed to load DexKit native library: ${e.message}")
+            }
+
             DexKitBridge.create(context.applicationInfo.sourceDir).use { bridge ->
                 commentImageStruct =
                     commentImageStruct {

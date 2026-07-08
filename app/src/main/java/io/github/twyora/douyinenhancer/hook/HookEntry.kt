@@ -23,12 +23,6 @@ object HookEntry : IYukiHookXposedInit {
     }
 
     override fun onHook() = encase {
-        try {
-            System.loadLibrary("dexkit")
-        } catch (e: Throwable) {
-            YLog.error("Failed to load DexKit native library: ${e.message}")
-        }
-
         loadApp(name = "com.ss.android.ugc.aweme") {
             withProcess(mainProcessName) {
                 Instrumentation::class.resolve().firstMethod {
