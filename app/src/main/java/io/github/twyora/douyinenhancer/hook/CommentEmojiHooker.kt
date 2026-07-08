@@ -29,6 +29,7 @@ import kotlinx.io.buffered
 import kotlinx.io.files.Path
 import kotlinx.io.files.SystemFileSystem
 
+@HookOnMainProcess
 object CommentEmojiHooker : YukiBaseHooker() {
     private val TAG = this::class.simpleName
 

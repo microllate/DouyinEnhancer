@@ -9,6 +9,7 @@ import io.github.twyora.douyinenhancer.hook.utils.getField
 import io.github.twyora.douyinenhancer.hook.utils.invokeMethod
 import io.github.twyora.douyinenhancer.hook.utils.resolveMethod
 
+@HookOnMainProcess
 object RecommendedFeedHooker : YukiBaseHooker() {
     private val TAG = this::class.simpleName
 
