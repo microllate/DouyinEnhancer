@@ -66,7 +66,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                     readHookInfo(context)
                 }
             YLog.debug("$TAG: load hookInfo time: $time")
-            YLog.info("$TAG: hookInfo: $result")
+            YLog.debug("$TAG: hookInfo: $result")
 
             result
         }
