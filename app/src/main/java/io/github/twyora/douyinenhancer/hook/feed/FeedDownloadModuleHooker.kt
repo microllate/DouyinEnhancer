@@ -23,13 +23,13 @@ object FeedDownloadModuleHooker : YukiBaseHooker() {
                     return@after
                 }
 
-                /**
-                 * TODO: Kinda tired of staring at this thing, and honestly
-                 * the author doesn't really need to download restricted content that often,
-                 * so let's just pick some low-hanging fruit first —
-                 * this one can wait till next time, hehe (^///^)
-                 */
-                YLog.warn("$TAG: Feed download button is hidden by the host and the hook logic hasn't been implemented yet — the download button will remain hidden!")
+                // TODO: Kinda tired of staring at this thing, and honestly
+                // the author doesn't really need to download restricted content that often,
+                // so let's just pick some low-hanging fruit first —
+                // this one can wait till next time, hehe (^///^)
+                YLog.warn(
+                    "$TAG: Feed download button is hidden by the host and the hook logic hasn't been implemented yet — the download button will remain hidden!"
+                )
             }
         }
     }
