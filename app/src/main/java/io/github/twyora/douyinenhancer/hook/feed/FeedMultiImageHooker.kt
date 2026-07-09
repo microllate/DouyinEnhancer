@@ -3,6 +3,8 @@ package io.github.twyora.douyinenhancer.hook.feed
 import com.highcapable.yukihookapi.hook.core.YukiMemberHookCreator
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.log.YLog
+import io.github.twyora.douyinenhancer.config.FastKVConfigManager
+import io.github.twyora.douyinenhancer.config.key.SaveKey
 import io.github.twyora.douyinenhancer.hook.DouyinPackage
 import io.github.twyora.douyinenhancer.hook.HookOnMainProcess
 import io.github.twyora.douyinenhancer.utils.getField
@@ -15,6 +17,10 @@ object FeedMultiImageHooker : YukiBaseHooker() {
     private val TAG = this::class.simpleName
 
     override fun onHook() {
+        if (!FastKVConfigManager.settings.getBoolean(SaveKey.FEED_MULTI_IMAGE_REMOVE_WATERMARK, false)) {
+            return
+        }
+
         installInjectPlayUrlIntoImageDownloadHook()
         installDisableSaveImageToVideoLocalWaterMaskHook()
     }
