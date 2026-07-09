@@ -19,6 +19,10 @@
     <string name="pref_comment_emoji_summary">Remove comment emoji save restrictions</string>
     <string name="pref_comment_audio_title">Download Comment Audio</string>
     <string name="pref_comment_audio_summary">Save to Music/douyin/audio directory</string>
+    <string name="pref_feed_video_remove_watermark_title">Save Feed Videos Without Watermark</string>
+    <string name="pref_feed_video_remove_watermark_summary">Uses the playback stream instead of the watermarked download-specific version</string>
+    <string name="pref_feed_multi_image_remove_watermark_title">Save Watermark-Free Multi-Image Posts</string>
+    <string name="pref_feed_multi_image_remove_watermark_summary">Remove in-image and border watermarks</string>
 
     <string name="recommended_feed_filter_dialog_title">Recommended Feed Filter</string>
     <string name="recommended_feed_filter_main_switch_title">Main switch</string>

@@ -154,6 +154,20 @@ message Aweme {
   optional Field groupon_large_card = 9;
   optional Method is_live = 10;
   optional Method is_multi_image = 11;
+  optional Method get_video = 12;
+  optional Field images = 13;
+}
+
+message Video {
+  optional Class class = 1;
+  optional Method get_play_addr = 2;
+}
+
+message ImageUrlStruct {
+  optional Class class = 1;
+  optional Field watermark_free_download_url_list = 2;
+  optional Field url_list = 3;
+  optional Field download_url_list = 4;
 }
 
 message FeedResponseHandler {
@@ -164,6 +178,27 @@ message FeedResponseHandler {
 message CommentLongPressWhiteListProvider {
   optional Class class = 1;
   optional Method buildWhiteList = 2;
+}
+
+message MiscDownloadAddrUtil {
+  optional Class class = 1;
+  optional Method get_suffix_scene_download_addr = 2;
+}
+
+message DownloadAction {
+  optional Class class = 1;
+  optional Method start_download = 2;
+  optional Field aweme = 3;
+}
+
+message ABTestServiceImpl {
+  optional Class class = 1;
+  optional Method enable_save_image_to_video_local_water_mask = 2;
+}
+
+message LppDownloadModule {
+  optional Class class = 1;
+  optional Method get_visibility = 2;
 }
 
 message HookInfo {
@@ -194,4 +229,10 @@ message HookInfo {
   optional CommentLongPressWhiteListProvider comment_long_press_white_list_provider = 24;
   optional CommentAudioStruct comment_audio_struct = 25;
   optional ListenerProviderParam listener_provider_param = 26;
+  optional MiscDownloadAddrUtil misc_download_addr_util = 27;
+  optional Video video = 28;
+  optional DownloadAction download_action = 29;
+  optional ImageUrlStruct image_url_struct = 30;
+  optional ABTestServiceImpl ab_test_service_impl = 31;
+  optional LppDownloadModule lpp_download_module = 32;
 }
