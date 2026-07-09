@@ -99,6 +99,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
     val miscDownloadAddrUtil = MiscDownloadAddrUtilModule()
     val downloadAction = DownloadActionModule()
     val abTestServiceImpl = ABTestServiceImplModule()
+    val lppDownloadModule = LppDownloadModuleModule()
 
     inner class CommentImageStructModule {
         val selfClass by weak {
@@ -518,6 +519,18 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
         fun enableSaveImageToVideoLocalWaterMask() = Method(
             hookInfo.abTestServiceImpl.enableSaveImageToVideoLocalWaterMask.nameOrNull,
             hookInfo.abTestServiceImpl.enableSaveImageToVideoLocalWaterMask.parameters.valuesListOrNull
+        )
+    }
+
+    inner class LppDownloadModuleModule {
+        val selfClass by weak {
+            hookInfo.lppDownloadModule.class_.nameOrNull
+                ?.toClass(classLoader)
+        }
+
+        fun getVisibility() = Method(
+            hookInfo.lppDownloadModule.getVisibility.nameOrNull,
+            hookInfo.lppDownloadModule.getVisibility.parameters.valuesListOrNull
         )
     }
 
@@ -1698,6 +1711,45 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                     }
                     enableSaveImageToVideoLocalWaterMask = method {
                         name = "enableSaveImageToVideoLocalWaterMask"
+                    }
+                }
+
+                lppDownloadModule = lppDownloadModule {
+                    runCatching {
+                        val lppDownloadModuleClsName =
+                            "com.ss.android.ugc.aweme.feed.long_press_panel.modules.business.homepage.LppDownloadModule"
+                        val getVisibilityMethod = lppDownloadModuleClsName
+                            .toClass(hostAppClassLoader)
+                            .resolve()
+                            .firstMethodOrNull {
+                                modifiers(Modifiers.PUBLIC, Modifiers.FINAL)
+                                parameters(
+                                    "com.ss.android.ugc.aweme.feed.long_press_panel.model.LongPressPanelParams"
+                                )
+                                returnType = Int::class.java
+                            }?.self
+
+                        if (getVisibilityMethod == null) {
+                            YLog.error(
+                                "$TAG: Unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
+                            )
+                            return@lppDownloadModule
+                        }
+
+                        class_ = class_ {
+                            name = lppDownloadModuleClsName
+                        }
+                        getVisibility = method {
+                            name = getVisibilityMethod.name
+                            parameters = MethodKt.parameters {
+                                values.clear()
+                                getVisibilityMethod.parameterTypes.forEach { paramType ->
+                                    values.add(paramType.name)
+                                }
+                            }
+                        }
+                    }.onFailure {
+                        YLog.error("$TAG: Unable to populate config", it)
                     }
                 }
             }
