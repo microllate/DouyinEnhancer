@@ -37,7 +37,7 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="@string/pref_category_recommend">
+        android:title="@string/pref_category_feed">
         <Preference
             android:key="recommend_feed_filter"
             android:title="@string/recommended_feed_filter_dialog_title"/>

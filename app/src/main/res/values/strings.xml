@@ -6,7 +6,7 @@
     <string name="settings_dialog_confirm_and_restart">Confirm &amp; Restart</string>
 
     <string name="pref_category_save">Save</string>
-    <string name="pref_category_recommend">Recommend</string>
+    <string name="pref_category_feed">Feed</string>
     <string name="pref_category_misc">Misc</string>
     <string name="pref_misc_enable_hidden_features_title">✦ Enable hidden features</string>
     <string name="pref_misc_enable_hidden_features_summary">Enable to use hidden features</string>
