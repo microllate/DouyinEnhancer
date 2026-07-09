@@ -69,7 +69,7 @@ class SettingsDialog(context: Context) : AlertDialog.Builder(context) {
             "version" -> {
                 val prefs = FastKVConfigManager.settings
                 if (!prefs.getBoolean(MiscKey.ENABLE_HIDDEN_FEATURES, false)) {
-                    if (++hiddenFeatureClickCount == 10) {
+                    if (++hiddenFeatureClickCount == 20) {
                         prefs.edit(commit = true) {
                             putBoolean(MiscKey.ENABLE_HIDDEN_FEATURES, true)
                         }
@@ -80,11 +80,11 @@ class SettingsDialog(context: Context) : AlertDialog.Builder(context) {
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
-                    } else if (hiddenFeatureClickCount >= 6) {
+                    } else if (hiddenFeatureClickCount >= 17) {
                         activity.runOnUiThread {
                             Toast.makeText(
                                 context,
-                                context.getString(R.string.pref_misc_enable_hidden_features_steps_remaining, 10 - hiddenFeatureClickCount),
+                                context.getString(R.string.pref_misc_enable_hidden_features_steps_remaining, 20 - hiddenFeatureClickCount),
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
