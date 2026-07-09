@@ -16,4 +16,9 @@ spotless {
         targetExclude("**/build/**")
         ktlint()
     }
+    protobuf {
+        target("**/*.proto")
+        targetExclude("**/build/**")
+        buf("1.44.0")
+    }
 }
