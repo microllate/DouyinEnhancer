@@ -83,7 +83,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
     val saveImageActionItem = SaveImageActionItemModule()
     val commentExtensionsKt = CommentExtensionsKtModule()
     val listenerProviderParam = ListenerProviderParamModule()
-    val commentImageSaveHelper = CommentImageSaveHelperModule()
+    val commentImageSaveDownloadListener = CommentImageSaveDownloadListenerModule()
     val downloadInfo = DownloadInfoModule()
     val digestUtils = DigestUtilsModule()
     val ugFileUtils = UGFileUtilsKtModule()
@@ -231,23 +231,23 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
         fun cert() = Field(hookInfo.listenerProviderParam.cert.nameOrNull)
     }
 
-    inner class CommentImageSaveHelperModule {
+    inner class CommentImageSaveDownloadListenerModule {
         val selfClass by weak {
-            hookInfo.commentImageSaveHelper.class_.nameOrNull
+            hookInfo.commentImageSaveDownloadListener.class_.nameOrNull
                 ?.toClass(classLoader)
         }
 
         fun onSuccessed() = Method(
-            hookInfo.commentImageSaveHelper.onSuccessed.nameOrNull,
-            hookInfo.commentImageSaveHelper.onSuccessed.parameters.valuesListOrNull
+            hookInfo.commentImageSaveDownloadListener.onSuccessed.nameOrNull,
+            hookInfo.commentImageSaveDownloadListener.onSuccessed.parameters.valuesListOrNull
         )
 
         fun notifyResult() = Method(
-            hookInfo.commentImageSaveHelper.notifyResult.nameOrNull,
-            hookInfo.commentImageSaveHelper.notifyResult.parameters.valuesListOrNull
+            hookInfo.commentImageSaveDownloadListener.notifyResult.nameOrNull,
+            hookInfo.commentImageSaveDownloadListener.notifyResult.parameters.valuesListOrNull
         )
 
-        fun listenerProviderParam() = Field(hookInfo.commentImageSaveHelper.listenerProviderParam.nameOrNull)
+        fun listenerProviderParam() = Field(hookInfo.commentImageSaveDownloadListener.listenerProviderParam.nameOrNull)
     }
 
     inner class DownloadInfoModule {
@@ -1034,8 +1034,8 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                     }
                 }
 
-                commentImageSaveHelper =
-                    commentImageSaveHelper {
+                commentImageSaveDownloadListener =
+                    commentImageSaveDownloadListener {
                         runCatching {
                             val onSuccessedMethodData = bridge
                                 .findMethod {
@@ -1076,7 +1076,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                                 YLog.error(
                                     "$TAG: Unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
                                 )
-                                return@commentImageSaveHelper
+                                return@commentImageSaveDownloadListener
                             }
 
                             class_ =
@@ -1106,7 +1106,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                             listenerProviderParam = field {
                                 name = listenerProviderParamFieldName
                             }
-                            return@commentImageSaveHelper
+                            return@commentImageSaveDownloadListener
                         }.onFailure {
                             YLog.error("$TAG: Unable to populate config", it)
                         }

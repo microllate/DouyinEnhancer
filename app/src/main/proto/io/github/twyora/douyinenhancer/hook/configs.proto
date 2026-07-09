@@ -114,7 +114,7 @@ message ListenerProviderParam {
   optional Field cert = 3;
 }
 
-message CommentImageSaveHelper {
+message CommentImageSaveDownloadListener {
   optional Class class = 1;
   optional Method on_successed = 2;
   optional Method notify_result = 3;
@@ -216,7 +216,7 @@ message HookInfo {
   optional CommentLongPressItemModel comment_long_press_item_model = 11;
   optional SaveImageActionItem save_image_action_item = 12;
   optional CommentExtensionKt comment_extension_kt = 13;
-  optional CommentImageSaveHelper comment_image_save_helper = 14;
+  optional CommentImageSaveDownloadListener comment_image_save_download_listener = 14;
   optional DownloadInfo download_info = 15;
   optional DigestUtils digest_utils = 16;
   optional UGFileUtilsKt ug_file_utils = 17;

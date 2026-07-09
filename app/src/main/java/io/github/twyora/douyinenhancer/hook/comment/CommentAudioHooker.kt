@@ -204,8 +204,8 @@ object CommentAudioHooker : YukiBaseHooker() {
     private fun installSaveDownloadedAudioHook(): YukiMemberHookCreator.MemberHookCreator.Result? {
         val packageInstance = DouyinPackage.instance
 
-        return packageInstance.commentImageSaveHelper.selfClass?.resolveMethod(
-            packageInstance.commentImageSaveHelper.onSuccessed()
+        return packageInstance.commentImageSaveDownloadListener.selfClass?.resolveMethod(
+            packageInstance.commentImageSaveDownloadListener.onSuccessed()
         )?.hook {
             before {
                 val downloadInfo = args[0] ?: return@before
@@ -230,7 +230,7 @@ object CommentAudioHooker : YukiBaseHooker() {
                 }.${ftypeInfo.extensions.first()}"
 
                 val context = instance.getField<Any>(
-                    packageInstance.commentImageSaveHelper.listenerProviderParam()
+                    packageInstance.commentImageSaveDownloadListener.listenerProviderParam()
                 )?.getField<Context>(
                     packageInstance.listenerProviderParam.context()
                 ) ?: run {
@@ -245,7 +245,7 @@ object CommentAudioHooker : YukiBaseHooker() {
                     ftypeInfo.mimeType,
                     "Music/douyin/audio",
                     instance.getField<Any>(
-                        packageInstance.commentImageSaveHelper.listenerProviderParam()
+                        packageInstance.commentImageSaveDownloadListener.listenerProviderParam()
                     )?.getField<Any>(
                         packageInstance.listenerProviderParam.cert()
                     )
@@ -270,7 +270,7 @@ object CommentAudioHooker : YukiBaseHooker() {
                 }.getOrDefault(false)
 
                 instance.invokeMethod<Any?>(
-                    packageInstance.commentImageSaveHelper.notifyResult(),
+                    packageInstance.commentImageSaveDownloadListener.notifyResult(),
                     context,
                     copyState
                 )
