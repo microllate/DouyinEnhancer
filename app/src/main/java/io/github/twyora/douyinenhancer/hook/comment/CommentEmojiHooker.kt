@@ -183,8 +183,8 @@ object CommentEmojiHooker : YukiBaseHooker() {
 
         val packageInstance = DouyinPackage.instance
 
-        packageInstance.commentImageSaveHelper.selfClass
-            ?.resolveMethod(packageInstance.commentImageSaveHelper.onSuccessed())?.hook {
+        packageInstance.commentImageSaveDownloadListener.selfClass
+            ?.resolveMethod(packageInstance.commentImageSaveDownloadListener.onSuccessed())?.hook {
                 before {
                     val downloadInfo = args[0] ?: return@before
 
@@ -284,7 +284,7 @@ object CommentEmojiHooker : YukiBaseHooker() {
                             }?.get<Context?>()
 
                     instance.invokeMethod<Any?>(
-                        DouyinPackage.instance.commentImageSaveHelper.notifyResult(),
+                        DouyinPackage.instance.commentImageSaveDownloadListener.notifyResult(),
                         context,
                         cpRet
                     )
