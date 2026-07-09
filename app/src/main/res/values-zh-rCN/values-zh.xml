@@ -6,7 +6,7 @@
     <string name="settings_dialog_back">返回</string>
     <string name="settings_dialog_confirm_and_restart">确定并重启客户端</string>
     <string name="pref_category_save">保存</string>
-    <string name="pref_category_recommend">推荐</string>
+    <string name="pref_category_feed">内容</string>
     <string name="pref_category_misc">杂项</string>
     <string name="pref_misc_enable_hidden_features_title">✦ 启用隐藏功能</string>
     <string name="pref_misc_enable_hidden_features_summary">打开后可以使用隐藏功能</string>
@@ -57,7 +57,7 @@
     <string name="recommended_feed_filter_group_title">标题</string>
     <string name="recommended_feed_filter_group_uid">UID</string>
     <string name="recommended_feed_filter_group_author_nickname">作者昵称</string>
-    <string name="recommended_feed_filter_group_desc">视频文案</string>
+    <string name="recommended_feed_filter_group_desc">内容文案</string>
 
     <string name="add">添加</string>
     <string name="delete">删除</string>
