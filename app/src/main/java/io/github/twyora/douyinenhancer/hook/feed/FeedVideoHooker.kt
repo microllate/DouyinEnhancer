@@ -33,13 +33,6 @@ object FeedVideoHooker : YukiBaseHooker() {
                     packageInstance.video.getPlayAddr()
                 )
                 if (playAddr != null) {
-                    YLog.debug(
-                        "$TAG: playAddr urlList: ${
-                            playAddr.getField<List<String>>(
-                                packageInstance.urlModel.urlList()
-                            ) ?: "null"
-                        }"
-                    )
                     result = playAddr
                 }
             }
