@@ -101,8 +101,15 @@ class RecommendedFeedFilterDialog(context: Context) : AlertDialog.Builder(contex
             val blockGrouponLargeCard = recommendedFeedFilterDialogBinding.switchBlockGrouponLargeCard.isChecked
             val blockLive = recommendedFeedFilterDialogBinding.switchBlockLive.isChecked
             val blockMultiImage = recommendedFeedFilterDialogBinding.switchBlockMultiImage.isChecked
+
             val hideShortDurationLimit = recommendedFeedFilterDialogBinding.editShortDuration.text.toString().toIntOrNull() ?: 0
             val hideLongDurationLimit = recommendedFeedFilterDialogBinding.editLongDuration.text.toString().toIntOrNull() ?: Int.MAX_VALUE
+            if (hideShortDurationLimit > hideLongDurationLimit) {
+                (context as? Activity)?.runOnUiThread {
+                    Toast.makeText(context, context.getString(R.string.save_failed_short_duration_exceeds_long), Toast.LENGTH_SHORT).show()
+                }
+                return@setPositiveButton
+            }
 
             val titleRegexMode = recommendedFeedFilterDialogBinding.switchTitleRegex.isChecked
             val titleKeywords = recommendedFeedFilterDialogBinding.groupAwemeTitle.children.map {

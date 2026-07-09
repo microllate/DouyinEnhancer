@@ -2,6 +2,7 @@
 plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.spotless)
+    alias(libs.plugins.jetbrains.kotlin.jvm) apply false
 }
 
 spotless {
@@ -14,5 +15,10 @@ spotless {
         target("**/*.gradle.kts")
         targetExclude("**/build/**")
         ktlint()
+    }
+    protobuf {
+        target("**/*.proto")
+        targetExclude("**/build/**")
+        buf("1.44.0")
     }
 }

@@ -150,6 +150,9 @@ protobuf {
 }
 
 dependencies {
+    implementation(project(":annotation"))
+    ksp(project(":processor"))
+
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.core.ktx)
     implementation(libs.material)

@@ -50,3 +50,5 @@ gropify {
 
 rootProject.name = "DouyinEnhancer"
 include(":app")
+include(":annotation")
+include(":processor")

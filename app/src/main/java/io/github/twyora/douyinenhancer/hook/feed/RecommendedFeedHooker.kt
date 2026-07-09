@@ -1,14 +1,17 @@
-package io.github.twyora.douyinenhancer.hook
+package io.github.twyora.douyinenhancer.hook.feed
 
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.log.YLog
 import io.github.twyora.douyinenhancer.config.FastKVConfigManager
 import io.github.twyora.douyinenhancer.config.key.MiscKey
 import io.github.twyora.douyinenhancer.config.key.RecommendedFeedFilterKey
-import io.github.twyora.douyinenhancer.hook.utils.getField
-import io.github.twyora.douyinenhancer.hook.utils.invokeMethod
-import io.github.twyora.douyinenhancer.hook.utils.resolveMethod
+import io.github.twyora.douyinenhancer.hook.DouyinPackage
+import io.github.twyora.douyinenhancer.hook.HookOnMainProcess
+import io.github.twyora.douyinenhancer.utils.getField
+import io.github.twyora.douyinenhancer.utils.invokeMethod
+import io.github.twyora.douyinenhancer.utils.resolveMethod
 
+@HookOnMainProcess
 object RecommendedFeedHooker : YukiBaseHooker() {
     private val TAG = this::class.simpleName
 
@@ -80,84 +83,82 @@ object RecommendedFeedHooker : YukiBaseHooker() {
 
         val packageInstance = DouyinPackage.instance
 
-        withProcess(mainProcessName) {
-            packageInstance.feedResponseHandler.selfClass?.resolveMethod(
-                packageInstance.feedResponseHandler.processAwemeList()
-            )?.hook {
-                before {
-                    val awemeList = args[2] as? MutableList<*> ?: return@before
+        packageInstance.feedResponseHandler.selfClass?.resolveMethod(
+            packageInstance.feedResponseHandler.processAwemeList()
+        )?.hook {
+            before {
+                val awemeList = args[2] as? MutableList<*> ?: return@before
 
-                    val iter = awemeList.iterator()
-                    while (iter.hasNext()) {
-                        val awemeObj = iter.next() ?: continue
+                val iter = awemeList.iterator()
+                while (iter.hasNext()) {
+                    val awemeObj = iter.next() ?: continue
 
-                        if (blockAdEnabled && awemeObj.invokeMethod<Boolean?>(packageInstance.aweme.getAd()) == true) {
-                            YLog.debug("$TAG: filtered by ad")
-                            iter.remove()
-                            continue
-                        } else if (blockEcomEnabled && awemeObj.invokeMethod<Boolean?>(packageInstance.aweme.isEcomAweme()) == true) {
-                            // NOTE: this filter logic has not been rigorously verified
-                            YLog.debug("$TAG: filtered by ecom aweme")
-                            iter.remove()
-                            continue
-                        } else if (blockGrouponLargeCardEnabled && awemeObj.getField<Any?>(
-                                packageInstance.aweme.grouponLargeCard()
-                            ) != null
-                        ) {
-                            // NOTE: this filter logic has not been rigorously verified
-                            YLog.debug("$TAG: filtered by groupon large card")
-                            iter.remove()
-                            continue
-                        } else if (blockLiveEnabled && awemeObj.invokeMethod<Boolean?>(packageInstance.aweme.isLive()) == true) {
-                            // NOTE: this filter logic has not been rigorously verified
-                            YLog.debug("$TAG: filtered by live")
-                            iter.remove()
-                            continue
-                        } else if (blockMultiImageEnabled &&
-                            awemeObj.invokeMethod<Boolean?>(packageInstance.aweme.isMultiImage()) == true
-                        ) {
-                            // NOTE: this filter logic has not been rigorously verified
-                            YLog.debug("$TAG: filtered by multi image")
-                            iter.remove()
-                            continue
-                        } else if (run {
-                                if (hideShortDurationLimit > hideLongDurationLimit) {
-                                    return@run false
-                                }
-
-                                if (awemeObj.invokeMethod<Boolean?>(
-                                        packageInstance.aweme.isNormalVideo()
-                                    ) == false
-                                ) {
-                                    return@run false
-                                }
-
-                                val duration = awemeObj.getField<Int?>(
-                                    packageInstance.aweme.duration()
-                                ) ?: return@run false
-
-                                return@run duration != 0 && (duration !in hideShortDurationLimit..hideLongDurationLimit)
+                    if (blockAdEnabled && awemeObj.invokeMethod<Boolean?>(packageInstance.aweme.getAd()) == true) {
+                        YLog.debug("$TAG: filtered by ad")
+                        iter.remove()
+                        continue
+                    } else if (blockEcomEnabled && awemeObj.invokeMethod<Boolean?>(packageInstance.aweme.isEcomAweme()) == true) {
+                        // NOTE: this filter logic has not been rigorously verified
+                        YLog.debug("$TAG: filtered by ecom aweme")
+                        iter.remove()
+                        continue
+                    } else if (blockGrouponLargeCardEnabled && awemeObj.getField<Any?>(
+                            packageInstance.aweme.grouponLargeCard()
+                        ) != null
+                    ) {
+                        // NOTE: this filter logic has not been rigorously verified
+                        YLog.debug("$TAG: filtered by groupon large card")
+                        iter.remove()
+                        continue
+                    } else if (blockLiveEnabled && awemeObj.invokeMethod<Boolean?>(packageInstance.aweme.isLive()) == true) {
+                        // NOTE: this filter logic has not been rigorously verified
+                        YLog.debug("$TAG: filtered by live")
+                        iter.remove()
+                        continue
+                    } else if (blockMultiImageEnabled &&
+                        awemeObj.invokeMethod<Boolean?>(packageInstance.aweme.isMultiImage()) == true
+                    ) {
+                        // NOTE: this filter logic has not been rigorously verified
+                        YLog.debug("$TAG: filtered by multi image")
+                        iter.remove()
+                        continue
+                    } else if (run {
+                            if (hideShortDurationLimit > hideLongDurationLimit) {
+                                return@run false
                             }
-                        ) {
-                            YLog.debug("$TAG: filtered by duration")
-                            iter.remove()
-                            continue
-                        } else if (isContainsBlockKwd(awemeObj)) {
-                            iter.remove()
-                            continue
+
+                            if (awemeObj.invokeMethod<Boolean?>(
+                                    packageInstance.aweme.isNormalVideo()
+                                ) == false
+                            ) {
+                                return@run false
+                            }
+
+                            val duration = awemeObj.getField<Int?>(
+                                packageInstance.aweme.duration()
+                            ) ?: return@run false
+
+                            return@run duration != 0 && (duration !in hideShortDurationLimit..hideLongDurationLimit)
                         }
+                    ) {
+                        YLog.debug("$TAG: filtered by duration")
+                        iter.remove()
+                        continue
+                    } else if (isContainsBlockKwd(awemeObj)) {
+                        iter.remove()
+                        continue
                     }
                 }
-            }?.result {
-                onConductFailure { param, throwable ->
-                    YLog.error("$TAG: Feed hook runtime error", throwable)
-                }
-                onHookingFailure { throwable ->
-                    YLog.error("$TAG: Failed to hook feed method", throwable)
-                }
-                onHooked {
-                    YLog.info("$TAG: Feed hook installed")
-                }
+            }
+        }?.result {
+            onConductFailure { param, throwable ->
+                YLog.error("$TAG: Feed hook runtime error", throwable)
+            }
+            onHookingFailure { throwable ->
+                YLog.error("$TAG: Failed to hook feed method", throwable)
+            }
+            onHooked {
+                YLog.info("$TAG: Feed hook installed")
             }
         }
     }

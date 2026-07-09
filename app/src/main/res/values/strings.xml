@@ -21,7 +21,6 @@
     <string name="pref_comment_audio_summary">Save to Music/douyin/audio directory</string>
 
     <string name="recommended_feed_filter_dialog_title">Recommended Feed Filter</string>
-    <string name="pref_recommend_feed_filter">✦ Recommended Feed Filter</string>
     <string name="recommended_feed_filter_main_switch_title">Main switch</string>
     <string name="recommended_feed_filter_main_switch_summary">Turn on to use recommended feed filtering features</string>
 

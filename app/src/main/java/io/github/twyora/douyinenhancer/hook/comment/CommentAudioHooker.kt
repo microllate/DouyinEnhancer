@@ -1,4 +1,4 @@
-package io.github.twyora.douyinenhancer.hook
+package io.github.twyora.douyinenhancer.hook.comment
 
 import android.content.Context
 import android.net.Uri
@@ -7,16 +7,19 @@ import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.log.YLog
 import io.github.twyora.douyinenhancer.config.FastKVConfigManager
 import io.github.twyora.douyinenhancer.config.key.SaveKey
-import io.github.twyora.douyinenhancer.hook.utils.FileTypeDetector
-import io.github.twyora.douyinenhancer.hook.utils.HookTransaction
-import io.github.twyora.douyinenhancer.hook.utils.getField
-import io.github.twyora.douyinenhancer.hook.utils.invokeMethod
-import io.github.twyora.douyinenhancer.hook.utils.invokeStaticMethod
-import io.github.twyora.douyinenhancer.hook.utils.resolveMethod
-import io.github.twyora.douyinenhancer.hook.utils.setField
+import io.github.twyora.douyinenhancer.hook.DouyinPackage
+import io.github.twyora.douyinenhancer.hook.HookOnMainProcess
+import io.github.twyora.douyinenhancer.utils.FileTypeDetector
+import io.github.twyora.douyinenhancer.utils.HookTransaction
+import io.github.twyora.douyinenhancer.utils.getField
+import io.github.twyora.douyinenhancer.utils.invokeMethod
+import io.github.twyora.douyinenhancer.utils.invokeStaticMethod
+import io.github.twyora.douyinenhancer.utils.resolveMethod
+import io.github.twyora.douyinenhancer.utils.setField
 import java.io.FileInputStream
 import org.json.JSONObject
 
+@HookOnMainProcess
 object CommentAudioHooker : YukiBaseHooker() {
     private val TAG = this::class.simpleName
 
@@ -25,24 +28,22 @@ object CommentAudioHooker : YukiBaseHooker() {
             return
         }
 
-        withProcess(name = mainProcessName) {
-            val transaction = HookTransaction(TAG)
+        val transaction = HookTransaction(TAG)
 
-            transaction.add(::installForceSaveImageVisibleHook.name) {
-                installForceSaveImageVisibleHook()
-            }
-            transaction.add(::installAddSaveImageToWhiteListHook.name) {
-                installAddSaveImageToWhiteListHook()
-            }
-            transaction.add(::installInjectAudioUrlOnSaveClickHook.name) {
-                installInjectAudioUrlOnSaveClickHook()
-            }
-            transaction.add(::installSaveDownloadedAudioHook.name) {
-                installSaveDownloadedAudioHook()
-            }
-
-            transaction.commit()
+        transaction.add(::installForceSaveImageVisibleHook.name) {
+            installForceSaveImageVisibleHook()
         }
+        transaction.add(::installAddSaveImageToWhiteListHook.name) {
+            installAddSaveImageToWhiteListHook()
+        }
+        transaction.add(::installInjectAudioUrlOnSaveClickHook.name) {
+            installInjectAudioUrlOnSaveClickHook()
+        }
+        transaction.add(::installSaveDownloadedAudioHook.name) {
+            installSaveDownloadedAudioHook()
+        }
+
+        transaction.commit()
     }
 
     private fun installForceSaveImageVisibleHook(): YukiMemberHookCreator.MemberHookCreator.Result? {

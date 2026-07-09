@@ -23,43 +23,30 @@ object HookEntry : IYukiHookXposedInit {
     }
 
     override fun onHook() = encase {
-        try {
-            System.loadLibrary("dexkit")
-        } catch (e: Throwable) {
-            YLog.error("Failed to load DexKit native library: ${e.message}")
-        }
-
-        // Load cached HookInfo and run hooks when app context is available
-        withProcess(mainProcessName) {
-            Instrumentation::class
-                .resolve()
-                .firstMethod {
+        loadApp(name = "com.ss.android.ugc.aweme") {
+            withProcess(mainProcessName) {
+                Instrumentation::class.resolve().firstMethod {
                     name = "callApplicationOnCreate"
                     parameters(Application::class)
                 }.hook {
                     before {
                         val context = args[0] as? Context ?: return@before
 
-                        // Hook main process only; skip plugin sub-processes and cases
-                        // where processName resolves to "android" unexpectedly (root cause unknown)
-                        if ((appInfo.sourceDir != context.applicationInfo.sourceDir) ||
-                            processName != context.packageName
-                        ) {
+                        // hook main process only; skip plugin sub-processes
+                        if (appInfo.sourceDir != context.applicationInfo.sourceDir) {
                             return@before
                         }
 
+                        // load cached HookInfo and run hooks when app context is available
                         DouyinPackage(appClassLoader!!, context)
                         FastKVConfigManager.init(context)
 
-                        loadApp(hooker = SettingsHooker)
-                        loadApp(hooker = CommentImageHooker)
-                        loadApp(hooker = CommentEmojiHooker)
-                        loadApp(hooker = CommentAudioHooker)
-                        loadApp(hooker = FeedVideoHooker)
-                        loadApp(hooker = FeedMultiImageHooker)
-                        loadApp(hooker = RecommendedFeedHooker)
+                        HookerRegistry.mainProcessHookers.forEach {
+                            loadHooker(it)
+                        }
                     }
                 }
+            }
         }
     }
 }

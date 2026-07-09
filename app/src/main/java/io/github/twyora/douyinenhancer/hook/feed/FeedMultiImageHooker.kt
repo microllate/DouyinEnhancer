@@ -1,21 +1,22 @@
-package io.github.twyora.douyinenhancer.hook
+package io.github.twyora.douyinenhancer.hook.feed
 
 import com.highcapable.yukihookapi.hook.core.YukiMemberHookCreator
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.log.YLog
-import io.github.twyora.douyinenhancer.hook.utils.getField
-import io.github.twyora.douyinenhancer.hook.utils.invokeMethod
-import io.github.twyora.douyinenhancer.hook.utils.resolveMethod
-import io.github.twyora.douyinenhancer.hook.utils.setField
+import io.github.twyora.douyinenhancer.hook.DouyinPackage
+import io.github.twyora.douyinenhancer.hook.HookOnMainProcess
+import io.github.twyora.douyinenhancer.utils.getField
+import io.github.twyora.douyinenhancer.utils.invokeMethod
+import io.github.twyora.douyinenhancer.utils.resolveMethod
+import io.github.twyora.douyinenhancer.utils.setField
 
+@HookOnMainProcess
 object FeedMultiImageHooker : YukiBaseHooker() {
     private val TAG = this::class.simpleName
 
     override fun onHook() {
-        withProcess(name = mainProcessName) {
-            installInjectPlayUrlIntoImageDownloadHook()
-            installDisableSaveImageToVideoLocalWaterMaskHook()
-        }
+        installInjectPlayUrlIntoImageDownloadHook()
+        installDisableSaveImageToVideoLocalWaterMaskHook()
     }
 
     private fun installInjectPlayUrlIntoImageDownloadHook(): YukiMemberHookCreator.MemberHookCreator.Result? {
