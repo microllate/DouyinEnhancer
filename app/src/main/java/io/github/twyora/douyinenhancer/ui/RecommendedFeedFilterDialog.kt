@@ -30,14 +30,21 @@ class RecommendedFeedFilterDialog(context: Context) : AlertDialog.Builder(contex
             recommendedFeedFilterDialogBinding.groupBlockAd.visibility = View.VISIBLE
             recommendedFeedFilterDialogBinding.groupBlockEcomAweme.visibility = View.VISIBLE
             recommendedFeedFilterDialogBinding.groupBlockGrouponLargeCard.visibility = View.VISIBLE
+            recommendedFeedFilterDialogBinding.groupBlockLive.visibility = View.VISIBLE
+            recommendedFeedFilterDialogBinding.groupBlockMultiImage.visibility = View.VISIBLE
         }
 
         // restore state
+        recommendedFeedFilterDialogBinding.switchMainSwitch.isChecked = prefs.getBoolean(RecommendedFeedFilterKey.MAIN_SWITCH, false)
         recommendedFeedFilterDialogBinding.switchBlockAd.isChecked = prefs.getBoolean(RecommendedFeedFilterKey.BLOCK_AD, false)
         recommendedFeedFilterDialogBinding.switchBlockEcomAweme.isChecked =
             prefs.getBoolean(RecommendedFeedFilterKey.BLOCK_ECOM, false)
         recommendedFeedFilterDialogBinding.switchBlockGrouponLargeCard.isChecked =
             prefs.getBoolean(RecommendedFeedFilterKey.BLOCK_GROUPON, false)
+        recommendedFeedFilterDialogBinding.switchBlockLive.isChecked =
+            prefs.getBoolean(RecommendedFeedFilterKey.BLOCK_LIVE, false)
+        recommendedFeedFilterDialogBinding.switchBlockMultiImage.isChecked =
+            prefs.getBoolean(RecommendedFeedFilterKey.BLOCK_MULTI_IMAGE, false)
         prefs.getInt(RecommendedFeedFilterKey.SHORT_DURATION_LIMIT, 0).let {
             recommendedFeedFilterDialogBinding.editShortDuration.setText(it.toString())
         }
@@ -88,11 +95,21 @@ class RecommendedFeedFilterDialog(context: Context) : AlertDialog.Builder(contex
         setTitle(context.getString(R.string.recommended_feed_filter_dialog_title))
         setNegativeButton(android.R.string.cancel, null)
         setPositiveButton(android.R.string.ok) { _, _ ->
-            val blockAd = recommendedFeedFilterDialogBinding.switchBlockAd.isChecked && showBlockGroups
-            val blockEcomAweme = recommendedFeedFilterDialogBinding.switchBlockEcomAweme.isChecked && showBlockGroups
-            val blockGrouponLargeCard = recommendedFeedFilterDialogBinding.switchBlockGrouponLargeCard.isChecked && showBlockGroups
+            val mainSwitch = recommendedFeedFilterDialogBinding.switchMainSwitch.isChecked
+            val blockAd = recommendedFeedFilterDialogBinding.switchBlockAd.isChecked
+            val blockEcomAweme = recommendedFeedFilterDialogBinding.switchBlockEcomAweme.isChecked
+            val blockGrouponLargeCard = recommendedFeedFilterDialogBinding.switchBlockGrouponLargeCard.isChecked
+            val blockLive = recommendedFeedFilterDialogBinding.switchBlockLive.isChecked
+            val blockMultiImage = recommendedFeedFilterDialogBinding.switchBlockMultiImage.isChecked
+
             val hideShortDurationLimit = recommendedFeedFilterDialogBinding.editShortDuration.text.toString().toIntOrNull() ?: 0
             val hideLongDurationLimit = recommendedFeedFilterDialogBinding.editLongDuration.text.toString().toIntOrNull() ?: Int.MAX_VALUE
+            if (hideShortDurationLimit > hideLongDurationLimit) {
+                (context as? Activity)?.runOnUiThread {
+                    Toast.makeText(context, context.getString(R.string.save_failed_short_duration_exceeds_long), Toast.LENGTH_SHORT).show()
+                }
+                return@setPositiveButton
+            }
 
             val titleRegexMode = recommendedFeedFilterDialogBinding.switchTitleRegex.isChecked
             val titleKeywords = recommendedFeedFilterDialogBinding.groupAwemeTitle.children.map {
@@ -143,9 +160,12 @@ class RecommendedFeedFilterDialog(context: Context) : AlertDialog.Builder(contex
             }
 
             prefs.edit(commit = true) {
+                putBoolean(RecommendedFeedFilterKey.MAIN_SWITCH, mainSwitch)
                 putBoolean(RecommendedFeedFilterKey.BLOCK_AD, blockAd)
                 putBoolean(RecommendedFeedFilterKey.BLOCK_ECOM, blockEcomAweme)
                 putBoolean(RecommendedFeedFilterKey.BLOCK_GROUPON, blockGrouponLargeCard)
+                putBoolean(RecommendedFeedFilterKey.BLOCK_LIVE, blockLive)
+                putBoolean(RecommendedFeedFilterKey.BLOCK_MULTI_IMAGE, blockMultiImage)
                 putInt(RecommendedFeedFilterKey.SHORT_DURATION_LIMIT, hideShortDurationLimit)
                 putInt(RecommendedFeedFilterKey.LONG_DURATION_LIMIT, hideLongDurationLimit)
                 putBoolean(RecommendedFeedFilterKey.TITLE_REGEX_MODE, titleRegexMode)

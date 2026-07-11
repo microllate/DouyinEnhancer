@@ -1,11 +1,14 @@
-package io.github.twyora.douyinenhancer.hook.utils
+package io.github.twyora.douyinenhancer.utils
 
 import com.highcapable.kavaref.KavaRef.Companion.asResolver
 import com.highcapable.kavaref.KavaRef.Companion.resolve
 import com.highcapable.kavaref.resolver.FieldResolver
 import com.highcapable.kavaref.resolver.MethodResolver
 import com.highcapable.yukihookapi.hook.log.YLog
-import io.github.twyora.douyinenhancer.hook.DouyinPackage
+
+data class Field(val name: String?)
+
+data class Method(val name: String?, val parameters: List<String>?)
 
 /**
  * Resolves a type name string into a format directly recognizable by reflection systems like KavaRef.
@@ -50,7 +53,7 @@ fun List<String>.toClassIfPrimitiveElseString(): Array<Any> = Array(size) {
     this[it].toClassIfPrimitiveElseString()
 }
 
-fun Any.resolveMethod(method: DouyinPackage.Method): MethodResolver<*>? {
+fun Any.resolveMethod(method: Method): MethodResolver<*>? {
     if (method.name.isNullOrBlank()) {
         YLog.error("Cannot determine which method to resolve on ${this::class.simpleName}, name is null or blank")
         return null
@@ -73,7 +76,7 @@ fun Any.resolveMethod(method: DouyinPackage.Method): MethodResolver<*>? {
         }
 }
 
-fun Any.resolveField(field: DouyinPackage.Field): FieldResolver<*>? {
+fun Any.resolveField(field: Field): FieldResolver<*>? {
     if (field.name.isNullOrBlank()) {
         YLog.error("Cannot determine which field to resolve on ${this::class.simpleName}, name is null or blank")
         return null
@@ -93,7 +96,7 @@ fun Any.resolveField(field: DouyinPackage.Field): FieldResolver<*>? {
         }
 }
 
-fun Class<*>.resolveMethod(method: DouyinPackage.Method): MethodResolver<*>? {
+fun Class<*>.resolveMethod(method: Method): MethodResolver<*>? {
     if (method.name.isNullOrBlank()) {
         YLog.error("Cannot determine which method to resolve on ${this.simpleName}, name is null or blank")
         return null
@@ -116,7 +119,7 @@ fun Class<*>.resolveMethod(method: DouyinPackage.Method): MethodResolver<*>? {
         }
 }
 
-fun Class<*>.resolveField(field: DouyinPackage.Field): FieldResolver<*>? {
+fun Class<*>.resolveField(field: Field): FieldResolver<*>? {
     if (field.name.isNullOrBlank()) {
         YLog.error("Cannot determine which field to resolve on ${this.simpleName}, name is null or blank")
         return null
@@ -136,20 +139,18 @@ fun Class<*>.resolveField(field: DouyinPackage.Field): FieldResolver<*>? {
         }
 }
 
-inline fun <reified T> Any.invokeMethod(method: DouyinPackage.Method, vararg args: Any?): T? =
-    this.resolveMethod(method)?.invoke(*args) as? T
+inline fun <reified T> Any.invokeMethod(method: Method, vararg args: Any?): T? = this.resolveMethod(method)?.invoke(*args) as? T
 
-inline fun <reified T> Class<*>.invokeStaticMethod(method: DouyinPackage.Method, vararg args: Any?): T? =
-    this.resolveMethod(method)?.invoke(*args) as? T
+inline fun <reified T> Class<*>.invokeStaticMethod(method: Method, vararg args: Any?): T? = this.resolveMethod(method)?.invoke(*args) as? T
 
-inline fun <reified T> Any.getField(field: DouyinPackage.Field): T? = this.resolveField(field)?.get() as? T
+inline fun <reified T> Any.getField(field: Field): T? = this.resolveField(field)?.get() as? T
 
-fun <T> Any.setField(field: DouyinPackage.Field, value: T?) {
+fun <T> Any.setField(field: Field, value: T?) {
     this.resolveField(field)?.set(value)
 }
 
-inline fun <reified T> Class<*>.getStaticField(field: DouyinPackage.Field): T? = this.resolveField(field)?.get() as? T
+inline fun <reified T> Class<*>.getStaticField(field: Field): T? = this.resolveField(field)?.get() as? T
 
-fun <T> Class<*>.setStaticField(field: DouyinPackage.Field, value: T?) {
+fun <T> Class<*>.setStaticField(field: Field, value: T?) {
     this.resolveField(field)?.set(value)
 }

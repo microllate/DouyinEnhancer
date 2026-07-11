@@ -13,12 +13,12 @@ import android.widget.Toast
 import androidx.core.content.edit
 import com.highcapable.yukihookapi.hook.factory.injectModuleAppResources
 import com.highcapable.yukihookapi.hook.log.YLog
+import io.github.twyora.douyinenhancer.BuildConfig
 import io.github.twyora.douyinenhancer.R
 import io.github.twyora.douyinenhancer.config.FastKVConfigManager
 import io.github.twyora.douyinenhancer.config.key.MiscKey
-import io.github.twyora.douyinenhancer.generated.AppProperties
-import io.github.twyora.douyinenhancer.hook.DouyinPackage
-import io.github.twyora.douyinenhancer.hook.utils.setField
+import io.github.twyora.douyinenhancer.utils.Field
+import io.github.twyora.douyinenhancer.utils.setField
 import kotlin.system.exitProcess
 
 /**
@@ -38,8 +38,8 @@ class SettingsDialog(context: Context) : AlertDialog.Builder(context) {
 
             val prefs = FastKVConfigManager.settings
 
-            preferenceManager.setField<Any?>(DouyinPackage.Field("mSharedPreferences"), prefs)
-            preferenceManager.setField<Any?>(DouyinPackage.Field("mEditor"), null)
+            preferenceManager.setField<Any?>(Field("mSharedPreferences"), prefs)
+            preferenceManager.setField<Any?>(Field("mEditor"), null)
             addPreferencesFromResource(R.xml.prefs_setting)
 
             if (!prefs.getBoolean(MiscKey.ENABLE_HIDDEN_FEATURES, false)) {
@@ -54,7 +54,7 @@ class SettingsDialog(context: Context) : AlertDialog.Builder(context) {
                 }
             }
 
-            findPreference("version")?.summary = AppProperties.PROJECT_VERSION_NAME
+            findPreference("version")?.summary = BuildConfig.VERSION_NAME
             findPreference("version")?.onPreferenceClickListener = this
             findPreference("recommend_feed_filter")?.onPreferenceClickListener = this
         }
@@ -69,7 +69,7 @@ class SettingsDialog(context: Context) : AlertDialog.Builder(context) {
             "version" -> {
                 val prefs = FastKVConfigManager.settings
                 if (!prefs.getBoolean(MiscKey.ENABLE_HIDDEN_FEATURES, false)) {
-                    if (++hiddenFeatureClickCount == 10) {
+                    if (++hiddenFeatureClickCount == 20) {
                         prefs.edit(commit = true) {
                             putBoolean(MiscKey.ENABLE_HIDDEN_FEATURES, true)
                         }
@@ -80,11 +80,11 @@ class SettingsDialog(context: Context) : AlertDialog.Builder(context) {
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
-                    } else if (hiddenFeatureClickCount >= 6) {
+                    } else if (hiddenFeatureClickCount >= 17) {
                         activity.runOnUiThread {
                             Toast.makeText(
                                 context,
-                                context.getString(R.string.pref_misc_enable_hidden_features_steps_remaining, 10 - hiddenFeatureClickCount),
+                                context.getString(R.string.pref_misc_enable_hidden_features_steps_remaining, 20 - hiddenFeatureClickCount),
                                 Toast.LENGTH_SHORT
                             ).show()
                         }

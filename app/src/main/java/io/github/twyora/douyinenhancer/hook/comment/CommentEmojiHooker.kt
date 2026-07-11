@@ -1,10 +1,11 @@
-package io.github.twyora.douyinenhancer.hook
+package io.github.twyora.douyinenhancer.hook.comment
 
 import android.content.Context
 import android.graphics.Bitmap
 import android.media.MediaExtractor
 import android.media.MediaFormat
 import android.media.MediaMetadataRetriever
+import android.net.Uri
 import android.os.Build
 import android.webkit.MimeTypeMap
 import com.highcapable.kavaref.KavaRef.Companion.asResolver
@@ -14,14 +15,16 @@ import com.highcapable.yukihookapi.hook.log.YLog
 import com.shakster.gifkt.GifEncoder
 import io.github.twyora.douyinenhancer.config.FastKVConfigManager
 import io.github.twyora.douyinenhancer.config.key.SaveKey
-import io.github.twyora.douyinenhancer.hook.utils.FileTypeDetector
-import io.github.twyora.douyinenhancer.hook.utils.HookTransaction
-import io.github.twyora.douyinenhancer.hook.utils.getField
-import io.github.twyora.douyinenhancer.hook.utils.getStaticField
-import io.github.twyora.douyinenhancer.hook.utils.invokeMethod
-import io.github.twyora.douyinenhancer.hook.utils.invokeStaticMethod
-import io.github.twyora.douyinenhancer.hook.utils.resolveMethod
-import io.github.twyora.douyinenhancer.hook.utils.setField
+import io.github.twyora.douyinenhancer.hook.DouyinPackage
+import io.github.twyora.douyinenhancer.hook.HookOnMainProcess
+import io.github.twyora.douyinenhancer.utils.FileTypeDetector
+import io.github.twyora.douyinenhancer.utils.HookTransaction
+import io.github.twyora.douyinenhancer.utils.getField
+import io.github.twyora.douyinenhancer.utils.getStaticField
+import io.github.twyora.douyinenhancer.utils.invokeMethod
+import io.github.twyora.douyinenhancer.utils.invokeStaticMethod
+import io.github.twyora.douyinenhancer.utils.resolveMethod
+import io.github.twyora.douyinenhancer.utils.setField
 import java.io.File
 import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.io.Sink
@@ -29,6 +32,7 @@ import kotlinx.io.buffered
 import kotlinx.io.files.Path
 import kotlinx.io.files.SystemFileSystem
 
+@HookOnMainProcess
 object CommentEmojiHooker : YukiBaseHooker() {
     private val TAG = this::class.simpleName
 
@@ -37,33 +41,31 @@ object CommentEmojiHooker : YukiBaseHooker() {
             return
         }
 
-        withProcess(mainProcessName) {
-            val transaction = HookTransaction(TAG)
-            // Force "save to album" button visible for emoji comments.
-            transaction.add(::installSaveEmojiToAlbumButtonHook.name) {
-                installSaveEmojiToAlbumButtonHook()
-            }
-            // Before the save button's download callback fires, inject emoji URLs into
-            // comment.imageList[0].downloadUrl so the downloader picks them up.
-            // Without it: the downloader fetches nothing because imageList is empty.
-            transaction.add(::installClickSaveEmojiToAlbumButtonCallbackHook.name) {
-                installClickSaveEmojiToAlbumButtonCallbackHook()
-            }
-            // Intercept emoji download completion: detect real file type, convert video
-            // to GIF if needed, copy to album, show result toast, skip original handler
-            // — otherwise every downloaded emoji is saved as .png with MIME image/png.
-            transaction.add(::installEmojiDownloadedCallbackHook.name) {
-                installEmojiDownloadedCallbackHook()
-            }
-            // Fix MediaStore URI creation for converted GIF files: internal logic has a
-            // file-extension whitelist, so non-whitelisted extensions (e.g. gif) fail
-            // createUri and cannot be saved to external storage — this hook falls back
-            // to getImageUri manually and writes into output array.
-            transaction.add(::installCreateUriHook.name) {
-                installCreateUriHook()
-            }
-            transaction.commit()
+        val transaction = HookTransaction(TAG)
+        // Force "save to album" button visible for emoji comments.
+        transaction.add(::installSaveEmojiToAlbumButtonHook.name) {
+            installSaveEmojiToAlbumButtonHook()
         }
+        // Before the save button's download callback fires, inject emoji URLs into
+        // comment.imageList[0].downloadUrl so the downloader picks them up.
+        // Without it: the downloader fetches nothing because imageList is empty.
+        transaction.add(::installClickSaveEmojiToAlbumButtonCallbackHook.name) {
+            installClickSaveEmojiToAlbumButtonCallbackHook()
+        }
+        // Intercept emoji download completion: detect real file type, convert video
+        // to GIF if needed, copy to album, show result toast, skip original handler
+        // — otherwise every downloaded emoji is saved as .png with MIME image/png.
+        transaction.add(::installEmojiDownloadedCallbackHook.name) {
+            installEmojiDownloadedCallbackHook()
+        }
+        // Fix MediaStore URI creation for converted GIF files: internal logic has a
+        // file-extension whitelist, so non-whitelisted extensions (e.g. gif) fail
+        // createUri and cannot be saved to external storage — this hook falls back
+        // to getImageUri manually and writes into output array.
+        transaction.add(::installCreateUriHook.name) {
+            installCreateUriHook()
+        }
+        transaction.commit()
     }
 
     private fun installSaveEmojiToAlbumButtonHook(): YukiMemberHookCreator.MemberHookCreator.Result? {
@@ -181,8 +183,8 @@ object CommentEmojiHooker : YukiBaseHooker() {
 
         val packageInstance = DouyinPackage.instance
 
-        packageInstance.commentImageSaveHelper.selfClass
-            ?.resolveMethod(packageInstance.commentImageSaveHelper.onSuccessed())?.hook {
+        packageInstance.commentImageSaveDownloadListener.selfClass
+            ?.resolveMethod(packageInstance.commentImageSaveDownloadListener.onSuccessed())?.hook {
                 before {
                     val downloadInfo = args[0] ?: return@before
 
@@ -282,7 +284,7 @@ object CommentEmojiHooker : YukiBaseHooker() {
                             }?.get<Context?>()
 
                     instance.invokeMethod<Any?>(
-                        DouyinPackage.instance.commentImageSaveHelper.notifyResult(),
+                        DouyinPackage.instance.commentImageSaveDownloadListener.notifyResult(),
                         context,
                         cpRet
                     )
@@ -323,9 +325,9 @@ object CommentEmojiHooker : YukiBaseHooker() {
         packageInstance.ugFileUtils.selfClass
             ?.resolveMethod(packageInstance.ugFileUtils.createUri())?.hook {
                 after {
-                    val uriRet = result as? android.net.Uri
+                    val uriRet = result as? Uri
                     // original createUri succeeded — nothing to fix
-                    if (uriRet != null && uriRet != android.net.Uri.EMPTY) {
+                    if (uriRet != null && uriRet != Uri.EMPTY) {
                         return@after
                     }
 
@@ -362,7 +364,7 @@ object CommentEmojiHooker : YukiBaseHooker() {
 
                     val finalUri =
                         DouyinPackage.instance.ugFileUtils.selfClass
-                            ?.invokeStaticMethod<android.net.Uri>(
+                            ?.invokeStaticMethod<Uri>(
                                 DouyinPackage.instance.ugFileUtils.getImageUri(),
                                 context,
                                 fileName,
@@ -375,7 +377,7 @@ object CommentEmojiHooker : YukiBaseHooker() {
 
                     // also write into the caller's out-parameter array
                     @Suppress("UNCHECKED_CAST")
-                    val uriArr = args[2] as? Array<android.net.Uri> ?: return@after
+                    val uriArr = args[2] as? Array<Uri> ?: return@after
                     if (uriArr.isNotEmpty()) {
                         uriArr[0] = finalUri
                     }
