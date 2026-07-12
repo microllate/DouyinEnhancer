@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">抖柚</string>
+    <string name="app_description">为抖音添加一些优化体验的小功能</string>
     <string name="settings_dialog_title">抖柚</string>
     <string name="settings_dialog_back">返回</string>
     <string name="settings_dialog_confirm_and_restart">确定并重启客户端</string>
