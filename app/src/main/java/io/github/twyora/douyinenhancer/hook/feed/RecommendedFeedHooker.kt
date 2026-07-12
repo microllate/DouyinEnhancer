@@ -63,7 +63,6 @@ object RecommendedFeedHooker : YukiBaseHooker() {
     private val hideShareCountMax
         get() = FastKVConfigManager.settings.getInt(RecommendedFeedFilterKey.SHARE_COUNT_MAX, Int.MAX_VALUE)
 
-
     private val kwdFilterTitleRegexMode by lazy {
         FastKVConfigManager.settings.getBoolean(RecommendedFeedFilterKey.TITLE_REGEX_MODE, false)
     }
@@ -194,9 +193,9 @@ object RecommendedFeedHooker : YukiBaseHooker() {
         val packageInstance = DouyinPackage.instance
 
         val statsMinLEMax = hideCollectCountMin <= hideCollectCountMax ||
-                hideCommentCountMin <= hideCommentCountMax ||
-                hideDiggCountMin <= hideDiggCountMax ||
-                hideShareCountMin <= hideShareCountMax
+            hideCommentCountMin <= hideCommentCountMax ||
+            hideDiggCountMin <= hideDiggCountMax ||
+            hideShareCountMin <= hideShareCountMax
         if (!statsMinLEMax) {
             return false
         }
