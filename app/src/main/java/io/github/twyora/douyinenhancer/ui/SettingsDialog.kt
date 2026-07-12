@@ -3,8 +3,10 @@
 package io.github.twyora.douyinenhancer.ui
 
 import android.app.Activity
+import android.app.Activity.RESULT_CANCELED
 import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.preference.Preference
 import android.preference.PreferenceCategory
@@ -13,12 +15,25 @@ import android.widget.Toast
 import androidx.core.content.edit
 import com.highcapable.yukihookapi.hook.factory.injectModuleAppResources
 import com.highcapable.yukihookapi.hook.log.YLog
+import io.fastkv.FastKV
+import io.fastkv.interfaces.FastCipher
 import io.github.twyora.douyinenhancer.BuildConfig
 import io.github.twyora.douyinenhancer.R
 import io.github.twyora.douyinenhancer.config.FastKVConfigManager
 import io.github.twyora.douyinenhancer.config.key.MiscKey
 import io.github.twyora.douyinenhancer.utils.Field
 import io.github.twyora.douyinenhancer.utils.setField
+import java.io.File
+import java.security.DigestInputStream
+import java.security.DigestOutputStream
+import java.security.MessageDigest
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+import java.util.zip.ZipEntry
+import java.util.zip.ZipInputStream
+import java.util.zip.ZipOutputStream
+import kotlinx.io.IOException
 import kotlin.system.exitProcess
 
 /**
@@ -57,6 +72,8 @@ class SettingsDialog(context: Context) : AlertDialog.Builder(context) {
             findPreference("version")?.summary = BuildConfig.VERSION_NAME
             findPreference("version")?.onPreferenceClickListener = this
             findPreference("recommend_feed_filter")?.onPreferenceClickListener = this
+            findPreference("export_config")?.onPreferenceClickListener = this
+            findPreference("import_config")?.onPreferenceClickListener = this
         }
 
         @Deprecated("Deprecated in Java")
@@ -101,7 +118,177 @@ class SettingsDialog(context: Context) : AlertDialog.Builder(context) {
                 true
             }
 
+            "export_config" -> onExportConfigClick()
+
+            "import_config" -> onImportConfigClick()
+
             else -> false
+        }
+
+        @Deprecated("Deprecated in Java")
+        override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+            when (requestCode) {
+                EXPORT_CONFIG, IMPORT_CONFIG -> {
+                    val settingsKva = File(context.filesDir, "./fastkv/douyinenhancer_prefs.kva")
+                    val settingsKvb = File(context.filesDir, "./fastkv/douyinenhancer_prefs.kvb")
+                    val digest = MessageDigest.getInstance("SHA-256")
+
+                    val uri = data?.data
+                    if (resultCode == RESULT_CANCELED || uri == null) {
+                        return
+                    }
+
+                    when (requestCode) {
+                        EXPORT_CONFIG -> {
+                            runCatching {
+                                activity.contentResolver.openOutputStream(uri)?.use { outputStream ->
+                                    ZipOutputStream(outputStream).use { zipOut ->
+                                        listOf(
+                                            settingsKva, settingsKvb
+                                        ).filter {
+                                            it.exists()
+                                        }.forEach { file ->
+                                            zipOut.putNextEntry(ZipEntry(file.name))
+                                            DigestInputStream(file.inputStream(), digest).use { input ->
+                                                input.copyTo(zipOut)
+                                            }
+                                            zipOut.closeEntry()
+                                        }
+                                        zipOut.putNextEntry(ZipEntry("checksum"))
+                                        zipOut.write(digest.digest().joinToString("") {
+                                            "%02x".format(it)
+                                        }.toByteArray())
+                                        zipOut.closeEntry()
+                                    }
+                                }
+                            }.onFailure {
+                                activity.runOnUiThread {
+                                    Toast.makeText(
+                                        context,
+                                        context.getString(R.string.config_export_failed, it.message),
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                                YLog.error("$TAG: Export config failed", it)
+                            }.onSuccess {
+                                activity.runOnUiThread {
+                                    Toast.makeText(context, R.string.config_export_success, Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        }
+
+                        IMPORT_CONFIG -> {
+                            val tempBaseName = "douyinenhancer_prefs_temp"
+                            val settingsKvaTemp = File(context.cacheDir, "$tempBaseName.kva")
+                            val settingsKvbTemp = File(context.cacheDir, "$tempBaseName.kvb")
+                            runCatching {
+                                var checksum: String? = null
+
+                                activity.contentResolver.openInputStream(uri)?.use { inputStream ->
+                                    ZipInputStream(inputStream).use { zipIn ->
+                                        generateSequence {
+                                            zipIn.nextEntry
+                                        }.forEach { zipEntry ->
+                                            when (val fileName = zipEntry.name) {
+                                                "checksum" -> {
+                                                    val checksumBytes = ByteArray(1024)
+                                                    val readCount = zipIn.read(checksumBytes)
+                                                    checksum = String(checksumBytes, 0, readCount)
+                                                }
+
+                                                else -> {
+                                                    val targetFile = when (fileName) {
+                                                        settingsKva.name -> settingsKvaTemp
+                                                        settingsKvb.name -> settingsKvbTemp
+                                                        else -> null
+                                                    }
+                                                    targetFile?.outputStream()?.let {
+                                                        DigestOutputStream(it, digest).use { out ->
+                                                            zipIn.copyTo(out)
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            zipIn.closeEntry()
+                                        }
+                                    }
+                                }
+
+                                val expectedChecksum = digest.digest().joinToString("") {
+                                    "%02x".format(it)
+                                }
+                                if (checksum != expectedChecksum) {
+                                    throw IOException(context.getString(R.string.config_import_corrupted))
+                                }
+
+                                val settingsPref = FastKVConfigManager.settings
+                                val hiddenFeatureEnabled = settingsPref.getBoolean(MiscKey.ENABLE_HIDDEN_FEATURES, false)
+                                val importedSettings = FastKV.Builder(context.cacheDir.absolutePath, tempBaseName).build()
+                                try {
+                                    (settingsPref as FastKV).putAll(
+                                        importedSettings.all
+                                    )
+                                    settingsPref.putBoolean(MiscKey.ENABLE_HIDDEN_FEATURES, hiddenFeatureEnabled)
+                                } finally {
+                                    importedSettings.close()
+                                }
+                            }.onFailure {
+                                activity.runOnUiThread {
+                                    Toast.makeText(
+                                        context,
+                                        context.getString(R.string.config_import_failed, it.message),
+                                        Toast.LENGTH_SHORT
+                                    ).show()
+                                }
+                                YLog.error("$TAG: Import config failed", it)
+                            }.onSuccess {
+                                activity.runOnUiThread {
+                                    Toast.makeText(context, R.string.config_import_success, Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                            settingsKvaTemp.delete()
+                            settingsKvbTemp.delete()
+                        }
+                    }
+                }
+
+                else -> {}
+            }
+        }
+
+        private fun onExportConfigClick(): Boolean {
+            val intent = Intent(Intent.ACTION_CREATE_DOCUMENT)
+            intent.type = "application/zip"
+            intent.putExtra(
+                Intent.EXTRA_TITLE, "douyinenhancer_backup_${
+                    SimpleDateFormat("yyMMdd-HHmmss", Locale.getDefault()).format(Date())
+                }.zip"
+            )
+            intent.addCategory(Intent.CATEGORY_OPENABLE)
+            runCatching {
+                startActivityForResult(Intent.createChooser(intent, context.getString(R.string.config_export_chooser)), EXPORT_CONFIG)
+            }.onFailure {
+                activity.runOnUiThread {
+                    Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            return true
+        }
+
+        private fun onImportConfigClick(): Boolean {
+            val intent = Intent(Intent.ACTION_GET_CONTENT)
+            intent.type = "application/zip"
+            intent.addCategory(Intent.CATEGORY_OPENABLE)
+            runCatching {
+                startActivityForResult(Intent.createChooser(intent, context.getString(R.string.config_import_chooser)), IMPORT_CONFIG)
+            }.onFailure {
+                activity.runOnUiThread {
+                    Toast.makeText(context, it.message, Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            return true
         }
     }
 
@@ -129,6 +316,9 @@ class SettingsDialog(context: Context) : AlertDialog.Builder(context) {
 
     companion object {
         private val TAG = this::class.simpleName
+
+        private const val EXPORT_CONFIG = 0
+        private const val IMPORT_CONFIG = 1
 
         fun show(context: Context) {
             runCatching {

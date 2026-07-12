@@ -67,6 +67,14 @@
     <string name="pref_backup_export_title">Export Config</string>
     <string name="pref_backup_import_title">Import Config</string>
 
+    <string name="config_export_success">Export successful</string>
+    <string name="config_export_failed">Export failed, %1$s</string>
+    <string name="config_import_success">Import successful. Some configs will take effect after restart</string>
+    <string name="config_import_failed">Import failed, %1$s</string>
+    <string name="config_import_corrupted">Configuration is corrupted</string>
+    <string name="config_export_chooser">Save configuration</string>
+    <string name="config_import_chooser">Select configuration</string>
+
     <string name="pref_category_about">About</string>
     <string name="pref_about_version_title">Version</string>
     <string name="pref_about_version_summary">0.0.1</string>
