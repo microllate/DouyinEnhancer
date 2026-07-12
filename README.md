@@ -32,6 +32,7 @@ A small Xposed module that adds quality-of-life features to Douyin
 - [x] Save audio comments from comment section
 - Remove copyright restriction of Douyin Audio Mode
 - [x] Backup and restore module settings
+- Add dark mode support for module settings page
 
 ## Usage
 
