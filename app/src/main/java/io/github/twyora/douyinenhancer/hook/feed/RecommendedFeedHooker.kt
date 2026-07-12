@@ -169,7 +169,7 @@ object RecommendedFeedHooker : YukiBaseHooker() {
                         iter.remove()
                         continue
                     } else if (shouldFilterByInteractionStats(awemeObj)) {
-                        //iter.remove()
+                        iter.remove()
                         continue
                     } else if (shouldFilterByKeyword(awemeObj)) {
                         iter.remove()
