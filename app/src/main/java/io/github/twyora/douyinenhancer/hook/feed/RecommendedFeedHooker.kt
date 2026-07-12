@@ -33,37 +33,36 @@ object RecommendedFeedHooker : YukiBaseHooker() {
     private val blockMultiImageEnabled
         get() = FastKVConfigManager.settings.getBoolean(RecommendedFeedFilterKey.BLOCK_MULTI_IMAGE, false) && hiddenFeaturesEnabled
 
-    private val hideShortDurationLimit by lazy {
-        FastKVConfigManager.settings.getInt(RecommendedFeedFilterKey.SHORT_DURATION_LIMIT, 0)
-    }
-    private val hideLongDurationLimit by lazy {
-        FastKVConfigManager.settings.getInt(RecommendedFeedFilterKey.LONG_DURATION_LIMIT, Int.MAX_VALUE)
-    }
+    private val hideShortDurationLimit
+        get() = FastKVConfigManager.settings.getInt(RecommendedFeedFilterKey.SHORT_DURATION_LIMIT, 0)
 
-    private val hideCollectCountMin by lazy {
-        FastKVConfigManager.settings.getInt(RecommendedFeedFilterKey.COLLECT_COUNT_MIN, 0)
-    }
-    private val hideCollectCountMax by lazy {
-        FastKVConfigManager.settings.getInt(RecommendedFeedFilterKey.COLLECT_COUNT_MAX, Int.MAX_VALUE)
-    }
-    private val hideCommentCountMin by lazy {
-        FastKVConfigManager.settings.getInt(RecommendedFeedFilterKey.COMMENT_COUNT_MIN, 0)
-    }
-    private val hideCommentCountMax by lazy {
-        FastKVConfigManager.settings.getInt(RecommendedFeedFilterKey.COMMENT_COUNT_MAX, Int.MAX_VALUE)
-    }
-    private val hideDiggCountMin by lazy {
-        FastKVConfigManager.settings.getInt(RecommendedFeedFilterKey.DIGG_COUNT_MIN, 0)
-    }
-    private val hideDiggCountMax by lazy {
-        FastKVConfigManager.settings.getInt(RecommendedFeedFilterKey.DIGG_COUNT_MAX, Int.MAX_VALUE)
-    }
-    private val hideShareCountMin by lazy {
-        FastKVConfigManager.settings.getInt(RecommendedFeedFilterKey.SHARE_COUNT_MIN, 0)
-    }
-    private val hideShareCountMax by lazy {
-        FastKVConfigManager.settings.getInt(RecommendedFeedFilterKey.SHARE_COUNT_MAX, Int.MAX_VALUE)
-    }
+    private val hideLongDurationLimit
+        get() = FastKVConfigManager.settings.getInt(RecommendedFeedFilterKey.LONG_DURATION_LIMIT, Int.MAX_VALUE)
+
+    private val hideCollectCountMin
+        get() = FastKVConfigManager.settings.getInt(RecommendedFeedFilterKey.COLLECT_COUNT_MIN, 0)
+
+    private val hideCollectCountMax
+        get() = FastKVConfigManager.settings.getInt(RecommendedFeedFilterKey.COLLECT_COUNT_MAX, Int.MAX_VALUE)
+
+    private val hideCommentCountMin
+        get() = FastKVConfigManager.settings.getInt(RecommendedFeedFilterKey.COMMENT_COUNT_MIN, 0)
+
+    private val hideCommentCountMax
+        get() = FastKVConfigManager.settings.getInt(RecommendedFeedFilterKey.COMMENT_COUNT_MAX, Int.MAX_VALUE)
+
+    private val hideDiggCountMin
+        get() = FastKVConfigManager.settings.getInt(RecommendedFeedFilterKey.DIGG_COUNT_MIN, 0)
+
+    private val hideDiggCountMax
+        get() = FastKVConfigManager.settings.getInt(RecommendedFeedFilterKey.DIGG_COUNT_MAX, Int.MAX_VALUE)
+
+    private val hideShareCountMin
+        get() = FastKVConfigManager.settings.getInt(RecommendedFeedFilterKey.SHARE_COUNT_MIN, 0)
+
+    private val hideShareCountMax
+        get() = FastKVConfigManager.settings.getInt(RecommendedFeedFilterKey.SHARE_COUNT_MAX, Int.MAX_VALUE)
+
 
     private val kwdFilterTitleRegexMode by lazy {
         FastKVConfigManager.settings.getBoolean(RecommendedFeedFilterKey.TITLE_REGEX_MODE, false)
