@@ -33,8 +33,8 @@ import java.util.Locale
 import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 import java.util.zip.ZipOutputStream
-import kotlinx.io.IOException
 import kotlin.system.exitProcess
+import kotlinx.io.IOException
 
 /**
  * Settings dialog for DouyinEnhancer.
@@ -144,7 +144,8 @@ class SettingsDialog(context: Context) : AlertDialog.Builder(context) {
                                 activity.contentResolver.openOutputStream(uri)?.use { outputStream ->
                                     ZipOutputStream(outputStream).use { zipOut ->
                                         listOf(
-                                            settingsKva, settingsKvb
+                                            settingsKva,
+                                            settingsKvb
                                         ).filter {
                                             it.exists()
                                         }.forEach { file ->
@@ -155,9 +156,11 @@ class SettingsDialog(context: Context) : AlertDialog.Builder(context) {
                                             zipOut.closeEntry()
                                         }
                                         zipOut.putNextEntry(ZipEntry("checksum"))
-                                        zipOut.write(digest.digest().joinToString("") {
-                                            "%02x".format(it)
-                                        }.toByteArray())
+                                        zipOut.write(
+                                            digest.digest().joinToString("") {
+                                                "%02x".format(it)
+                                            }.toByteArray()
+                                        )
                                         zipOut.closeEntry()
                                     }
                                 }
@@ -260,7 +263,8 @@ class SettingsDialog(context: Context) : AlertDialog.Builder(context) {
             val intent = Intent(Intent.ACTION_CREATE_DOCUMENT)
             intent.type = "application/zip"
             intent.putExtra(
-                Intent.EXTRA_TITLE, "douyinenhancer_backup_${
+                Intent.EXTRA_TITLE,
+                "douyinenhancer_backup_${
                     SimpleDateFormat("yyMMdd-HHmmss", Locale.getDefault()).format(Date())
                 }.zip"
             )
