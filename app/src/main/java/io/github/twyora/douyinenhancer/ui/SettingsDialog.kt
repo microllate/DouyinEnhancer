@@ -75,7 +75,7 @@ class SettingsDialog(context: Context) : AlertDialog.Builder(context) {
             findPreference("version")?.summary = BuildConfig.VERSION_NAME
             findPreference("version")?.onPreferenceClickListener = this
             findPreference("build_time")?.summary =
-                SimpleDateFormat("yy-MM-dd HH:mm:ss", Locale.getDefault()).format(BuildConfig.BUILD_TIMESTAMP)
+                SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(BuildConfig.BUILD_TIMESTAMP)
         }
 
         @Deprecated("Deprecated in Java")
