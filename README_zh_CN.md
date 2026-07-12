@@ -5,30 +5,30 @@
 
 [English](README.md) | [简体中文](README_zh_CN.md)
 
-为抖音添加一些优化体验的小功能。
+为抖音添加一些优化体验的小功能
 
-> 项目仍处于早期阶段，功能还在逐步完善中，欢迎反馈和建议。
+> 项目仍处于早期阶段，功能还在逐步完善中，欢迎反馈和建议
 
 ## 测试环境
+
 > 抖音 37.6.0
+---
+> 其它版本未经验证，不保证功能可用性，若存在问题欢迎提交 Issue 或 PR
 
 ## 模块功能
 
-- 评论区图片无水印下载
-- 评论区表情包保存到相册
-
-## 计划
-
+- [x] 评论区图片无水印下载
+- [x] 评论区表情包保存到相册
 - ~~视频过滤~~
 - [x] 推荐流过滤
-- 播放内容保存到相册
+- [x] 播放内容保存到相册（暂不支持受限制内容下载）
 - 已收藏表情保存到相册
 - [x] 模块设置页面
 - 清屏播放不隐藏弹幕
 - [x] 缓存被混淆方法的查找结果，提升宿主启动速度
-- 保存评论区语音评论
+- [x] 保存评论区语音评论
 - 移除听抖音版权限制
-- 模块设置的备份与恢复
+- [x] 模块设置的备份与恢复
 
 ## 使用方法
 
@@ -39,14 +39,16 @@
 ## 免责声明
 
 - 本项目仅供个人学习与技术交流使用，请勿用于商业用途。
-- 使用本模块产生的一切后果（如账号异常、数据丢失等）均由使用者自行承担。
+- 使用本模块产生的一切后果均由使用者自行承担。
 
 ## 致谢
 
-- 使用 [YukiHookAPI](https://github.com/HighCapable/YukiHookAPI) 作为 Xposed 模块开发框架
-- 使用 [DexKit](https://github.com/LuckyPray/DexKit) 进行混淆方法的动态搜索
-- 使用 [KavaRef](https://github.com/HighCapable/KavaLib) 提供反射 API 支持
-- 使用 [Gropify](https://github.com/HighCapable/Gropify) 管理项目构建配置
-- 使用 [gif.kt](https://github.com/shaksternano/gif.kt) 处理 GIF 动图的编码与解码
-- [RestoreSplashScreen](https://github.com/GSWXXN/RestoreSplashScreen) 是本人初次接触 Xposed 时的启蒙模块，第一次让我领略到 Xposed 的强大，也因此成为后来开发本项目的“白月光”与灵感源泉。本项目在构建配置、Hook 代码组织、Android CI 搭建等方面大量借鉴了[迷璐](https://github.com/GSWXXN)的设计思路
-- 感谢 [BiliRoaming](https://github.com/yujincheng08/BiliRoaming) 为本项目缓存混淆方法查找结果的实现提供思路
+> 排名不分先后
+
+- [BiliRoaming](https://github.com/yujincheng08/BiliRoaming)
+- [DexKit](https://github.com/LuckyPray/DexKit)
+- [gif.kt](https://github.com/shaksternano/gif.kt)
+- [Gropify](https://github.com/HighCapable/Gropify)
+- [KavaRef](https://github.com/HighCapable/KavaRef)
+- [RestoreSplashScreen](https://github.com/GSWXXN/RestoreSplashScreen)
+- [YukiHookAPI](https://github.com/HighCapable/YukiHookAPI)
