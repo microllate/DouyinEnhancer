@@ -40,6 +40,31 @@ object RecommendedFeedHooker : YukiBaseHooker() {
         FastKVConfigManager.settings.getInt(RecommendedFeedFilterKey.LONG_DURATION_LIMIT, Int.MAX_VALUE)
     }
 
+    private val hideCollectCountMin by lazy {
+        FastKVConfigManager.settings.getInt(RecommendedFeedFilterKey.COLLECT_COUNT_MIN, 0)
+    }
+    private val hideCollectCountMax by lazy {
+        FastKVConfigManager.settings.getInt(RecommendedFeedFilterKey.COLLECT_COUNT_MAX, Int.MAX_VALUE)
+    }
+    private val hideCommentCountMin by lazy {
+        FastKVConfigManager.settings.getInt(RecommendedFeedFilterKey.COMMENT_COUNT_MIN, 0)
+    }
+    private val hideCommentCountMax by lazy {
+        FastKVConfigManager.settings.getInt(RecommendedFeedFilterKey.COMMENT_COUNT_MAX, Int.MAX_VALUE)
+    }
+    private val hideDiggCountMin by lazy {
+        FastKVConfigManager.settings.getInt(RecommendedFeedFilterKey.DIGG_COUNT_MIN, 0)
+    }
+    private val hideDiggCountMax by lazy {
+        FastKVConfigManager.settings.getInt(RecommendedFeedFilterKey.DIGG_COUNT_MAX, Int.MAX_VALUE)
+    }
+    private val hideShareCountMin by lazy {
+        FastKVConfigManager.settings.getInt(RecommendedFeedFilterKey.SHARE_COUNT_MIN, 0)
+    }
+    private val hideShareCountMax by lazy {
+        FastKVConfigManager.settings.getInt(RecommendedFeedFilterKey.SHARE_COUNT_MAX, Int.MAX_VALUE)
+    }
+
     private val kwdFilterTitleRegexMode by lazy {
         FastKVConfigManager.settings.getBoolean(RecommendedFeedFilterKey.TITLE_REGEX_MODE, false)
     }
@@ -144,7 +169,10 @@ object RecommendedFeedHooker : YukiBaseHooker() {
                         YLog.debug("$TAG: filtered by duration")
                         iter.remove()
                         continue
-                    } else if (isContainsBlockKwd(awemeObj)) {
+                    } else if (shouldFilterByInteractionStats(awemeObj)) {
+                        //iter.remove()
+                        continue
+                    } else if (shouldFilterByKeyword(awemeObj)) {
                         iter.remove()
                         continue
                     }
@@ -163,7 +191,56 @@ object RecommendedFeedHooker : YukiBaseHooker() {
         }
     }
 
-    private fun isContainsBlockKwd(aweme: Any): Boolean {
+    private fun shouldFilterByInteractionStats(aweme: Any): Boolean {
+        val packageInstance = DouyinPackage.instance
+
+        val statsMinLEMax = hideCollectCountMin <= hideCollectCountMax ||
+                hideCommentCountMin <= hideCommentCountMax ||
+                hideDiggCountMin <= hideDiggCountMax ||
+                hideShareCountMin <= hideShareCountMax
+        if (!statsMinLEMax) {
+            return false
+        }
+
+        val statsObj = aweme.getField<Any?>(packageInstance.aweme.statistics())
+            ?: return false
+
+        if (hideCollectCountMin <= hideCollectCountMax) {
+            val collectCount = statsObj.getField<Long?>(packageInstance.awemeStatistics.collectCount())
+            if (collectCount != null && (collectCount !in hideCollectCountMin..hideCollectCountMax)) {
+                YLog.debug("$TAG: filtered by collect count: $collectCount")
+                return true
+            }
+        }
+
+        if (hideCommentCountMin <= hideCommentCountMax) {
+            val commentCount = statsObj.getField<Long?>(packageInstance.awemeStatistics.commentCount())
+            if (commentCount != null && (commentCount !in hideCommentCountMin..hideCommentCountMax)) {
+                YLog.debug("$TAG: filtered by comment count: $commentCount")
+                return true
+            }
+        }
+
+        if (hideDiggCountMin <= hideDiggCountMax) {
+            val diggCount = statsObj.getField<Long?>(packageInstance.awemeStatistics.diggCount())
+            if (diggCount != null && (diggCount !in hideDiggCountMin..hideDiggCountMax)) {
+                YLog.debug("$TAG: filtered by digg count: $diggCount")
+                return true
+            }
+        }
+
+        if (hideShareCountMin <= hideShareCountMax) {
+            val shareCount = statsObj.getField<Long?>(packageInstance.awemeStatistics.shareCount())
+            if (shareCount != null && (shareCount !in hideShareCountMin..hideShareCountMax)) {
+                YLog.debug("$TAG: filtered by share count: $shareCount")
+                return true
+            }
+        }
+
+        return false
+    }
+
+    private fun shouldFilterByKeyword(aweme: Any): Boolean {
         val packageInstance = DouyinPackage.instance
 
         val titleRegexes = kwdFilterTitleRegexes

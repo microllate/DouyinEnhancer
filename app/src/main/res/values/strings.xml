@@ -40,7 +40,19 @@
     <string name="recommended_feed_filter_group_author_nickname">Author name</string>
     <string name="recommended_feed_filter_group_desc">Description</string>
     <string name="save_failed_invalid_regex">Save failed, invalid regex pattern</string>
-    <string name="save_failed_short_duration_exceeds_long">Save failed, minimum duration cannot exceed maximum duration</string>
+    <string name="recommended_feed_filter_hide_by_collect_count_title">Hide feeds by collect count</string>
+    <string name="recommended_feed_filter_hide_by_comment_count_title">Hide feeds by comment count</string>
+    <string name="recommended_feed_filter_hide_by_digg_count_title">Hide feeds by like count</string>
+    <string name="recommended_feed_filter_hide_by_share_count_title">Hide feeds by share count</string>
+    <string name="recommended_feed_filter_hide_by_collect_count_min">Hide fewer than</string>
+    <string name="recommended_feed_filter_hide_by_collect_count_max">Hide more than</string>
+    <string name="recommended_feed_filter_hide_by_comment_count_min">Hide fewer than</string>
+    <string name="recommended_feed_filter_hide_by_comment_count_max">Hide more than</string>
+    <string name="recommended_feed_filter_hide_by_digg_count_min">Hide fewer than</string>
+    <string name="recommended_feed_filter_hide_by_digg_count_max">Hide more than</string>
+    <string name="recommended_feed_filter_hide_by_share_count_min">Hide fewer than</string>
+    <string name="recommended_feed_filter_hide_by_share_count_max">Hide more than</string>
+    <string name="save_failed_invalid_bounds">Save failed, invalid bounds</string>
 
     <string name="pref_category_backup">Backup &amp; Restore</string>
     <string name="pref_backup_export_title">Export Config</string>

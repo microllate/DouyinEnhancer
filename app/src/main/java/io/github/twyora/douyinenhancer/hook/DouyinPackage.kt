@@ -100,6 +100,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
     val downloadAction = DownloadActionModule()
     val abTestServiceImpl = ABTestServiceImplModule()
     val lppDownloadModule = LppDownloadModuleModule()
+    val awemeStatistics = AwemeStatisticsModule()
 
     inner class CommentImageStructModule {
         val selfClass by weak {
@@ -427,6 +428,23 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
         )
 
         fun images() = Field(hookInfo.aweme.images.nameOrNull)
+
+        fun statistics() = Field(hookInfo.aweme.statistics.nameOrNull)
+    }
+
+    inner class AwemeStatisticsModule {
+        val selfClass by weak {
+            hookInfo.awemeStatistics.class_.nameOrNull
+                ?.toClass(classLoader)
+        }
+
+        fun collectCount() = Field(hookInfo.awemeStatistics.collectCount.nameOrNull)
+
+        fun commentCount() = Field(hookInfo.awemeStatistics.commentCount.nameOrNull)
+
+        fun diggCount() = Field(hookInfo.awemeStatistics.diggCount.nameOrNull)
+
+        fun shareCount() = Field(hookInfo.awemeStatistics.shareCount.nameOrNull)
     }
 
     inner class VideoModule {
@@ -1464,6 +1482,27 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                     }
                     images = field {
                         name = "images"
+                    }
+                    statistics = field {
+                        name = "statistics"
+                    }
+                }
+
+                awemeStatistics = awemeStatistics {
+                    class_ = class_ {
+                        name = "com.ss.android.ugc.aweme.feed.model.AwemeStatistics"
+                    }
+                    collectCount = field {
+                        name = "collectCount"
+                    }
+                    commentCount = field {
+                        name = "commentCount"
+                    }
+                    diggCount = field {
+                        name = "diggCount"
+                    }
+                    shareCount = field {
+                        name = "shareCount"
                     }
                 }
 
