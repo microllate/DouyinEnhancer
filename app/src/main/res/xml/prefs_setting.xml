@@ -91,6 +91,26 @@
                 android:data="@string/repository_url" />
         </Preference>
 
+        <Preference
+            android:key="telegram"
+            android:title="@string/pref_about_telegram_title"
+            android:summary="@string/pref_about_telegram_summary">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="@string/telegram_url"/>
+        </Preference>
+
+        <Preference
+            android:key="build_time"
+            android:title="@string/pref_about_build_time_title"
+            android:summary="@string/unknown"/>
+
+        <Preference
+            android:key="back_then"
+            android:title="@string/pref_about_back_then_title"
+            android:summary="@string/pref_about_back_then_summary" >
+        </Preference>
+
     </PreferenceCategory>
 
 </PreferenceScreen>

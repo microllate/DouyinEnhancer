@@ -82,4 +82,10 @@
     <string name="pref_about_author_summary">twyora</string>
     <string name="pref_about_repository_title">仓库地址</string>
     <string name="pref_about_repository_summary">欢迎 Star 和反馈</string>
+    <string name="pref_about_back_then_title">作者当时🎵</string>
+    <string name="pref_about_back_then_summary">海内兮传四方，唤伊莫相忘</string>
+    <string name="pref_about_telegram_title">TG 群组</string>
+    <string name="pref_about_telegram_summary">点击加入 TG 频道</string>
+    <string name="pref_about_build_time_title">构建时间</string>
+    <string name="unknown">未知</string>
 </resources>

@@ -82,5 +82,11 @@
     <string name="pref_about_author_summary">twyora</string>
     <string name="pref_about_repository_title">Repository</string>
     <string name="pref_about_repository_summary">Welcome Star and Feedback</string>
+    <string name="pref_about_back_then_title">Back Then🎵</string>
+    <string name="pref_about_back_then_summary">My voice travels far and wide, saying forget me not</string>
+    <string name="pref_about_telegram_title">Telegram Group</string>
+    <string name="pref_about_telegram_summary">Tap to join the Telegram group</string>
+    <string name="pref_about_build_time_title">Build Time</string>
+    <string name="unknown">Unknown</string>
 
 </resources>
