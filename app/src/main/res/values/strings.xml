@@ -34,7 +34,7 @@
     <string name="recommended_feed_filter_hide_by_duration_title">Hide videos by duration (ms)</string>
     <string name="recommended_feed_filter_hide_by_short_duration">Hide shorter than</string>
     <string name="recommended_feed_filter_hide_by_long_duration">Hide longer than</string>
-    <string name="recommended_feed_filter_keywords_title">Filter videos by keywords</string>
+    <string name="recommended_feed_filter_keywords_title">Filter feeds by keywords</string>
     <string name="recommended_feed_filter_group_title">Title</string>
     <string name="recommended_feed_filter_group_uid">UID</string>
     <string name="recommended_feed_filter_group_author_nickname">Author name</string>
