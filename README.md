@@ -7,7 +7,8 @@
 
 A small Xposed module that adds quality-of-life features to Douyin.
 
-> This project is still in its early stages. Features are being added gradually — feedback and suggestions are welcome.
+> This project is still in its early stages. Features are being added gradually — feedback and
+> suggestions are welcome.
 
 ## Tested Environment
 
@@ -30,6 +31,7 @@ A small Xposed module that adds quality-of-life features to Douyin.
 - Save audio comments from comment section
 - Remove copyright restriction of Douyin Audio Mode
 - Backup and restore module settings
+- Add dark mode support for module settings page
 
 ## Usage
 
@@ -39,15 +41,21 @@ A small Xposed module that adds quality-of-life features to Douyin.
 
 ## Disclaimer
 
-- This project is for personal learning and technical exchange only. Please do not use it for commercial purposes.
-- Any consequences arising from the use of this module (e.g., account suspension, data loss) are at the user's own risk.
+- This project is for personal learning and technical exchange only. Please do not use it for
+  commercial purposes.
+- Any consequences arising from the use of this module (e.g., account suspension, data loss) are at
+  the user's own risk.
 
 ## Credits
 
-- [YukiHookAPI](https://github.com/HighCapable/YukiHookAPI) as the Xposed module development framework
+- [YukiHookAPI](https://github.com/HighCapable/YukiHookAPI) as the Xposed module development
+  framework
 - [DexKit](https://github.com/LuckyPray/DexKit) for dynamic obfuscated method lookup
 - [KavaRef](https://github.com/HighCapable/KavaRef) for reflection API support
 - [Gropify](https://github.com/HighCapable/Gropify) for managing build configuration
 - [gif.kt](https://github.com/shaksternano/gif.kt) for GIF encoding and decoding
-- [RestoreSplashScreen](https://github.com/GSWXXN/RestoreSplashScreen) for being the core inspiration for this project, with deep references in build configurations, hook logic organization, Android CI setups, and so on.
-- Thanks to [BiliRoaming](https://github.com/yujincheng08/BiliRoaming) for providing the approach to caching obfuscated method lookup results
+- [RestoreSplashScreen](https://github.com/GSWXXN/RestoreSplashScreen) for being the core
+  inspiration for this project, with deep references in build configurations, hook logic
+  organization, Android CI setups, and so on.
+- Thanks to [BiliRoaming](https://github.com/yujincheng08/BiliRoaming) for providing the approach to
+  caching obfuscated method lookup results
