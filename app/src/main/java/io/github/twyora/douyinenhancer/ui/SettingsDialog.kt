@@ -69,11 +69,13 @@ class SettingsDialog(context: Context) : AlertDialog.Builder(context) {
                 }
             }
 
-            findPreference("version")?.summary = BuildConfig.VERSION_NAME
-            findPreference("version")?.onPreferenceClickListener = this
             findPreference("recommend_feed_filter")?.onPreferenceClickListener = this
             findPreference("export_config")?.onPreferenceClickListener = this
             findPreference("import_config")?.onPreferenceClickListener = this
+            findPreference("version")?.summary = BuildConfig.VERSION_NAME
+            findPreference("version")?.onPreferenceClickListener = this
+            findPreference("build_time")?.summary =
+                SimpleDateFormat("yy-MM-dd HH:mm:ss", Locale.getDefault()).format(BuildConfig.BUILD_TIMESTAMP)
         }
 
         @Deprecated("Deprecated in Java")

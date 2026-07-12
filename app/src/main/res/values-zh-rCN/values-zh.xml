@@ -1,18 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">抖柚</string>
-
     <string name="settings_dialog_title">抖柚</string>
     <string name="settings_dialog_back">返回</string>
     <string name="settings_dialog_confirm_and_restart">确定并重启客户端</string>
+
     <string name="pref_category_save">保存</string>
-    <string name="pref_category_feed">内容</string>
-    <string name="pref_category_misc">杂项</string>
-    <string name="pref_misc_enable_hidden_features_title">✦ 启用隐藏功能</string>
-    <string name="pref_misc_enable_hidden_features_summary">打开后可以使用隐藏功能</string>
-    <string name="pref_misc_enable_hidden_features_steps_remaining">再执行 %1$d 步即可开启隐藏功能</string>
-    <string name="pref_misc_enable_hidden_features_already_enabled">隐藏功能已开启，无需执行此操作</string>
-    <string name="pref_misc_enable_hidden_features_restart_required">隐藏功能已开启，重启应用后生效</string>
     <string name="pref_comment_image_title">评论图片去水印</string>
     <string name="pref_comment_image_summary">保存无水印评论原图</string>
     <string name="pref_comment_emoji_title">解锁表情保存</string>
@@ -24,49 +17,34 @@
     <string name="pref_feed_multi_image_remove_watermark_title">保存无水印多图帖</string>
     <string name="pref_feed_multi_image_remove_watermark_summary">去除图片内置水印与边框水印</string>
 
+    <string name="pref_category_feed">内容</string>
     <string name="recommended_feed_filter_dialog_title">推荐流过滤器</string>
-    <string name="save_failed_invalid_regex">保存失败，正则表达式格式错误</string>
-    <string name="save_failed_short_duration_exceeds_long">保存失败，最小时长不能大于最大时长</string>
-    <string name="save_success_restart_required">保存成功，部分配置重启应用后生效</string>
-    <string name="restart_required">部分功能需重启应用后生效</string>
-
     <string name="recommended_feed_filter_main_switch_title">总开关</string>
     <string name="recommended_feed_filter_main_switch_summary">开启后可以使用推荐流过滤功能</string>
-
     <string name="recommended_feed_filter_block_ad_title">✦ 屏蔽广告</string>
     <string name="recommended_feed_filter_block_ad_summary">尝试屏蔽推荐流中的广告（实验性功能）</string>
-
     <string name="recommended_feed_filter_block_ecom_aweme_title">✦ 屏蔽电商推广</string>
     <string name="recommended_feed_filter_block_ecom_aweme_summary">尝试屏蔽推荐流中的电商带货推广（实验性功能）</string>
-
     <string name="recommended_feed_filter_block_groupon_large_card_title">✦ 屏蔽团购卡片</string>
     <string name="recommended_feed_filter_block_groupon_large_card_summary">尝试屏蔽推荐流中的团购活动大卡片（实验性功能）</string>
-
     <string name="recommended_feed_filter_block_live_title">✦ 屏蔽直播</string>
     <string name="recommended_feed_filter_block_live_summary">尝试屏蔽推荐流中的直播内容（实验性功能）</string>
-
     <string name="recommended_feed_filter_block_multi_image_title">✦ 屏蔽图文</string>
     <string name="recommended_feed_filter_block_multi_image_summary">尝试屏蔽推荐流中的图文内容（实验性功能）</string>
-
     <string name="recommended_feed_filter_hide_by_duration_title">隐藏指定时长的视频（毫秒）</string>
     <string name="recommended_feed_filter_hide_by_short_duration">隐藏视频时长小于</string>
     <string name="recommended_feed_filter_hide_by_long_duration">隐藏视频时长大于</string>
-
     <string name="recommended_feed_filter_keywords_title">过滤包含指定关键字的视频</string>
-
     <string name="recommended_feed_filter_group_title">标题</string>
     <string name="recommended_feed_filter_group_uid">UID</string>
     <string name="recommended_feed_filter_group_author_nickname">作者昵称</string>
     <string name="recommended_feed_filter_group_desc">内容文案</string>
-
-    <string name="add">添加</string>
-    <string name="delete">删除</string>
-    <string name="regex_mode">正则模式</string>
+    <string name="save_failed_invalid_regex">保存失败，正则表达式格式错误</string>
+    <string name="save_failed_short_duration_exceeds_long">保存失败，最小时长不能大于最大时长</string>
 
     <string name="pref_category_backup">备份和还原</string>
     <string name="pref_backup_export_title">导出配置</string>
     <string name="pref_backup_import_title">导入配置</string>
-
     <string name="config_export_success">导出成功</string>
     <string name="config_export_failed">导出失败, %1$s</string>
     <string name="config_import_success">导入成功，部分配置重启应用后生效</string>
@@ -75,6 +53,13 @@
     <string name="config_export_chooser">保存配置</string>
     <string name="config_import_chooser">选择配置</string>
 
+    <string name="pref_category_misc">杂项</string>
+    <string name="pref_misc_enable_hidden_features_title">✦ 启用隐藏功能</string>
+    <string name="pref_misc_enable_hidden_features_summary">打开后可以使用隐藏功能</string>
+    <string name="pref_misc_enable_hidden_features_steps_remaining">再执行 %1$d 步即可开启隐藏功能</string>
+    <string name="pref_misc_enable_hidden_features_already_enabled">隐藏功能已开启，无需执行此操作</string>
+    <string name="pref_misc_enable_hidden_features_restart_required">隐藏功能已开启，重启应用后生效</string>
+
     <string name="pref_category_about">关于</string>
     <string name="pref_about_version_title">版本</string>
     <string name="pref_about_version_summary">0.0.1</string>
@@ -82,4 +67,16 @@
     <string name="pref_about_author_summary">twyora</string>
     <string name="pref_about_repository_title">仓库地址</string>
     <string name="pref_about_repository_summary">欢迎 Star 和反馈</string>
+    <string name="pref_about_telegram_title">TG 群组</string>
+    <string name="pref_about_telegram_summary">点击加入 TG 频道</string>
+    <string name="pref_about_build_time_title">构建时间</string>
+    <string name="pref_about_back_then_title">作者当时🎵</string>
+    <string name="pref_about_back_then_summary">海内兮传四方，唤伊莫相忘</string>
+
+    <string name="add">添加</string>
+    <string name="delete">删除</string>
+    <string name="unknown">未知</string>
+    <string name="regex_mode">正则模式</string>
+    <string name="save_success_restart_required">保存成功，部分配置重启应用后生效</string>
+    <string name="restart_required">部分功能需重启应用后生效</string>
 </resources>

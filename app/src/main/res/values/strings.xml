@@ -1,18 +1,10 @@
 <resources>
     <string name="app_name">Douyin Enhancer</string>
-
     <string name="settings_dialog_title">Douyin Enhancer</string>
     <string name="settings_dialog_back">Back</string>
     <string name="settings_dialog_confirm_and_restart">Confirm &amp; Restart</string>
 
     <string name="pref_category_save">Save</string>
-    <string name="pref_category_feed">Feed</string>
-    <string name="pref_category_misc">Misc</string>
-    <string name="pref_misc_enable_hidden_features_title">✦ Enable hidden features</string>
-    <string name="pref_misc_enable_hidden_features_summary">Enable to use hidden features</string>
-    <string name="pref_misc_enable_hidden_features_steps_remaining">Perform %1$d more steps to enable hidden features</string>
-    <string name="pref_misc_enable_hidden_features_already_enabled">Hidden features are already enabled; no further action required</string>
-    <string name="pref_misc_enable_hidden_features_restart_required">Hidden features are enabled. Restart the app for changes to take effect</string>
     <string name="pref_comment_image_title">Remove Watermark from Comment Images</string>
     <string name="pref_comment_image_summary">Save watermark-free original comment images</string>
     <string name="pref_comment_emoji_title">Unlock Emoji Saving</string>
@@ -24,49 +16,34 @@
     <string name="pref_feed_multi_image_remove_watermark_title">Save Watermark-Free Multi-Image Posts</string>
     <string name="pref_feed_multi_image_remove_watermark_summary">Remove in-image and border watermarks</string>
 
+    <string name="pref_category_feed">Feed</string>
     <string name="recommended_feed_filter_dialog_title">Recommended Feed Filter</string>
     <string name="recommended_feed_filter_main_switch_title">Main switch</string>
     <string name="recommended_feed_filter_main_switch_summary">Turn on to use recommended feed filtering features</string>
-
-    <string name="save_failed_invalid_regex">Save failed, invalid regex pattern</string>
-    <string name="save_failed_short_duration_exceeds_long">Save failed, minimum duration cannot exceed maximum duration</string>
-    <string name="save_success_restart_required">Saved successfully. Some configurations will take effect after restarting the app</string>
-    <string name="restart_required">Some features will take effect after restarting the app</string>
-
     <string name="recommended_feed_filter_block_ad_title">✦ Block ads</string>
     <string name="recommended_feed_filter_block_ad_summary">Attempt to block ads in the feed (Experimental)</string>
-
     <string name="recommended_feed_filter_block_ecom_aweme_title">✦ Block e-commerce promotions</string>
     <string name="recommended_feed_filter_block_ecom_aweme_summary">Attempt to block e-commerce promotions in the feed (Experimental)</string>
-
     <string name="recommended_feed_filter_block_groupon_large_card_title">✦ Block group-buying cards</string>
     <string name="recommended_feed_filter_block_groupon_large_card_summary">Attempt to block large group-buying event cards in the feed (Experimental)</string>
-
     <string name="recommended_feed_filter_block_live_title">✦ Block livestreams</string>
     <string name="recommended_feed_filter_block_live_summary">Attempt to block livestream content in the feed (Experimental)</string>
-
     <string name="recommended_feed_filter_block_multi_image_title">✦ Block multi-image posts</string>
     <string name="recommended_feed_filter_block_multi_image_summary">Attempt to block multi-image posts in the feed (Experimental)</string>
-
     <string name="recommended_feed_filter_hide_by_duration_title">Hide videos by duration (ms)</string>
     <string name="recommended_feed_filter_hide_by_short_duration">Hide shorter than</string>
     <string name="recommended_feed_filter_hide_by_long_duration">Hide longer than</string>
-
     <string name="recommended_feed_filter_keywords_title">Filter videos by keywords</string>
-
     <string name="recommended_feed_filter_group_title">Title</string>
     <string name="recommended_feed_filter_group_uid">UID</string>
     <string name="recommended_feed_filter_group_author_nickname">Author name</string>
     <string name="recommended_feed_filter_group_desc">Description</string>
-
-    <string name="add">Add</string>
-    <string name="delete">Delete</string>
-    <string name="regex_mode">Regex mode</string>
+    <string name="save_failed_invalid_regex">Save failed, invalid regex pattern</string>
+    <string name="save_failed_short_duration_exceeds_long">Save failed, minimum duration cannot exceed maximum duration</string>
 
     <string name="pref_category_backup">Backup &amp; Restore</string>
     <string name="pref_backup_export_title">Export Config</string>
     <string name="pref_backup_import_title">Import Config</string>
-
     <string name="config_export_success">Export successful</string>
     <string name="config_export_failed">Export failed, %1$s</string>
     <string name="config_import_success">Import successful. Some configs will take effect after restart</string>
@@ -75,6 +52,13 @@
     <string name="config_export_chooser">Save configuration</string>
     <string name="config_import_chooser">Select configuration</string>
 
+    <string name="pref_category_misc">Misc</string>
+    <string name="pref_misc_enable_hidden_features_title">✦ Enable hidden features</string>
+    <string name="pref_misc_enable_hidden_features_summary">Enable to use hidden features</string>
+    <string name="pref_misc_enable_hidden_features_steps_remaining">Perform %1$d more steps to enable hidden features</string>
+    <string name="pref_misc_enable_hidden_features_already_enabled">Hidden features are already enabled; no further action required</string>
+    <string name="pref_misc_enable_hidden_features_restart_required">Hidden features are enabled. Restart the app for changes to take effect</string>
+
     <string name="pref_category_about">About</string>
     <string name="pref_about_version_title">Version</string>
     <string name="pref_about_version_summary">0.0.1</string>
@@ -82,5 +66,16 @@
     <string name="pref_about_author_summary">twyora</string>
     <string name="pref_about_repository_title">Repository</string>
     <string name="pref_about_repository_summary">Welcome Star and Feedback</string>
+    <string name="pref_about_telegram_title">Telegram Group</string>
+    <string name="pref_about_telegram_summary">Tap to join the Telegram group</string>
+    <string name="pref_about_build_time_title">Build Time</string>
+    <string name="unknown">Unknown</string>
+    <string name="pref_about_back_then_title">Back Then🎵</string>
+    <string name="pref_about_back_then_summary">My voice travels far and wide, saying forget me not</string>
 
+    <string name="add">Add</string>
+    <string name="delete">Delete</string>
+    <string name="regex_mode">Regex mode</string>
+    <string name="save_success_restart_required">Saved successfully. Some configurations will take effect after restarting the app</string>
+    <string name="restart_required">Some features will take effect after restarting the app</string>
 </resources>

@@ -24,6 +24,8 @@ android {
         versionCode = gropify.project.versionCode
         versionName = gropify.project.versionName
 
+        buildConfigField("long", "BUILD_TIMESTAMP", "${System.currentTimeMillis()}")
+
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -32,7 +34,9 @@ android {
      * Thanks to [GSWXXN](https://github.com/GSWXXN)
      */
     val isKeyStoreAvailable = try {
-        gropify.keystore.path.isNotBlank() && gropify.keystore.password.isNotBlank() && gropify.key.alias.isNotBlank() &&
+        gropify.keystore.path.isNotBlank() &&
+            gropify.keystore.password.isNotBlank() &&
+            gropify.key.alias.isNotBlank() &&
             gropify.key.password.isNotBlank()
     } catch (_: Exception) {
         false
