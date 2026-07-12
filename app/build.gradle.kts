@@ -34,8 +34,10 @@ android {
      * Thanks to [GSWXXN](https://github.com/GSWXXN)
      */
     val isKeyStoreAvailable = try {
-        gropify.keystore.path.isNotBlank() && gropify.keystore.password.isNotBlank() && gropify.key.alias.isNotBlank() &&
-                gropify.key.password.isNotBlank()
+        gropify.keystore.path.isNotBlank() &&
+            gropify.keystore.password.isNotBlank() &&
+            gropify.key.alias.isNotBlank() &&
+            gropify.key.password.isNotBlank()
     } catch (_: Exception) {
         false
     }
