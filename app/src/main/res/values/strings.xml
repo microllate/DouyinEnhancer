@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Douyin Enhancer</string>
+    <string name="app_description">An Xposed module that adds minor quality-of-life features to Douyin</string>
     <string name="settings_dialog_title">Douyin Enhancer</string>
     <string name="settings_dialog_back">Back</string>
     <string name="settings_dialog_confirm_and_restart">Confirm &amp; Restart</string>
