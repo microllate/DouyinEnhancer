@@ -35,13 +35,25 @@
     <string name="recommended_feed_filter_hide_by_duration_title">隐藏指定时长的视频（毫秒）</string>
     <string name="recommended_feed_filter_hide_by_short_duration">隐藏视频时长小于</string>
     <string name="recommended_feed_filter_hide_by_long_duration">隐藏视频时长大于</string>
-    <string name="recommended_feed_filter_keywords_title">过滤包含指定关键字的视频</string>
+    <string name="recommended_feed_filter_keywords_title">过滤包含指定关键字的内容</string>
     <string name="recommended_feed_filter_group_title">标题</string>
     <string name="recommended_feed_filter_group_uid">UID</string>
     <string name="recommended_feed_filter_group_author_nickname">作者昵称</string>
     <string name="recommended_feed_filter_group_desc">内容文案</string>
     <string name="save_failed_invalid_regex">保存失败，正则表达式格式错误</string>
-    <string name="save_failed_short_duration_exceeds_long">保存失败，最小时长不能大于最大时长</string>
+    <string name="recommended_feed_filter_hide_by_collect_count_title">隐藏指定收藏数的内容</string>
+    <string name="recommended_feed_filter_hide_by_comment_count_title">隐藏指定评论数的内容</string>
+    <string name="recommended_feed_filter_hide_by_digg_count_title">隐藏指定点赞数的内容</string>
+    <string name="recommended_feed_filter_hide_by_share_count_title">隐藏指定分享数的内容</string>
+    <string name="recommended_feed_filter_hide_by_collect_count_min">隐藏内容收藏数小于</string>
+    <string name="recommended_feed_filter_hide_by_collect_count_max">隐藏内容收藏数大于</string>
+    <string name="recommended_feed_filter_hide_by_comment_count_min">隐藏内容评论数小于</string>
+    <string name="recommended_feed_filter_hide_by_comment_count_max">隐藏内容评论数大于</string>
+    <string name="recommended_feed_filter_hide_by_digg_count_min">隐藏内容点赞数小于</string>
+    <string name="recommended_feed_filter_hide_by_digg_count_max">隐藏内容点赞数大于</string>
+    <string name="recommended_feed_filter_hide_by_share_count_min">隐藏内容分享数小于</string>
+    <string name="recommended_feed_filter_hide_by_share_count_max">隐藏内容分享数大于</string>
+    <string name="save_failed_invalid_bounds">保存失败，上下限设置错误</string>
 
     <string name="pref_category_backup">备份和还原</string>
     <string name="pref_backup_export_title">导出配置</string>

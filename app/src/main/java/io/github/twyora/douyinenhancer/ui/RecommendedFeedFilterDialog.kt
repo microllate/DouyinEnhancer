@@ -51,6 +51,30 @@ class RecommendedFeedFilterDialog(context: Context) : AlertDialog.Builder(contex
         prefs.getInt(RecommendedFeedFilterKey.LONG_DURATION_LIMIT, Int.MAX_VALUE).let {
             recommendedFeedFilterDialogBinding.editLongDuration.setText(it.toString())
         }
+        prefs.getInt(RecommendedFeedFilterKey.COLLECT_COUNT_MIN, 0).let {
+            recommendedFeedFilterDialogBinding.editCollectCountMin.setText(it.toString())
+        }
+        prefs.getInt(RecommendedFeedFilterKey.COLLECT_COUNT_MAX, Int.MAX_VALUE).let {
+            recommendedFeedFilterDialogBinding.editCollectCountMax.setText(it.toString())
+        }
+        prefs.getInt(RecommendedFeedFilterKey.COMMENT_COUNT_MIN, 0).let {
+            recommendedFeedFilterDialogBinding.editCommentCountMin.setText(it.toString())
+        }
+        prefs.getInt(RecommendedFeedFilterKey.COMMENT_COUNT_MAX, Int.MAX_VALUE).let {
+            recommendedFeedFilterDialogBinding.editCommentCountMax.setText(it.toString())
+        }
+        prefs.getInt(RecommendedFeedFilterKey.DIGG_COUNT_MIN, 0).let {
+            recommendedFeedFilterDialogBinding.editDiggCountMin.setText(it.toString())
+        }
+        prefs.getInt(RecommendedFeedFilterKey.DIGG_COUNT_MAX, Int.MAX_VALUE).let {
+            recommendedFeedFilterDialogBinding.editDiggCountMax.setText(it.toString())
+        }
+        prefs.getInt(RecommendedFeedFilterKey.SHARE_COUNT_MIN, 0).let {
+            recommendedFeedFilterDialogBinding.editShareCountMin.setText(it.toString())
+        }
+        prefs.getInt(RecommendedFeedFilterKey.SHARE_COUNT_MAX, Int.MAX_VALUE).let {
+            recommendedFeedFilterDialogBinding.editShareCountMax.setText(it.toString())
+        }
         recommendedFeedFilterDialogBinding.switchTitleRegex.isChecked = prefs.getBoolean(RecommendedFeedFilterKey.TITLE_REGEX_MODE, false)
         prefs.getStringSet(RecommendedFeedFilterKey.TITLE_KEYWORDS, null)?.forEach {
             pushKeywordItem(context, recommendedFeedFilterDialogBinding.groupAwemeTitle).apply {
@@ -106,7 +130,43 @@ class RecommendedFeedFilterDialog(context: Context) : AlertDialog.Builder(contex
             val hideLongDurationLimit = recommendedFeedFilterDialogBinding.editLongDuration.text.toString().toIntOrNull() ?: Int.MAX_VALUE
             if (hideShortDurationLimit > hideLongDurationLimit) {
                 (context as? Activity)?.runOnUiThread {
-                    Toast.makeText(context, context.getString(R.string.save_failed_short_duration_exceeds_long), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, context.getString(R.string.save_failed_invalid_bounds), Toast.LENGTH_SHORT).show()
+                }
+                return@setPositiveButton
+            }
+
+            val hideCollectCountMin = recommendedFeedFilterDialogBinding.editCollectCountMin.text.toString().toIntOrNull() ?: 0
+            val hideCollectCountMax = recommendedFeedFilterDialogBinding.editCollectCountMax.text.toString().toIntOrNull() ?: Int.MAX_VALUE
+            if (hideCollectCountMin > hideCollectCountMax) {
+                (context as? Activity)?.runOnUiThread {
+                    Toast.makeText(context, context.getString(R.string.save_failed_invalid_bounds), Toast.LENGTH_SHORT).show()
+                }
+                return@setPositiveButton
+            }
+
+            val hideCommentCountMin = recommendedFeedFilterDialogBinding.editCommentCountMin.text.toString().toIntOrNull() ?: 0
+            val hideCommentCountMax = recommendedFeedFilterDialogBinding.editCommentCountMax.text.toString().toIntOrNull() ?: Int.MAX_VALUE
+            if (hideCommentCountMin > hideCommentCountMax) {
+                (context as? Activity)?.runOnUiThread {
+                    Toast.makeText(context, context.getString(R.string.save_failed_invalid_bounds), Toast.LENGTH_SHORT).show()
+                }
+                return@setPositiveButton
+            }
+
+            val hideDiggCountMin = recommendedFeedFilterDialogBinding.editDiggCountMin.text.toString().toIntOrNull() ?: 0
+            val hideDiggCountMax = recommendedFeedFilterDialogBinding.editDiggCountMax.text.toString().toIntOrNull() ?: Int.MAX_VALUE
+            if (hideDiggCountMin > hideDiggCountMax) {
+                (context as? Activity)?.runOnUiThread {
+                    Toast.makeText(context, context.getString(R.string.save_failed_invalid_bounds), Toast.LENGTH_SHORT).show()
+                }
+                return@setPositiveButton
+            }
+
+            val hideShareCountMin = recommendedFeedFilterDialogBinding.editShareCountMin.text.toString().toIntOrNull() ?: 0
+            val hideShareCountMax = recommendedFeedFilterDialogBinding.editShareCountMax.text.toString().toIntOrNull() ?: Int.MAX_VALUE
+            if (hideShareCountMin > hideShareCountMax) {
+                (context as? Activity)?.runOnUiThread {
+                    Toast.makeText(context, context.getString(R.string.save_failed_invalid_bounds), Toast.LENGTH_SHORT).show()
                 }
                 return@setPositiveButton
             }
@@ -168,6 +228,14 @@ class RecommendedFeedFilterDialog(context: Context) : AlertDialog.Builder(contex
                 putBoolean(RecommendedFeedFilterKey.BLOCK_MULTI_IMAGE, blockMultiImage)
                 putInt(RecommendedFeedFilterKey.SHORT_DURATION_LIMIT, hideShortDurationLimit)
                 putInt(RecommendedFeedFilterKey.LONG_DURATION_LIMIT, hideLongDurationLimit)
+                putInt(RecommendedFeedFilterKey.COLLECT_COUNT_MIN, hideCollectCountMin)
+                putInt(RecommendedFeedFilterKey.COLLECT_COUNT_MAX, hideCollectCountMax)
+                putInt(RecommendedFeedFilterKey.COMMENT_COUNT_MIN, hideCommentCountMin)
+                putInt(RecommendedFeedFilterKey.COMMENT_COUNT_MAX, hideCommentCountMax)
+                putInt(RecommendedFeedFilterKey.DIGG_COUNT_MIN, hideDiggCountMin)
+                putInt(RecommendedFeedFilterKey.DIGG_COUNT_MAX, hideDiggCountMax)
+                putInt(RecommendedFeedFilterKey.SHARE_COUNT_MIN, hideShareCountMin)
+                putInt(RecommendedFeedFilterKey.SHARE_COUNT_MAX, hideShareCountMax)
                 putBoolean(RecommendedFeedFilterKey.TITLE_REGEX_MODE, titleRegexMode)
                 putStringSet(RecommendedFeedFilterKey.TITLE_KEYWORDS, titleKeywords)
                 putStringSet(RecommendedFeedFilterKey.AUTHOR_UID_KEYWORDS, uidKeywords)
