@@ -63,6 +63,18 @@
     <string name="delete">删除</string>
     <string name="regex_mode">正则模式</string>
 
+    <string name="pref_category_backup">备份和还原</string>
+    <string name="pref_backup_export_title">导出配置</string>
+    <string name="pref_backup_import_title">导入配置</string>
+
+    <string name="config_export_success">导出成功</string>
+    <string name="config_export_failed">导出失败, %1$s</string>
+    <string name="config_import_success">导入成功，部分配置重启应用后生效</string>
+    <string name="config_import_failed">导入失败, %1$s</string>
+    <string name="config_import_corrupted">配置已损坏</string>
+    <string name="config_export_chooser">保存配置</string>
+    <string name="config_import_chooser">选择配置</string>
+
     <string name="pref_category_about">关于</string>
     <string name="pref_about_version_title">版本</string>
     <string name="pref_about_version_summary">0.0.1</string>
