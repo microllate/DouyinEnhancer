@@ -41,6 +41,7 @@ A small Xposed module that adds quality-of-life features to Douyin
 - Play videos at a specified initial playback speed
 - More reliable way to inject module settings into the host app's settings page
 - Add more entry points to module settings
+- Try to support more new versions
 - ......
 
 ## Usage
