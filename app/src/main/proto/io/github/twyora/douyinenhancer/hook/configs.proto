@@ -103,11 +103,6 @@ message UGFileUtilsKt {
   optional Method get_audio_uri = 8;
 }
 
-message CommentExtensionKt {
-  optional Class class = 1;
-  optional Method has_valid_image_url = 2;
-}
-
 message ListenerProviderParam {
   optional Class class = 1;
   optional Field context = 2;
@@ -224,7 +219,6 @@ message HookInfo {
   optional CommentActionParams comment_action_params = 10;
   optional CommentLongPressItemModel comment_long_press_item_model = 11;
   optional SaveImageActionItem save_image_action_item = 12;
-  optional CommentExtensionKt comment_extension_kt = 13;
   optional CommentImageSaveDownloadListener comment_image_save_download_listener = 14;
   optional DownloadInfo download_info = 15;
   optional DigestUtils digest_utils = 16;
@@ -245,4 +239,6 @@ message HookInfo {
   optional ABTestServiceImpl ab_test_service_impl = 31;
   optional LppDownloadModule lpp_download_module = 32;
   optional AwemeStatistics aweme_statistics = 33;
+
+  reserved 13;
 }

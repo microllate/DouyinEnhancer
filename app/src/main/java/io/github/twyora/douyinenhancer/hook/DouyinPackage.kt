@@ -81,7 +81,6 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
     val commentActionParams = CommentActionParamsModule()
     val commentLongPressItemModel = CommentLongPressItemModelModule()
     val saveImageActionItem = SaveImageActionItemModule()
-    val commentExtensionsKt = CommentExtensionsKtModule()
     val listenerProviderParam = ListenerProviderParamModule()
     val commentImageSaveDownloadListener = CommentImageSaveDownloadListenerModule()
     val downloadInfo = DownloadInfoModule()
@@ -206,18 +205,6 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
         fun isVisible() = Method(
             hookInfo.saveImageActionItem.isVisible.nameOrNull,
             hookInfo.saveImageActionItem.isVisible.parameters.valuesListOrNull
-        )
-    }
-
-    inner class CommentExtensionsKtModule {
-        val selfClass by weak {
-            hookInfo.commentExtensionKt.class_.nameOrNull
-                ?.toClass(classLoader)
-        }
-
-        fun hasValidImageUrl() = Method(
-            hookInfo.commentExtensionKt.hasValidImageUrl.nameOrNull,
-            hookInfo.commentExtensionKt.hasValidImageUrl.parameters.valuesListOrNull
         )
     }
 
@@ -939,55 +926,6 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                             YLog.error("$TAG: Unable to populate config", it)
                         }
                     }
-
-                commentExtensionKt = commentExtensionKt {
-                    runCatching {
-                        bridge.findMethod {
-                            matcher {
-                                modifiers = Modifier.PUBLIC or Modifier.STATIC or Modifier.FINAL
-                                declaredClass = "com.ss.android.ugc.aweme.comment.util.CommentExtensionsKt"
-                                returnType = "boolean"
-                                params {
-                                    add("com.ss.android.ugc.aweme.comment.model.Comment")
-                                    add("int")
-                                }
-                                invokeMethods {
-                                    add {
-                                        declaredClass =
-                                            "com.ss.android.ugc.aweme.comment.model.CommentImageStruct"
-                                        returnType = "com.ss.android.ugc.aweme.base.model.UrlModel"
-                                        paramCount = 0
-                                        addUsingField {
-                                            name = "downloadUrl"
-                                        }
-                                    }
-                                }
-                            }
-                        }.singleOrNull()
-                            ?.also { match ->
-                                class_ =
-                                    class_ {
-                                        name = match.className
-                                    }
-                                hasValidImageUrl =
-                                    method {
-                                        name = match.methodName
-                                        parameters =
-                                            MethodKt.parameters {
-                                                values.clear()
-                                                values.addAll(match.paramTypeNames)
-                                            }
-                                    }
-                            } ?: run {
-                            YLog.error(
-                                "$TAG: Unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
-                            )
-                            return@commentExtensionKt
-                        }
-                    }.onFailure {
-                        YLog.error("$TAG: Unable to populate config", it)
-                    }
-                }
 
                 listenerProviderParam = listenerProviderParam {
                     runCatching {

@@ -73,31 +73,32 @@ object CommentEmojiHooker : YukiBaseHooker() {
 
         val packageInstance = DouyinPackage.instance
 
-        packageInstance.commentExtensionsKt.selfClass
-            ?.resolveMethod(packageInstance.commentExtensionsKt.hasValidImageUrl())?.hook {
-                before {
-                    val comment = args[0] ?: return@before
-                    val emojiUrls = extractEmojiUrls(comment)
-                    if (!emojiUrls.isNullOrEmpty()) {
-                        // force the visibility check to return true — show save button
-                        resultTrue()
-                    }
+        packageInstance.saveImageActionItem.selfClass?.resolveMethod(
+            packageInstance.saveImageActionItem.isVisible()
+        )?.hook {
+            before {
+                val comment = args[0] ?: return@before
+                val emojiUrls = extractEmojiUrls(comment)
+                if (!emojiUrls.isNullOrEmpty()) {
+                    // force the visibility check to return true — show save button
+                    resultTrue()
                 }
-            }?.result {
-                onConductFailure { param, throwable ->
-                    YLog.error("$TAG: Save emoji button hook runtime error", throwable)
-                }
-                onHookingFailure { throwable ->
-                    YLog.error("$TAG: Failed to hook save emoji button", throwable)
-                }
-                onHooked {
-                    YLog.info(
-                        "$TAG: Save emoji button hook installed successfully. The button will be shown for emoji comments"
-                    )
-                }.also {
-                    ret = it
-                }
-            } ?: run {
+            }
+        }?.result {
+            onConductFailure { param, throwable ->
+                YLog.error("$TAG: Save emoji button hook runtime error", throwable)
+            }
+            onHookingFailure { throwable ->
+                YLog.error("$TAG: Failed to hook save emoji button", throwable)
+            }
+            onHooked {
+                YLog.info(
+                    "$TAG: Save emoji button hook installed successfully. The button will be shown for emoji comments"
+                )
+            }.also {
+                ret = it
+            }
+        } ?: run {
             YLog.error(
                 "$TAG: Target method not found, save emoji to album button will not be shown"
             )
