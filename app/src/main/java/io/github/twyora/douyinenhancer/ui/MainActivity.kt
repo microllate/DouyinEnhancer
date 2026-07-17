@@ -1,6 +1,4 @@
-/**
- * Referenced from [BiliRoaming](https://github.com/yujincheng08/BiliRoaming/blob/master/app/src/main/java/me/iacn/biliroaming/MainActivity.kt)
- */
+// Referenced from [BiliRoaming](https://github.com/yujincheng08/BiliRoaming/blob/master/app/src/main/java/me/iacn/biliroaming/MainActivity.kt)
 
 @file:Suppress("DEPRECATION")
 
@@ -30,7 +28,10 @@ class MainActivity : Activity() {
         ).commit()
     }
 
-    class PrefsFragment : PreferenceFragment(), Preference.OnPreferenceChangeListener, Preference.OnPreferenceClickListener {
+    class PrefsFragment :
+        PreferenceFragment(),
+        Preference.OnPreferenceChangeListener,
+        Preference.OnPreferenceClickListener {
         @Deprecated("Deprecated in Java")
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
@@ -40,7 +41,7 @@ class MainActivity : Activity() {
             (findPreference("hide_launcher_icon") as? SwitchPreference)?.let {
                 val aliasName = ComponentName(activity, MainActivity::class.java.name + "Alias")
                 val isHidden = activity.packageManager.getComponentEnabledSetting(aliasName) ==
-                        PackageManager.COMPONENT_ENABLED_STATE_DISABLED
+                    PackageManager.COMPONENT_ENABLED_STATE_DISABLED
                 it.isChecked = isHidden
             }
             findPreference("hide_launcher_icon")?.onPreferenceChangeListener = this
@@ -55,31 +56,29 @@ class MainActivity : Activity() {
         }
 
         @Deprecated("Deprecated in Java")
-        override fun onPreferenceChange(preference: Preference, newValue: Any): Boolean {
-            return when (preference.key) {
-                "hide_launcher_icon" -> {
-                    val shouldHide = newValue as Boolean
-                    val status = if (shouldHide) {
-                        PackageManager.COMPONENT_ENABLED_STATE_DISABLED
-                    } else {
-                        PackageManager.COMPONENT_ENABLED_STATE_ENABLED
-                    }
-
-                    val aliasName = ComponentName(activity, MainActivity::class.java.name + "Alias")
-                    val packageManager = activity.packageManager
-                    if (packageManager.getComponentEnabledSetting(aliasName) != status) {
-                        packageManager.setComponentEnabledSetting(
-                            aliasName,
-                            status,
-                            PackageManager.DONT_KILL_APP
-                        )
-                    }
-
-                    true
+        override fun onPreferenceChange(preference: Preference, newValue: Any): Boolean = when (preference.key) {
+            "hide_launcher_icon" -> {
+                val shouldHide = newValue as Boolean
+                val status = if (shouldHide) {
+                    PackageManager.COMPONENT_ENABLED_STATE_DISABLED
+                } else {
+                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED
                 }
 
-                else -> false
+                val aliasName = ComponentName(activity, MainActivity::class.java.name + "Alias")
+                val packageManager = activity.packageManager
+                if (packageManager.getComponentEnabledSetting(aliasName) != status) {
+                    packageManager.setComponentEnabledSetting(
+                        aliasName,
+                        status,
+                        PackageManager.DONT_KILL_APP
+                    )
+                }
+
+                true
             }
+
+            else -> false
         }
 
         @Deprecated("Deprecated in Java")
