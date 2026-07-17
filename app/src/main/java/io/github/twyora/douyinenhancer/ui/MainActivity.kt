@@ -2,15 +2,19 @@
  * Referenced from [BiliRoaming](https://github.com/yujincheng08/BiliRoaming/blob/master/app/src/main/java/me/iacn/biliroaming/MainActivity.kt)
  */
 
+@file:Suppress("DEPRECATION")
+
 package io.github.twyora.douyinenhancer.ui
 
 import android.app.Activity
 import android.content.ComponentName
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.preference.Preference
 import android.preference.PreferenceFragment
 import android.preference.SwitchPreference
+import android.widget.Toast
 import com.highcapable.yukihookapi.YukiHookAPI
 import io.github.twyora.douyinenhancer.BuildConfig
 import io.github.twyora.douyinenhancer.R
@@ -80,7 +84,31 @@ class MainActivity : Activity() {
 
         @Deprecated("Deprecated in Java")
         override fun onPreferenceClick(preference: Preference): Boolean {
-            return false
+            return when (preference.key) {
+                "open_module_settings" -> {
+                    if (!YukiHookAPI.Status.isModuleActive) {
+                        Toast.makeText(
+                            activity,
+                            activity.getString(
+                                R.string.pref_about_activation_status_deactivated_summary
+                            ),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        return true
+                    }
+
+                    activity.packageManager.getLaunchIntentForPackage(
+                        "com.ss.android.ugc.aweme"
+                    )?.run {
+                        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+                        putExtra("douyinenhancer_start_settings", true)
+                        activity.startActivity(this)
+                    }
+                    true
+                }
+
+                else -> false
+            }
         }
     }
 }

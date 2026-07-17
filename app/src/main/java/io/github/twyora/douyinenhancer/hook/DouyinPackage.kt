@@ -10,6 +10,7 @@ import android.provider.Settings
 import com.highcapable.kavaref.KavaRef.Companion.resolve
 import com.highcapable.kavaref.condition.type.Modifiers
 import com.highcapable.kavaref.extension.toClass
+import com.highcapable.kavaref.extension.toClassOrNull
 import com.highcapable.yukihookapi.hook.log.YLog
 import io.github.twyora.douyinenhancer.BuildConfig
 import io.github.twyora.douyinenhancer.generated.AppProperties
@@ -101,6 +102,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
     val abTestServiceImpl = ABTestServiceImplModule()
     val lppDownloadModule = LppDownloadModuleModule()
     val awemeStatistics = AwemeStatisticsModule()
+    val mainActivity = MainActivityModule()
 
     inner class CommentImageStructModule {
         val selfClass by weak {
@@ -368,6 +370,22 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
         fun onResume() = Method(
             hookInfo.douYinSettingNewVersionActivity.onResume.nameOrNull,
             hookInfo.douYinSettingNewVersionActivity.onResume.parameters.valuesListOrNull
+        )
+    }
+
+    inner class MainActivityModule {
+        val selfClass by weak {
+            "com.ss.android.ugc.aweme.main.MainActivity".toClassOrNull(classLoader)
+        }
+
+        fun onResume() = Method(
+            "onResume",
+            null
+        )
+
+        fun onNewIntent() = Method(
+            "onNewIntent",
+            listOf("android.content.Intent")
         )
     }
 
