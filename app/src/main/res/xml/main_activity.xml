@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:key="pref_category_settings"
+        android:title="@string/pref_category_settings">
+
+        <Preference
+            android:key="open_module_settings"
+            android:title="@string/pref_settings_open_module_settings_title"
+            android:summary="@string/pref_settings_open_module_settings_summary" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="hide_launcher_icon"
+            android:title="@string/pref_settings_hide_launcher_icon_title"
+            android:summary="@string/pref_settings_hide_launcher_icon_summary" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:key="pref_category_about"
+        android:title="@string/pref_category_about">
+
+        <Preference
+            android:key="version"
+            android:title="@string/pref_about_version_title"
+            android:summary="@string/pref_about_version_summary" />
+
+        <Preference
+            android:key="author"
+            android:title="@string/pref_about_author_title"
+            android:summary="@string/pref_about_author_summary">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="@string/author_url" />
+        </Preference>
+
+        <Preference
+            android:key="repository"
+            android:title="@string/pref_about_repository_title"
+            android:summary="@string/pref_about_repository_summary">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="@string/repository_url" />
+        </Preference>
+
+        <Preference
+            android:key="telegram"
+            android:title="@string/pref_about_telegram_title"
+            android:summary="@string/pref_about_telegram_summary">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="@string/telegram_url"/>
+        </Preference>
+
+        <Preference
+            android:key="build_time"
+            android:title="@string/pref_about_build_time_title"
+            android:summary="@string/unknown"/>
+
+        <Preference
+            android:key="back_then"
+            android:title="@string/pref_about_back_then_title"
+            android:summary="@string/pref_about_back_then_summary" >
+        </Preference>
+
+        <Preference
+            android:key="activation_status"
+            android:title="@string/pref_about_activation_status_disabled_title"
+            android:summary="@string/pref_about_activation_status_deactivated_summary" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
