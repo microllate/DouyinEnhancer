@@ -109,6 +109,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
     val heifBitmapFactoryImpl = HeifBitmapFactoryImplModule()
     val downLoadExecutor = DownLoadExecutorModule()
     val downLoadTask = DownLoadTaskModule()
+    val downloadLivePhotoExecutor = DownloadLivePhotoExecutorModule()
     val singleImageToMp4Composer = SingleImageToMp4ComposerModule()
     val multiImageToMp4Composer = MultiImageToMp4ComposerModule()
     val mainActivity = MainActivityModule()
@@ -532,7 +533,22 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                 ?.toClass(classLoader)
         }
 
-        fun targetFilePath() = Field(hookInfo.downLoadTask.targetFilePath.nameOrNull)
+        fun getTargetFilePaths() = Method(
+            hookInfo.downLoadTask.getTargetFilePaths.nameOrNull,
+            hookInfo.downLoadTask.getTargetFilePaths.parameters.valuesListOrNull
+        )
+    }
+
+    inner class DownloadLivePhotoExecutorModule {
+        val selfClass by weak {
+            hookInfo.downloadLivePhotoExecutor.class_.nameOrNull
+                ?.toClass(classLoader)
+        }
+
+        fun encodeLivePhoto() = Method(
+            hookInfo.downloadLivePhotoExecutor.encodeLivePhoto.nameOrNull,
+            hookInfo.downloadLivePhotoExecutor.encodeLivePhoto.parameters.valuesListOrNull
+        )
     }
 
     inner class SingleImageToMp4ComposerModule {
@@ -653,6 +669,11 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
         fun enableSaveImageToVideoLocalWaterMask() = Method(
             hookInfo.abTestServiceImpl.enableSaveImageToVideoLocalWaterMask.nameOrNull,
             hookInfo.abTestServiceImpl.enableSaveImageToVideoLocalWaterMask.parameters.valuesListOrNull
+        )
+
+        fun enableVEAddLiveVideoWaterMark() = Method(
+            hookInfo.abTestServiceImpl.enableVEAddLiveVideoWaterMark.nameOrNull,
+            hookInfo.abTestServiceImpl.enableVEAddLiveVideoWaterMark.parameters.valuesListOrNull
         )
     }
 
@@ -1587,6 +1608,9 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                     grouponLargeCard = field {
                         name = "grouponLargeCard"
                     }
+                    isLivePhoto = field {
+                        name = "isLivePhoto"
+                    }
                     isLive = method {
                         name = "isLive"
                     }
@@ -1699,11 +1723,22 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                 downLoadTask = downLoadTask {
                     runCatching {
                         val downloadTaskClassName = this@hookInfo.downLoadExecutor.execute.parameters.valuesListOrNull?.firstOrNull()
-                        val targetFilePathField = downloadTaskClassName?.toClass(hostAppClassLoader)?.resolve()?.firstFieldOrNull {
-                            type = String::class
-                        }?.self ?: run {
+                            ?: run {
+                                YLog.error(
+                                    "$TAG: Unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated classes"
+                                )
+                                return@downLoadTask
+                            }
+                        val getTargetFilePathsMethodData = bridge.findMethod {
+                            matcher {
+                                declaredClass = downloadTaskClassName
+                                returnType = "java.util.List"
+                            }
+                        }.singleOrNull()
+
+                        if (getTargetFilePathsMethodData == null) {
                             YLog.error(
-                                "$TAG: Unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated fields"
+                                "$TAG: Unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
                             )
                             return@downLoadTask
                         }
@@ -1711,8 +1746,45 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                         class_ = class_ {
                             name = downloadTaskClassName
                         }
-                        targetFilePath = field {
-                            name = targetFilePathField.name
+                        getTargetFilePaths = method {
+                            name = getTargetFilePathsMethodData.methodName
+                            parameters = MethodKt.parameters {
+                                values.clear()
+                                values.addAll(getTargetFilePathsMethodData.paramTypeNames)
+                            }
+                        }
+                    }.onFailure {
+                        YLog.error("$TAG: Unable to populate config", it)
+                    }
+                }
+
+                downloadLivePhotoExecutor = downloadLivePhotoExecutor {
+                    runCatching {
+                        val encodeLivePhotoMethodData = bridge.findMethod {
+                            matcher {
+                                modifiers = Modifier.PUBLIC or Modifier.FINAL
+                                returnType = "boolean"
+                                usingStrings {
+                                    add("DownloadLiveExecutor")
+                                    add("encode live photo isFinish: ")
+                                }
+                            }
+                        }.singleOrNull() ?: run {
+                            YLog.error(
+                                "$TAG: Unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
+                            )
+                            return@downloadLivePhotoExecutor
+                        }
+
+                        class_ = class_ {
+                            name = encodeLivePhotoMethodData.className
+                        }
+                        encodeLivePhoto = method {
+                            name = encodeLivePhotoMethodData.methodName
+                            parameters = MethodKt.parameters {
+                                values.clear()
+                                values.addAll(encodeLivePhotoMethodData.paramTypeNames)
+                            }
                         }
                     }.onFailure {
                         YLog.error("$TAG: Unable to populate config", it)
@@ -2059,6 +2131,9 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                     }
                     enableSaveImageToVideoLocalWaterMask = method {
                         name = "enableSaveImageToVideoLocalWaterMask"
+                    }
+                    enableVEAddLiveVideoWaterMark = method {
+                        name = "enableVEAddLiveVideoWaterMark"
                     }
                 }
 

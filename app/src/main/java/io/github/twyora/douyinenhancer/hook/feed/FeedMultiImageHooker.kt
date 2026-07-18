@@ -38,10 +38,15 @@ object FeedMultiImageHooker : YukiBaseHooker() {
         }
 
         installInjectPlayUrlIntoImageDownloadHook()
+
         installConvertVvicImageToPngHook()
+
         installConvertSingleVvicImageToMp4Hook()
         installConvertMultiVvicImageToMp4Hook()
         installDisableSaveImageToVideoLocalWaterMaskHook()
+
+        installConvertVvicCoverImageToPngHook()
+        installDisableVEAddLiveVideoWaterMarkHook()
 
         packageInstance.imageResourceRxDownloadListener.selfClass?.resolveMethod(
             packageInstance.imageResourceRxDownloadListener.onSuccessed()
@@ -145,6 +150,53 @@ object FeedMultiImageHooker : YukiBaseHooker() {
             }
         }
 
+    private fun installConvertVvicCoverImageToPngHook(): YukiMemberHookCreator.MemberHookCreator.Result? {
+        return packageInstance.downloadLivePhotoExecutor.selfClass?.resolveMethod(
+            packageInstance.downloadLivePhotoExecutor.encodeLivePhoto()
+        )?.hook {
+            before {
+                val downloadTask = args[0] ?: return@before
+
+                val vvicImagePathList = downloadTask.invokeMethod<List<String?>>(
+                    packageInstance.downLoadTask.getTargetFilePaths()
+                )?.filterNotNull()?.filter {
+                    it.isNotBlank() && File(it).exists() && FileTypeDetector.detect(it).mimeType == "image/vvic"
+                }
+
+                if (verbose) {
+                    YLog.debug("$TAG: vvic image path list: $vvicImagePathList")
+                }
+
+                vvicImagePathList?.forEach {
+                    overwriteVvicWithPng(it)
+                }
+            }
+        }?.result {
+            onConductFailure { _, throwable ->
+                YLog.error("$TAG: failed to convert vvic cover image to png", throwable)
+            }
+            onHookingFailure {
+                YLog.error("$TAG: hook failed, vvic cover image to png conversion unavailable")
+            }
+        }
+    }
+
+    private fun installDisableVEAddLiveVideoWaterMarkHook(): YukiMemberHookCreator.MemberHookCreator.Result? =
+        packageInstance.abTestServiceImpl.selfClass?.resolveMethod(
+            packageInstance.abTestServiceImpl.enableVEAddLiveVideoWaterMark()
+        )?.hook {
+            before {
+                resultFalse()
+            }
+        }?.result {
+            onConductFailure { _, throwable ->
+                YLog.error("$TAG: failed to hook ABTestServiceImpl.enableVEAddLiveVideoWaterMark", throwable)
+            }
+            onHookingFailure {
+                YLog.error("$TAG: hook failed, unable to remove watermark from live video")
+            }
+        }
+
     private fun installConvertVvicImageToPngHook(): YukiMemberHookCreator.MemberHookCreator.Result? {
         return packageInstance.downLoadExecutor.selfClass?.resolveMethod(
             packageInstance.downLoadExecutor.execute()
@@ -152,21 +204,19 @@ object FeedMultiImageHooker : YukiBaseHooker() {
             before {
                 val downloadTask = args[0] ?: return@before
 
-                val imageFilePath = downloadTask.getField<String>(
-                    packageInstance.downLoadTask.targetFilePath()
-                ) ?: run {
-                    YLog.error("$TAG: Failed to get image file path when downloading image")
+                val imageFilePath = downloadTask.invokeMethod<List<String?>>(
+                    packageInstance.downLoadTask.getTargetFilePaths()
+                )?.filterNotNull()?.filter {
+                    it.isNotBlank() && File(it).exists() && FileTypeDetector.detect(it).mimeType == "image/vvic"
+                } ?: run {
+                    YLog.error("$TAG: failed to get image file path when downloading image")
                     return@before
                 }
 
-                val imageFile = File(imageFilePath)
-                if (!imageFile.exists()) {
-                    YLog.error("$TAG: Image file does not exist when downloading image: ${imageFile.absolutePath}")
-                    return@before
-                }
-
-                if (!overwriteVvicWithPng(imageFilePath)) {
-                    YLog.error("$TAG: Failed to convert vvic image to png when downloading image: $imageFilePath")
+                imageFilePath.forEach {
+                    if (!overwriteVvicWithPng(it)) {
+                        YLog.error("$TAG: failed to convert vvic image to png when downloading image: $it")
+                    }
                 }
             }
         }?.result {
@@ -179,8 +229,8 @@ object FeedMultiImageHooker : YukiBaseHooker() {
         }
     }
 
-    private fun installConvertSingleVvicImageToMp4Hook(): YukiMemberHookCreator.MemberHookCreator.Result? {
-        return packageInstance.singleImageToMp4Composer.selfClass?.resolveMethod(
+    private fun installConvertSingleVvicImageToMp4Hook(): YukiMemberHookCreator.MemberHookCreator.Result? =
+        packageInstance.singleImageToMp4Composer.selfClass?.resolveMethod(
             packageInstance.singleImageToMp4Composer.onLoad()
         )?.hook {
             before {
@@ -210,10 +260,9 @@ object FeedMultiImageHooker : YukiBaseHooker() {
                 YLog.error("$TAG: hook failed, vvic image to png conversion in mp4 composer unavailable")
             }
         }
-    }
 
-    private fun installConvertMultiVvicImageToMp4Hook(): YukiMemberHookCreator.MemberHookCreator.Result? {
-        return packageInstance.multiImageToMp4Composer.selfClass?.resolveMethod(
+    private fun installConvertMultiVvicImageToMp4Hook(): YukiMemberHookCreator.MemberHookCreator.Result? =
+        packageInstance.multiImageToMp4Composer.selfClass?.resolveMethod(
             packageInstance.multiImageToMp4Composer.onLoad()
         )?.hook {
             before {
@@ -239,7 +288,6 @@ object FeedMultiImageHooker : YukiBaseHooker() {
                 YLog.error("$TAG: hook failed, vvic image to png conversion in mutil mp4 composer unavailable")
             }
         }
-    }
 
     private fun overwriteVvicWithPng(imageFilePath: String): Boolean {
         val imageFile = File(imageFilePath)
