@@ -2,8 +2,6 @@ package io.github.twyora.douyinenhancer.hook.feed
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.icu.text.RelativeDateTimeFormatter
-import android.os.strictmode.UntaggedSocketViolation
 import com.highcapable.kavaref.KavaRef.Companion.resolve
 import com.highcapable.yukihookapi.hook.core.YukiMemberHookCreator
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
@@ -13,21 +11,25 @@ import io.github.twyora.douyinenhancer.config.key.SaveKey
 import io.github.twyora.douyinenhancer.hook.DouyinPackage
 import io.github.twyora.douyinenhancer.hook.HookOnMainProcess
 import io.github.twyora.douyinenhancer.utils.Field
+import io.github.twyora.douyinenhancer.utils.FileTypeDetector
 import io.github.twyora.douyinenhancer.utils.Method
 import io.github.twyora.douyinenhancer.utils.getField
 import io.github.twyora.douyinenhancer.utils.getStaticField
 import io.github.twyora.douyinenhancer.utils.invokeMethod
 import io.github.twyora.douyinenhancer.utils.resolveMethod
 import io.github.twyora.douyinenhancer.utils.setField
-import org.apache.commons.collections4.queue.CircularFifoQueue
+import java.io.File
 import java.io.FileInputStream
-import java.nio.file.Files
-import kotlin.io.path.Path
+import org.apache.commons.collections4.queue.CircularFifoQueue
 
 @HookOnMainProcess
 object FeedMultiImageHooker : YukiBaseHooker() {
     private val TAG = this::class.simpleName
+
     private val ring = CircularFifoQueue<String>(5)
+
+    private val packageInstance
+        get() = DouyinPackage.instance
 
     override fun onHook() {
         if (!FastKVConfigManager.settings.getBoolean(SaveKey.FEED_MULTI_IMAGE_REMOVE_WATERMARK, false)) {
@@ -37,7 +39,6 @@ object FeedMultiImageHooker : YukiBaseHooker() {
         installInjectPlayUrlIntoImageDownloadHook()
         installDisableSaveImageToVideoLocalWaterMaskHook()
 
-        val packageInstance = DouyinPackage.instance
         packageInstance.imageResourceRxDownloadListener.selfClass?.resolveMethod(
             packageInstance.imageResourceRxDownloadListener.onSuccessed()
         )?.hook {
@@ -55,51 +56,72 @@ object FeedMultiImageHooker : YukiBaseHooker() {
             }
         }
 
-        //LX/19xB;->LIZIZ(LX/19u9;)Z
-        "X.19xB".toClass().resolve().firstMethodOrNull {
-            name = "LIZIZ"
-        }?.hook {
+        packageInstance.downLoadExecutor.selfClass?.resolveMethod(
+            packageInstance.downLoadExecutor.execute()
+        )?.hook {
             before {
-                val _19u9 = args[0] ?: return@before
-                val imgFilePath = _19u9.getField<String>(
-                    Field(name = "LIZJ")
+                val downloadTask = args[0] ?: return@before
+
+                val imageFilePath = downloadTask.getField<String>(
+                    packageInstance.downLoadTask.targetFilePath()
                 )
-                if (imgFilePath == null) {
-                    YLog.error("$TAG: imgFilePath is null")
+                if (imageFilePath == null) {
+                    YLog.error("$TAG: Failed to get image file path from download task")
                     return@before
-                } else {
-                    YLog.debug("$TAG: imgFilePath: $imgFilePath")
                 }
 
-                val imgBytes = FileInputStream(imgFilePath).use {
+                val imageFile = File(imageFilePath)
+                if (!imageFile.exists()) {
+                    YLog.error("$TAG: Image file does not exist")
+                    return@before
+                }
+
+                val fvvicInfo = FileTypeDetector.detect(imageFile)
+                if (fvvicInfo.mimeType != "image/vvic") {
+                    YLog.debug("$TAG: Image is not in vvic format (got ${fvvicInfo.mimeType}), skipping")
+                    return@before
+                }
+
+                // convert to bitmap
+                val imageBytes = FileInputStream(imageFile).use {
                     it.readBytes()
                 }
-                val options = BitmapFactory.Options()
-                options.inPreferredConfig = Bitmap.Config.ARGB_8888
-
-                val bitmap = "com.bytedance.fresco.heif.HeifDecoder".toClass().getStaticField<Any>(
-                    Field(name = "sBitmapFactory")
+                val bitmap = packageInstance.heifDecoder.selfClass?.getStaticField<Any>(
+                    packageInstance.heifDecoder.sBitmapFactory()
                 )?.invokeMethod<Bitmap>(
-                    Method(name = "decodeByteArray", parameters = null),
-                    imgBytes,
+                    packageInstance.heifBitmapFactoryImpl.decodeByteArray(),
+                    imageBytes,
                     0,
-                    imgBytes.size,
-                    options
+                    imageBytes.size,
+                    BitmapFactory.Options().apply {
+                        inPreferredConfig = Bitmap.Config.ARGB_8888
+                    }
                 )
                 if (bitmap == null) {
-                    YLog.error("$TAG: bitmap is null")
+                    YLog.error("$TAG: Failed to decode image to bitmap")
                     return@before
-                } else {
-                    YLog.info("$TAG: bitmap nooooooooooot null!")
                 }
+
+                // save bitmap as png alongside the original file
+                val pngFile = File(imageFilePath).run { resolveSibling("$nameWithoutExtension.png") }
+                runCatching {
+                    pngFile.outputStream().use { out ->
+                        require(bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)) {
+                            "Failed to compress image to png"
+                        }
+                    }
+                }.onSuccess {
+                    YLog.debug("$TAG: Saved png image to ${pngFile.absolutePath}")
+                }.onFailure {
+                    YLog.error("$TAG: Failed to save png image", it)
+                }
+
                 bitmap.recycle()
             }
         }
     }
 
     private fun installInjectPlayUrlIntoImageDownloadHook(): YukiMemberHookCreator.MemberHookCreator.Result? {
-        val packageInstance = DouyinPackage.instance
-
         return packageInstance.downloadAction.selfClass?.resolveMethod(
             packageInstance.downloadAction.startDownload()
         )?.hook {
@@ -203,10 +225,8 @@ object FeedMultiImageHooker : YukiBaseHooker() {
         }
     }
 
-    private fun installDisableSaveImageToVideoLocalWaterMaskHook(): YukiMemberHookCreator.MemberHookCreator.Result? {
-        val packageInstance = DouyinPackage.instance
-
-        return packageInstance.abTestServiceImpl.selfClass?.resolveMethod(
+    private fun installDisableSaveImageToVideoLocalWaterMaskHook(): YukiMemberHookCreator.MemberHookCreator.Result? =
+        packageInstance.abTestServiceImpl.selfClass?.resolveMethod(
             packageInstance.abTestServiceImpl.enableSaveImageToVideoLocalWaterMask()
         )?.hook {
             before {
@@ -221,5 +241,4 @@ object FeedMultiImageHooker : YukiBaseHooker() {
                 YLog.error("$TAG: hook failed, unable to remove watermark from save-image-to-video")
             }
         }
-    }
 }

@@ -103,6 +103,10 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
     val abTestServiceImpl = ABTestServiceImplModule()
     val lppDownloadModule = LppDownloadModuleModule()
     val awemeStatistics = AwemeStatisticsModule()
+    val heifDecoder = HeifDecoderModule()
+    val heifBitmapFactoryImpl = HeifBitmapFactoryImplModule()
+    val downLoadExecutor = DownLoadExecutorModule()
+    val downLoadTask = DownLoadTaskModule()
     val mainActivity = MainActivityModule()
 
     inner class CommentImageStructModule {
@@ -483,6 +487,48 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
         fun diggCount() = Field(hookInfo.awemeStatistics.diggCount.nameOrNull)
 
         fun shareCount() = Field(hookInfo.awemeStatistics.shareCount.nameOrNull)
+    }
+
+    inner class HeifDecoderModule {
+        val selfClass by weak {
+            hookInfo.heifDecoder.class_.nameOrNull
+                ?.toClass(classLoader)
+        }
+
+        fun sBitmapFactory() = Field(hookInfo.heifDecoder.sBitmapFactory.nameOrNull)
+    }
+
+    inner class HeifBitmapFactoryImplModule {
+        val selfClass by weak {
+            hookInfo.heifBitmapFactoryImpl.class_.nameOrNull
+                ?.toClass(classLoader)
+        }
+
+        fun decodeByteArray() = Method(
+            hookInfo.heifBitmapFactoryImpl.decodeByteArray.nameOrNull,
+            hookInfo.heifBitmapFactoryImpl.decodeByteArray.parameters.valuesListOrNull
+        )
+    }
+
+    inner class DownLoadExecutorModule {
+        val selfClass by weak {
+            hookInfo.downLoadExecutor.class_.nameOrNull
+                ?.toClass(classLoader)
+        }
+
+        fun execute() = Method(
+            hookInfo.downLoadExecutor.execute.nameOrNull,
+            hookInfo.downLoadExecutor.execute.parameters.valuesListOrNull
+        )
+    }
+
+    inner class DownLoadTaskModule {
+        val selfClass by weak {
+            hookInfo.downLoadTask.class_.nameOrNull
+                ?.toClass(classLoader)
+        }
+
+        fun targetFilePath() = Field(hookInfo.downLoadTask.targetFilePath.nameOrNull)
     }
 
     inner class VideoModule {
@@ -1544,6 +1590,100 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                     }
                     shareCount = field {
                         name = "shareCount"
+                    }
+                }
+
+                heifDecoder = heifDecoder {
+                    class_ = class_ {
+                        name = "com.bytedance.fresco.heif.HeifDecoder"
+                    }
+                    sBitmapFactory = field {
+                        name = "sBitmapFactory"
+                    }
+                }
+
+                heifBitmapFactoryImpl = heifBitmapFactoryImpl {
+                    class_ = class_ {
+                        name = "com.bytedance.fresco.heif.HeifBitmapFactoryImpl"
+                    }
+                    decodeByteArray = method {
+                        name = "decodeByteArray"
+                        parameters = MethodKt.parameters {
+                            values.clear()
+                            values.addAll(
+                                listOf(
+                                    "[B",
+                                    "int",
+                                    "int",
+                                    "android.graphics.BitmapFactory\$Options"
+                                )
+                            )
+                        }
+                    }
+                }
+
+                downLoadExecutor = downLoadExecutor {
+                    runCatching {
+                        val executeMethodData = bridge.findMethod {
+                            matcher {
+                                modifiers = Modifier.PUBLIC or Modifier.FINAL
+                                returnType = "boolean"
+                                paramCount = 1
+                                usingStrings {
+                                    add("/douyin")
+                                    add("share_")
+                                    add(".png")
+                                    add("DownLoadExecutor")
+                                }
+                                invokeMethods {
+                                    add {
+                                        descriptor =
+                                            "Lcom/bytedance/android/ug/UGFileUtilsKt;->getExternalStorageDirectory(Ljava/lang/String;Z)Ljava/lang/String;"
+                                    }
+                                }
+                            }
+                        }.singleOrNull() ?: run {
+                            YLog.error(
+                                "$TAG: Unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
+                            )
+                            return@downLoadExecutor
+                        }
+
+                        class_ = class_ {
+                            name = executeMethodData.className
+                        }
+                        execute = method {
+                            name = executeMethodData.methodName
+                            parameters = MethodKt.parameters {
+                                values.clear()
+                                values.addAll(executeMethodData.paramTypeNames)
+                            }
+                        }
+                    }.onFailure {
+                        YLog.error("$TAG: Unable to populate config", it)
+                    }
+                }
+
+                downLoadTask = downLoadTask {
+                    runCatching {
+                        val downloadTaskClassName = this@hookInfo.downLoadExecutor.execute.parameters.valuesListOrNull?.firstOrNull()
+                        val targetFilePathField = downloadTaskClassName?.toClass(hostAppClassLoader)?.resolve()?.firstFieldOrNull {
+                            type = String::class
+                        }?.self ?: run {
+                            YLog.error(
+                                "$TAG: Unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated fields"
+                            )
+                            return@downLoadTask
+                        }
+
+                        class_ = class_ {
+                            name = downloadTaskClassName
+                        }
+                        targetFilePath = field {
+                            name = targetFilePathField.name
+                        }
+                    }.onFailure {
+                        YLog.error("$TAG: Unable to populate config", it)
                     }
                 }
 

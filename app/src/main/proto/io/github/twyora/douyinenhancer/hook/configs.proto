@@ -217,6 +217,26 @@ message ImageResourceRxDownloadListener{
   optional Method on_successed = 3;
 }
 
+message HeifDecoder {
+  optional Class class = 1;
+  optional Field s_bitmap_factory = 2;
+}
+
+message HeifBitmapFactoryImpl {
+  optional Class class = 1;
+  optional Method decode_byte_array = 2;
+}
+
+message DownLoadExecutor {
+  optional Class class = 1;
+  optional Method execute = 2;
+}
+
+message DownLoadTask {
+  optional Class class = 1;
+  optional Field target_file_path = 2;
+}
+
 message HookInfo {
   uint64 last_update_time = 1;
   uint32 module_version_code = 2;
@@ -253,4 +273,8 @@ message HookInfo {
   optional LppDownloadModule lpp_download_module = 32;
   optional AwemeStatistics aweme_statistics = 33;
   optional ImageResourceRxDownloadListener image_resource_rx_download_listener = 34;
+  optional HeifDecoder heif_decoder = 35;
+  optional HeifBitmapFactoryImpl heif_bitmap_factory_impl = 36;
+  optional DownLoadExecutor down_load_executor = 37;
+  optional DownLoadTask down_load_task = 38;
 }
