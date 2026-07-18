@@ -237,6 +237,17 @@ message DownLoadTask {
   optional Field target_file_path = 2;
 }
 
+message SingleImageToMp4Composer {
+  optional Class class = 1;
+  optional Method on_load = 2;
+}
+
+message MultiImageToMp4Composer {
+  optional Class class = 1;
+  optional Method on_load = 2;
+  optional Field image_path_list = 3;
+}
+
 message HookInfo {
   uint64 last_update_time = 1;
   uint32 module_version_code = 2;
@@ -277,4 +288,6 @@ message HookInfo {
   optional HeifBitmapFactoryImpl heif_bitmap_factory_impl = 36;
   optional DownLoadExecutor down_load_executor = 37;
   optional DownLoadTask down_load_task = 38;
+  optional SingleImageToMp4Composer single_image_to_mp4_composer = 39;
+  optional MultiImageToMp4Composer multi_image_to_mp4_composer = 40;
 }

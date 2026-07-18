@@ -8,6 +8,8 @@ import android.app.AndroidAppHelper
 import android.content.Context
 import android.provider.Settings
 import com.highcapable.kavaref.KavaRef.Companion.resolve
+import com.highcapable.kavaref.condition.matcher.extension.parameterizedBy
+import com.highcapable.kavaref.condition.matcher.extension.toTypeMatcher
 import com.highcapable.kavaref.condition.type.Modifiers
 import com.highcapable.kavaref.extension.toClass
 import com.highcapable.kavaref.extension.toClassOrNull
@@ -107,6 +109,8 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
     val heifBitmapFactoryImpl = HeifBitmapFactoryImplModule()
     val downLoadExecutor = DownLoadExecutorModule()
     val downLoadTask = DownLoadTaskModule()
+    val singleImageToMp4Composer = SingleImageToMp4ComposerModule()
+    val multiImageToMp4Composer = MultiImageToMp4ComposerModule()
     val mainActivity = MainActivityModule()
 
     inner class CommentImageStructModule {
@@ -529,6 +533,34 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
         }
 
         fun targetFilePath() = Field(hookInfo.downLoadTask.targetFilePath.nameOrNull)
+    }
+
+    inner class SingleImageToMp4ComposerModule {
+        val selfClass by weak {
+            hookInfo.singleImageToMp4Composer.class_.nameOrNull
+                ?.toClass(classLoader)
+        }
+
+        fun onLoad() = Method(
+            hookInfo.singleImageToMp4Composer.onLoad.nameOrNull,
+            hookInfo.singleImageToMp4Composer.onLoad.parameters.valuesListOrNull
+        )
+    }
+
+    inner class MultiImageToMp4ComposerModule {
+        val selfClass by weak {
+            hookInfo.multiImageToMp4Composer.class_.nameOrNull
+                ?.toClass(classLoader)
+        }
+
+        fun onLoad() = Method(
+            hookInfo.multiImageToMp4Composer.onLoad.nameOrNull,
+            hookInfo.multiImageToMp4Composer.onLoad.parameters.valuesListOrNull
+        )
+
+        fun imagePathList() = Field(
+            hookInfo.multiImageToMp4Composer.imagePathList.nameOrNull
+        )
     }
 
     inner class VideoModule {
@@ -1681,6 +1713,102 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                         }
                         targetFilePath = field {
                             name = targetFilePathField.name
+                        }
+                    }.onFailure {
+                        YLog.error("$TAG: Unable to populate config", it)
+                    }
+                }
+
+                singleImageToMp4Composer = singleImageToMp4Composer {
+                    runCatching {
+                        val onLoadMethodData = bridge.findMethod {
+                            matcher {
+                                name = "onLoad"
+                                usingStrings {
+                                    add("[onLoad] failed, cause path not exist")
+                                }
+                                invokeMethods {
+                                    add {
+                                        descriptor = "Lcom/ss/android/ugc/aweme/utils/FileUtils;->checkFileExists(Ljava/lang/String;)Z"
+                                    }
+                                    add {
+                                        descriptor =
+                                            "Lcom/ss/android/ugc/aweme/services/external/ui/IStoryService;->convertImgToMp4(Landroid/content/Context;Landroidx/lifecycle/LifecycleOwner;Ljava/lang/String;Ljava/lang/String;ZJLjava/lang/String;Lcom/ss/android/ugc/aweme/services/external/ui/IStoryService\$OnMuxImgToMp4Callback;)V"
+                                    }
+                                }
+                            }
+                        }.singleOrNull() ?: run {
+                            YLog.error(
+                                "$TAG: Unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
+                            )
+                            return@singleImageToMp4Composer
+                        }
+
+                        class_ = class_ {
+                            name = onLoadMethodData.className
+                        }
+                        onLoad = method {
+                            name = onLoadMethodData.methodName
+                            parameters = MethodKt.parameters {
+                                values.clear()
+                                values.addAll(onLoadMethodData.paramTypeNames)
+                            }
+                        }
+                    }.onFailure {
+                        YLog.error("$TAG: Unable to populate config", it)
+                    }
+                }
+
+                multiImageToMp4Composer = multiImageToMp4Composer {
+                    runCatching {
+                        val onLoadMethodData = bridge.findMethod {
+                            matcher {
+                                name = "onLoad"
+                                usingStrings {
+                                    add("images file not exist!")
+                                }
+                                invokeMethods {
+                                    add {
+                                        descriptor = "Lcom/ss/android/ugc/aweme/utils/FileUtils;->checkFileExists(Ljava/lang/String;)Z"
+                                    }
+                                    add {
+                                        descriptor =
+                                            "Lcom/ss/android/ugc/aweme/services/external/ui/IStoryService;->convertImgListToMp4UseMusicUrl(Landroid/app/Activity;Landroidx/lifecycle/LifecycleOwner;Ljava/util/List;Lcom/ss/android/ugc/aweme/music/model/Music;ZZLjava/lang/String;ZLkotlin/jvm/functions/Function1;)V"
+                                    }
+                                }
+                            }
+                        }.singleOrNull()
+
+                        val imagePathListFieldName = onLoadMethodData?.className
+                            ?.toClass(hostAppClassLoader)
+                            ?.resolve()
+                            ?.firstFieldOrNull {
+                                genericType = List::class.parameterizedBy(
+                                    List::class.parameterizedBy(
+                                        String::class.toTypeMatcher()
+                                    )
+                                )
+                            }?.self?.name
+
+                        if (onLoadMethodData == null || imagePathListFieldName == null) {
+                            YLog.error(
+                                "$TAG: Unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods or fields"
+                            )
+                            return@multiImageToMp4Composer
+                        }
+
+                        class_ = class_ {
+                            name = onLoadMethodData.className
+                        }
+                        onLoad = method {
+                            name = onLoadMethodData.methodName
+                            parameters = MethodKt.parameters {
+                                values.clear()
+                                values.addAll(onLoadMethodData.paramTypeNames)
+                            }
+                        }
+                        imagePathList = field {
+                            name = imagePathListFieldName
                         }
                     }.onFailure {
                         YLog.error("$TAG: Unable to populate config", it)
