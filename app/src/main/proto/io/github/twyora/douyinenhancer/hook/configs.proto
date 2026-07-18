@@ -211,7 +211,7 @@ message LppDownloadModule {
   optional Method get_visibility = 2;
 }
 
-message ImageResourceRxDownloadListener{
+message ImageResourceRxDownloadListener {
   optional Class class = 1;
   optional Field observable_emitter = 2;
   optional Method on_successed = 3;

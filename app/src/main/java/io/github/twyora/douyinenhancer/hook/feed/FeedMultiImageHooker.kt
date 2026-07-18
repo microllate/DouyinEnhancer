@@ -26,10 +26,13 @@ import org.apache.commons.collections4.queue.CircularFifoQueue
 object FeedMultiImageHooker : YukiBaseHooker() {
     private val TAG = this::class.simpleName
 
-    private val ring = CircularFifoQueue<String>(5)
-
     private val packageInstance
         get() = DouyinPackage.instance
+
+    private val ring = CircularFifoQueue<String>(5)
+
+    // TODO: FastKVConfigManager.global.getBoolean("verbose", true)
+    private val verbose = false
 
     override fun onHook() {
         if (!FastKVConfigManager.settings.getBoolean(SaveKey.FEED_MULTI_IMAGE_REMOVE_WATERMARK, false)) {
@@ -37,6 +40,7 @@ object FeedMultiImageHooker : YukiBaseHooker() {
         }
 
         installInjectPlayUrlIntoImageDownloadHook()
+        installConvertVvicImageToPngHook()
         installDisableSaveImageToVideoLocalWaterMaskHook()
 
         packageInstance.imageResourceRxDownloadListener.selfClass?.resolveMethod(
@@ -53,70 +57,6 @@ object FeedMultiImageHooker : YukiBaseHooker() {
                 } else {
                     YLog.debug("$TAG: file path: $filePath")
                 }
-            }
-        }
-
-        packageInstance.downLoadExecutor.selfClass?.resolveMethod(
-            packageInstance.downLoadExecutor.execute()
-        )?.hook {
-            before {
-                val downloadTask = args[0] ?: return@before
-
-                val imageFilePath = downloadTask.getField<String>(
-                    packageInstance.downLoadTask.targetFilePath()
-                )
-                if (imageFilePath == null) {
-                    YLog.error("$TAG: Failed to get image file path from download task")
-                    return@before
-                }
-
-                val imageFile = File(imageFilePath)
-                if (!imageFile.exists()) {
-                    YLog.error("$TAG: Image file does not exist")
-                    return@before
-                }
-
-                val fvvicInfo = FileTypeDetector.detect(imageFile)
-                if (fvvicInfo.mimeType != "image/vvic") {
-                    YLog.debug("$TAG: Image is not in vvic format (got ${fvvicInfo.mimeType}), skipping")
-                    return@before
-                }
-
-                // convert to bitmap
-                val imageBytes = FileInputStream(imageFile).use {
-                    it.readBytes()
-                }
-                val bitmap = packageInstance.heifDecoder.selfClass?.getStaticField<Any>(
-                    packageInstance.heifDecoder.sBitmapFactory()
-                )?.invokeMethod<Bitmap>(
-                    packageInstance.heifBitmapFactoryImpl.decodeByteArray(),
-                    imageBytes,
-                    0,
-                    imageBytes.size,
-                    BitmapFactory.Options().apply {
-                        inPreferredConfig = Bitmap.Config.ARGB_8888
-                    }
-                )
-                if (bitmap == null) {
-                    YLog.error("$TAG: Failed to decode image to bitmap")
-                    return@before
-                }
-
-                // save bitmap as png alongside the original file
-                val pngFile = File(imageFilePath).run { resolveSibling("$nameWithoutExtension.png") }
-                runCatching {
-                    pngFile.outputStream().use { out ->
-                        require(bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)) {
-                            "Failed to compress image to png"
-                        }
-                    }
-                }.onSuccess {
-                    YLog.debug("$TAG: Saved png image to ${pngFile.absolutePath}")
-                }.onFailure {
-                    YLog.error("$TAG: Failed to save png image", it)
-                }
-
-                bitmap.recycle()
             }
         }
     }
@@ -155,7 +95,7 @@ object FeedMultiImageHooker : YukiBaseHooker() {
 
                 awemeImages.forEach { imageStruct ->
                     if (imageStruct == null) {
-                        return@before
+                        return@forEach
                     }
 
                     val urlList = imageStruct.getField<List<*>>(
@@ -165,54 +105,15 @@ object FeedMultiImageHooker : YukiBaseHooker() {
                         YLog.error("$TAG: image has no play URL, skipping watermark-free injection")
                         return@forEach
                     } else {
-                        YLog.debug("$TAG: image.urlList[0]: ${urlList.first()}")
+                        if (verbose) {
+                            YLog.debug("$TAG: image.urlList[0]: ${urlList.first()}")
+                        }
                     }
 
                     imageStruct.setField(
                         packageInstance.imageUrlStruct.downloadUrlList(),
                         urlList
                     )
-                    /*
-                    val downloadUrlList = imageStruct.getField<List<String>>(
-                        Field(name = "downloadUrlList")
-                    )
-                    val maskUrlList = imageStruct.getField<List<String>>(
-                        Field(name = "maskUrlList")
-                    )
-                    val urlList = imageStruct.getField<List<String>>(
-                        Field(name = "urlList")
-                    )
-                    val watermarkFreeDownloadUrlList = imageStruct.getField<List<String>>(
-                        Field(name = "watermarkFreeDownloadUrlList")
-                    )
-                    val imageExtra = imageStruct.getField<Any>(
-                        Field(name = "imageExtra")
-                    )
-                    val backupUrlList = imageExtra?.getField<List<String>>(
-                        Field(name = "backupUrlList")
-                    )
-
-                    YLog.debug(
-                        "$TAG: urlList: ${
-                            urlList?.firstOrNull()
-                        }, downloadUrlList: ${
-                            downloadUrlList?.firstOrNull()
-                        }, maskUrlList: ${
-                            maskUrlList?.firstOrNull()
-                        }, watermarkFreeDownloadUrlList: ${
-                            watermarkFreeDownloadUrlList?.firstOrNull()
-                        }, backupUrlList: ${
-                            backupUrlList?.firstOrNull()
-                        }"
-                    )
-                     */
-
-                    /*
-                    if (imageStruct == null) {
-                        return@forEach
-                    }
-
-                     */
                 }
             }
         }?.result {
@@ -230,7 +131,9 @@ object FeedMultiImageHooker : YukiBaseHooker() {
             packageInstance.abTestServiceImpl.enableSaveImageToVideoLocalWaterMask()
         )?.hook {
             before {
-                YLog.debug("$TAG: disabling local watermark for save-image-to-video")
+                if (verbose) {
+                    YLog.debug("$TAG: disabling local watermark for save-image-to-video")
+                }
                 resultFalse()
             }
         }?.result {
@@ -241,4 +144,89 @@ object FeedMultiImageHooker : YukiBaseHooker() {
                 YLog.error("$TAG: hook failed, unable to remove watermark from save-image-to-video")
             }
         }
+
+    private fun installConvertVvicImageToPngHook(): YukiMemberHookCreator.MemberHookCreator.Result? {
+        return packageInstance.downLoadExecutor.selfClass?.resolveMethod(
+            packageInstance.downLoadExecutor.execute()
+        )?.hook {
+            before {
+                val downloadTask = args[0] ?: return@before
+
+                val imageFilePath = downloadTask.getField<String>(
+                    packageInstance.downLoadTask.targetFilePath()
+                ) ?: run {
+                    YLog.error("$TAG: failed to get image file path from download task")
+                    return@before
+                }
+
+                val imageFile = File(imageFilePath)
+                if (!imageFile.exists()) {
+                    YLog.error("$TAG: image file does not exist")
+                    return@before
+                }
+                if (verbose) {
+                    YLog.debug("$TAG: image file absolute path: ${imageFile.absolutePath}")
+                }
+
+                val fvvicInfo = FileTypeDetector.detect(imageFile)
+                if (fvvicInfo.mimeType != "image/vvic") {
+                    if (verbose) {
+                        YLog.debug("$TAG: image is not in vvic format (got ${fvvicInfo.mimeType}), skipping")
+                    }
+                    return@before
+                }
+
+                // convert to bitmap
+                val imageBytes = FileInputStream(imageFile).use {
+                    it.readBytes()
+                }
+                val bitmap = packageInstance.heifDecoder.selfClass?.getStaticField<Any>(
+                    packageInstance.heifDecoder.sBitmapFactory()
+                )?.invokeMethod<Bitmap>(
+                    packageInstance.heifBitmapFactoryImpl.decodeByteArray(),
+                    imageBytes,
+                    0,
+                    imageBytes.size,
+                    BitmapFactory.Options().apply {
+                        inPreferredConfig = Bitmap.Config.ARGB_8888
+                    }
+                ) ?: run {
+                    YLog.error("$TAG: failed to decode image to bitmap")
+                    return@before
+                }
+
+                // convert to png and overwrite the original image file
+                val pngFile = File(imageFilePath).run {
+                    resolveSibling("$nameWithoutExtension.png")
+                }
+                try {
+                    runCatching {
+                        pngFile.outputStream().use { out ->
+                            require(bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)) {
+                                "failed to compress image to png"
+                            }
+                        }
+                        imageFile.writeBytes(pngFile.readBytes())
+                    }.onSuccess {
+                        if (verbose) {
+                            YLog.debug("$TAG: saved png image to ${imageFile.absolutePath}")
+                        }
+                    }.onFailure {
+                        YLog.error("$TAG: failed to save png image", it)
+                    }.also {
+                        pngFile.delete()
+                    }
+                } finally {
+                    bitmap.recycle()
+                }
+            }
+        }?.result {
+            onConductFailure { _, throwable ->
+                YLog.error("$TAG: failed to convert vvic image to png", throwable)
+            }
+            onHookingFailure {
+                YLog.error("$TAG: hook failed, vvic image to png conversion unavailable")
+            }
+        }
+    }
 }
