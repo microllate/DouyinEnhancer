@@ -165,6 +165,7 @@ message Aweme {
   optional Method get_video = 12;
   optional Field images = 13;
   optional Field statistics = 14;
+  optional Method get_aid = 15;
 }
 
 message Video {
@@ -210,6 +211,12 @@ message LppDownloadModule {
   optional Method get_visibility = 2;
 }
 
+message ImageResourceRxDownloadListener{
+  optional Class class = 1;
+  optional Field observable_emitter = 2;
+  optional Method on_successed = 3;
+}
+
 message HookInfo {
   uint64 last_update_time = 1;
   uint32 module_version_code = 2;
@@ -245,4 +252,5 @@ message HookInfo {
   optional ABTestServiceImpl ab_test_service_impl = 31;
   optional LppDownloadModule lpp_download_module = 32;
   optional AwemeStatistics aweme_statistics = 33;
+  optional ImageResourceRxDownloadListener image_resource_rx_download_listener = 34;
 }

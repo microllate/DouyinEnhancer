@@ -85,6 +85,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
     val commentExtensionsKt = CommentExtensionsKtModule()
     val listenerProviderParam = ListenerProviderParamModule()
     val commentImageSaveDownloadListener = CommentImageSaveDownloadListenerModule()
+    val imageResourceRxDownloadListener = ImageResourceRxDownloadListenerModule()
     val downloadInfo = DownloadInfoModule()
     val digestUtils = DigestUtilsModule()
     val ugFileUtils = UGFileUtilsKtModule()
@@ -251,6 +252,20 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
         )
 
         fun listenerProviderParam() = Field(hookInfo.commentImageSaveDownloadListener.listenerProviderParam.nameOrNull)
+    }
+
+    inner class ImageResourceRxDownloadListenerModule {
+        val selfClass by weak {
+            hookInfo.imageResourceRxDownloadListener.class_.nameOrNull
+                ?.toClass(classLoader)
+        }
+
+        fun onSuccessed() = Method(
+            hookInfo.imageResourceRxDownloadListener.onSuccessed.nameOrNull,
+            hookInfo.imageResourceRxDownloadListener.onSuccessed.parameters.valuesListOrNull
+        )
+
+        fun observableEmitter() = Field(hookInfo.imageResourceRxDownloadListener.observableEmitter.nameOrNull)
     }
 
     inner class DownloadInfoModule {
@@ -448,6 +463,11 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
         fun images() = Field(hookInfo.aweme.images.nameOrNull)
 
         fun statistics() = Field(hookInfo.aweme.statistics.nameOrNull)
+
+        fun getAid() = Method(
+            hookInfo.aweme.getAid.nameOrNull,
+            hookInfo.aweme.getAid.parameters.valuesListOrNull
+        )
     }
 
     inner class AwemeStatisticsModule {
@@ -1504,6 +1524,9 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                     statistics = field {
                         name = "statistics"
                     }
+                    getAid = method {
+                        name = "getAid"
+                    }
                 }
 
                 awemeStatistics = awemeStatistics {
@@ -1803,6 +1826,91 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                                 getVisibilityMethod.parameterTypes.forEach { paramType ->
                                     values.add(paramType.name)
                                 }
+                            }
+                        }
+                    }.onFailure {
+                        YLog.error("$TAG: Unable to populate config", it)
+                    }
+                }
+
+                imageResourceRxDownloadListener = imageResourceRxDownloadListener {
+                    runCatching {
+                        val imageDownloadObservableSubscribeMethodData = bridge.findMethod {
+                            matcher {
+                                params {
+                                    add("io.reactivex.ObservableEmitter")
+                                }
+                                usingStrings {
+                                    add("image_music_resource_1")
+                                }
+                                invokeMethods {
+                                    add {
+                                        descriptor =
+                                            "Lcom/ss/android/socialbase/downloader/model/DownloadTask;->monitorScene(Ljava/lang/String;)Lcom/ss/android/socialbase/downloader/model/DownloadTask;"
+                                    }
+                                }
+                            }
+                        }.singleOrNull()
+                        if (imageDownloadObservableSubscribeMethodData == null) {
+                            YLog.error(
+                                "$TAG: Unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
+                            )
+                            return@imageResourceRxDownloadListener
+                        }
+
+                        val imgResRxDownloadListenerList = imageDownloadObservableSubscribeMethodData.invokes.filter {
+                            it.methodName == "<init>" && it.paramTypeNames.contains("io.reactivex.ObservableEmitter")
+                        }.map {
+                            it.className
+                        }.distinct()
+                        if (imgResRxDownloadListenerList.isEmpty() || imgResRxDownloadListenerList.size > 1) {
+                            if (imgResRxDownloadListenerList.isEmpty()) {
+                                YLog.error(
+                                    "$TAG: Unable to populate ${this::class.java.enclosingClass?.simpleName} config, image resource rx download listener not found"
+                                )
+                            } else {
+                                YLog.error(
+                                    "$TAG: Unable to populate ${this::class.java.enclosingClass?.simpleName} config, multiple image resource rx download listener candidates found, don't know which to pick"
+                                )
+                            }
+                            return@imageResourceRxDownloadListener
+                        }
+
+                        val imageResRxDownloadListenerName = imgResRxDownloadListenerList.first()
+                        val imageResRxDownloadListenerOnSuccessedMethod =
+                            imageResRxDownloadListenerName.toClass(hostAppClassLoader).resolve().optional().firstMethodOrNull {
+                                name = "onSuccessed"
+                                parameters(
+                                    "com.ss.android.socialbase.downloader.model.DownloadInfo"
+                                )
+                            }?.self
+                        val imageResRxDownloadListenerObservableEmitter =
+                            imageResRxDownloadListenerName.toClass(hostAppClassLoader).resolve().optional().firstFieldOrNull {
+                                type = "io.reactivex.ObservableEmitter"
+                            }?.self
+
+                        if (imageResRxDownloadListenerOnSuccessedMethod == null || imageResRxDownloadListenerObservableEmitter == null) {
+                            YLog.error(
+                                "$TAG: Unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods or fields"
+                            )
+                            return@imageResourceRxDownloadListener
+                        }
+
+                        class_ = class_ {
+                            name = imageResRxDownloadListenerName
+                        }
+                        observableEmitter = field {
+                            name = imageResRxDownloadListenerObservableEmitter.name
+                        }
+                        onSuccessed = method {
+                            name = imageResRxDownloadListenerOnSuccessedMethod.name
+                            parameters = MethodKt.parameters {
+                                values.clear()
+                                values.addAll(
+                                    imageResRxDownloadListenerOnSuccessedMethod.parameterTypes.map {
+                                        it.name
+                                    }
+                                )
                             }
                         }
                     }.onFailure {
