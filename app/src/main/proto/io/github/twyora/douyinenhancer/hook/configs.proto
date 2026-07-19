@@ -165,11 +165,15 @@ message Aweme {
   optional Method get_video = 12;
   optional Field images = 13;
   optional Field statistics = 14;
+  optional Method get_aid = 15;
 }
 
 message Video {
   optional Class class = 1;
   optional Method get_play_addr = 2;
+  optional Field has_suffix_water_mark = 3;
+  optional Field has_water_mark = 4;
+  optional Field download_addr = 5;
 }
 
 message ImageUrlStruct {
@@ -177,6 +181,7 @@ message ImageUrlStruct {
   optional Field watermark_free_download_url_list = 2;
   optional Field url_list = 3;
   optional Field download_url_list = 4;
+  optional Field video = 5;
 }
 
 message FeedResponseHandler {
@@ -203,11 +208,48 @@ message DownloadAction {
 message ABTestServiceImpl {
   optional Class class = 1;
   optional Method enable_save_image_to_video_local_water_mask = 2;
+  optional Method enableVEAddLiveVideoWaterMark = 3;
 }
 
 message LppDownloadModule {
   optional Class class = 1;
   optional Method get_visibility = 2;
+}
+
+message HeifDecoder {
+  optional Class class = 1;
+  optional Field s_bitmap_factory = 2;
+}
+
+message HeifBitmapFactoryImpl {
+  optional Class class = 1;
+  optional Method decode_byte_array = 2;
+}
+
+message DownLoadExecutor {
+  optional Class class = 1;
+  optional Method execute = 2;
+}
+
+message DownLoadTask {
+  optional Class class = 1;
+  optional Method get_target_file_paths = 2;
+}
+
+message DownloadLivePhotoExecutor {
+  optional Class class = 1;
+  optional Method encode_live_photo = 2;
+}
+
+message SingleImageToMp4Composer {
+  optional Class class = 1;
+  optional Method on_load = 2;
+}
+
+message MultiImageToMp4Composer {
+  optional Class class = 1;
+  optional Method on_load = 2;
+  optional Field image_path_list = 3;
 }
 
 message HookInfo {
@@ -245,4 +287,11 @@ message HookInfo {
   optional ABTestServiceImpl ab_test_service_impl = 31;
   optional LppDownloadModule lpp_download_module = 32;
   optional AwemeStatistics aweme_statistics = 33;
+  optional HeifDecoder heif_decoder = 35;
+  optional HeifBitmapFactoryImpl heif_bitmap_factory_impl = 36;
+  optional DownLoadExecutor down_load_executor = 37;
+  optional DownLoadTask down_load_task = 38;
+  optional SingleImageToMp4Composer single_image_to_mp4_composer = 39;
+  optional MultiImageToMp4Composer multi_image_to_mp4_composer = 40;
+  optional DownloadLivePhotoExecutor download_live_photo_executor = 41;
 }

@@ -170,6 +170,7 @@ dependencies {
     implementation(libs.fastkv)
     implementation(libs.protobuf.javalite)
     implementation(libs.protobuf.kotlin.lite)
+    implementation(libs.commons.collections4)
 
     // ---------------------- HOOK ----------------------
     // 基础依赖

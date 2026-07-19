@@ -8,6 +8,8 @@ import android.app.AndroidAppHelper
 import android.content.Context
 import android.provider.Settings
 import com.highcapable.kavaref.KavaRef.Companion.resolve
+import com.highcapable.kavaref.condition.matcher.extension.parameterizedBy
+import com.highcapable.kavaref.condition.matcher.extension.toTypeMatcher
 import com.highcapable.kavaref.condition.type.Modifiers
 import com.highcapable.kavaref.extension.toClass
 import com.highcapable.kavaref.extension.toClassOrNull
@@ -102,6 +104,13 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
     val abTestServiceImpl = ABTestServiceImplModule()
     val lppDownloadModule = LppDownloadModuleModule()
     val awemeStatistics = AwemeStatisticsModule()
+    val heifDecoder = HeifDecoderModule()
+    val heifBitmapFactoryImpl = HeifBitmapFactoryImplModule()
+    val downLoadExecutor = DownLoadExecutorModule()
+    val downLoadTask = DownLoadTaskModule()
+    val downloadLivePhotoExecutor = DownloadLivePhotoExecutorModule()
+    val singleImageToMp4Composer = SingleImageToMp4ComposerModule()
+    val multiImageToMp4Composer = MultiImageToMp4ComposerModule()
     val mainActivity = MainActivityModule()
 
     inner class CommentImageStructModule {
@@ -448,6 +457,11 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
         fun images() = Field(hookInfo.aweme.images.nameOrNull)
 
         fun statistics() = Field(hookInfo.aweme.statistics.nameOrNull)
+
+        fun getAid() = Method(
+            hookInfo.aweme.getAid.nameOrNull,
+            hookInfo.aweme.getAid.parameters.valuesListOrNull
+        )
     }
 
     inner class AwemeStatisticsModule {
@@ -465,6 +479,91 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
         fun shareCount() = Field(hookInfo.awemeStatistics.shareCount.nameOrNull)
     }
 
+    inner class HeifDecoderModule {
+        val selfClass by weak {
+            hookInfo.heifDecoder.class_.nameOrNull
+                ?.toClass(classLoader)
+        }
+
+        fun sBitmapFactory() = Field(hookInfo.heifDecoder.sBitmapFactory.nameOrNull)
+    }
+
+    inner class HeifBitmapFactoryImplModule {
+        val selfClass by weak {
+            hookInfo.heifBitmapFactoryImpl.class_.nameOrNull
+                ?.toClass(classLoader)
+        }
+
+        fun decodeByteArray() = Method(
+            hookInfo.heifBitmapFactoryImpl.decodeByteArray.nameOrNull,
+            hookInfo.heifBitmapFactoryImpl.decodeByteArray.parameters.valuesListOrNull
+        )
+    }
+
+    inner class DownLoadExecutorModule {
+        val selfClass by weak {
+            hookInfo.downLoadExecutor.class_.nameOrNull
+                ?.toClass(classLoader)
+        }
+
+        fun execute() = Method(
+            hookInfo.downLoadExecutor.execute.nameOrNull,
+            hookInfo.downLoadExecutor.execute.parameters.valuesListOrNull
+        )
+    }
+
+    inner class DownLoadTaskModule {
+        val selfClass by weak {
+            hookInfo.downLoadTask.class_.nameOrNull
+                ?.toClass(classLoader)
+        }
+
+        fun getTargetFilePaths() = Method(
+            hookInfo.downLoadTask.getTargetFilePaths.nameOrNull,
+            hookInfo.downLoadTask.getTargetFilePaths.parameters.valuesListOrNull
+        )
+    }
+
+    inner class DownloadLivePhotoExecutorModule {
+        val selfClass by weak {
+            hookInfo.downloadLivePhotoExecutor.class_.nameOrNull
+                ?.toClass(classLoader)
+        }
+
+        fun encodeLivePhoto() = Method(
+            hookInfo.downloadLivePhotoExecutor.encodeLivePhoto.nameOrNull,
+            hookInfo.downloadLivePhotoExecutor.encodeLivePhoto.parameters.valuesListOrNull
+        )
+    }
+
+    inner class SingleImageToMp4ComposerModule {
+        val selfClass by weak {
+            hookInfo.singleImageToMp4Composer.class_.nameOrNull
+                ?.toClass(classLoader)
+        }
+
+        fun onLoad() = Method(
+            hookInfo.singleImageToMp4Composer.onLoad.nameOrNull,
+            hookInfo.singleImageToMp4Composer.onLoad.parameters.valuesListOrNull
+        )
+    }
+
+    inner class MultiImageToMp4ComposerModule {
+        val selfClass by weak {
+            hookInfo.multiImageToMp4Composer.class_.nameOrNull
+                ?.toClass(classLoader)
+        }
+
+        fun onLoad() = Method(
+            hookInfo.multiImageToMp4Composer.onLoad.nameOrNull,
+            hookInfo.multiImageToMp4Composer.onLoad.parameters.valuesListOrNull
+        )
+
+        fun imagePathList() = Field(
+            hookInfo.multiImageToMp4Composer.imagePathList.nameOrNull
+        )
+    }
+
     inner class VideoModule {
         val selfClass by weak {
             hookInfo.video.class_.nameOrNull
@@ -475,6 +574,12 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
             hookInfo.video.getPlayAddr.nameOrNull,
             hookInfo.video.getPlayAddr.parameters.valuesListOrNull
         )
+
+        fun hasSuffixWaterMark() = Field(hookInfo.video.hasSuffixWaterMark.nameOrNull)
+
+        fun hasWaterMark() = Field(hookInfo.video.hasWaterMark.nameOrNull)
+
+        fun downloadAddr() = Field(hookInfo.video.downloadAddr.nameOrNull)
     }
 
     inner class ImageUrlStructModule {
@@ -493,6 +598,10 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
 
         fun downloadUrlList() = Field(
             hookInfo.imageUrlStruct.downloadUrlList.nameOrNull
+        )
+
+        fun video() = Field(
+            hookInfo.imageUrlStruct.video.nameOrNull
         )
     }
 
@@ -555,6 +664,11 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
         fun enableSaveImageToVideoLocalWaterMask() = Method(
             hookInfo.abTestServiceImpl.enableSaveImageToVideoLocalWaterMask.nameOrNull,
             hookInfo.abTestServiceImpl.enableSaveImageToVideoLocalWaterMask.parameters.valuesListOrNull
+        )
+
+        fun enableVEAddLiveVideoWaterMark() = Method(
+            hookInfo.abTestServiceImpl.enableVEAddLiveVideoWaterMark.nameOrNull,
+            hookInfo.abTestServiceImpl.enableVEAddLiveVideoWaterMark.parameters.valuesListOrNull
         )
     }
 
@@ -1504,6 +1618,9 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                     statistics = field {
                         name = "statistics"
                     }
+                    getAid = method {
+                        name = "getAid"
+                    }
                 }
 
                 awemeStatistics = awemeStatistics {
@@ -1521,6 +1638,244 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                     }
                     shareCount = field {
                         name = "shareCount"
+                    }
+                }
+
+                heifDecoder = heifDecoder {
+                    class_ = class_ {
+                        name = "com.bytedance.fresco.heif.HeifDecoder"
+                    }
+                    sBitmapFactory = field {
+                        name = "sBitmapFactory"
+                    }
+                }
+
+                heifBitmapFactoryImpl = heifBitmapFactoryImpl {
+                    class_ = class_ {
+                        name = "com.bytedance.fresco.heif.HeifBitmapFactoryImpl"
+                    }
+                    decodeByteArray = method {
+                        name = "decodeByteArray"
+                        parameters = MethodKt.parameters {
+                            values.clear()
+                            values.addAll(
+                                listOf(
+                                    "[B",
+                                    "int",
+                                    "int",
+                                    "android.graphics.BitmapFactory\$Options"
+                                )
+                            )
+                        }
+                    }
+                }
+
+                downLoadExecutor = downLoadExecutor {
+                    runCatching {
+                        val executeMethodData = bridge.findMethod {
+                            matcher {
+                                modifiers = Modifier.PUBLIC or Modifier.FINAL
+                                returnType = "boolean"
+                                paramCount = 1
+                                usingStrings {
+                                    add("/douyin")
+                                    add("share_")
+                                    add(".png")
+                                    add("DownLoadExecutor")
+                                }
+                                invokeMethods {
+                                    add {
+                                        descriptor =
+                                            "Lcom/bytedance/android/ug/UGFileUtilsKt;->getExternalStorageDirectory(Ljava/lang/String;Z)Ljava/lang/String;"
+                                    }
+                                }
+                            }
+                        }.singleOrNull() ?: run {
+                            YLog.error(
+                                "$TAG: Unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
+                            )
+                            return@downLoadExecutor
+                        }
+
+                        class_ = class_ {
+                            name = executeMethodData.className
+                        }
+                        execute = method {
+                            name = executeMethodData.methodName
+                            parameters = MethodKt.parameters {
+                                values.clear()
+                                values.addAll(executeMethodData.paramTypeNames)
+                            }
+                        }
+                    }.onFailure {
+                        YLog.error("$TAG: Unable to populate config", it)
+                    }
+                }
+
+                downLoadTask = downLoadTask {
+                    runCatching {
+                        val downloadTaskClassName = this@hookInfo.downLoadExecutor.execute.parameters.valuesListOrNull?.firstOrNull()
+                            ?: run {
+                                YLog.error(
+                                    "$TAG: Unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated classes"
+                                )
+                                return@downLoadTask
+                            }
+                        val getTargetFilePathsMethodData = bridge.findMethod {
+                            matcher {
+                                declaredClass = downloadTaskClassName
+                                returnType = "java.util.List"
+                            }
+                        }.singleOrNull()
+
+                        if (getTargetFilePathsMethodData == null) {
+                            YLog.error(
+                                "$TAG: Unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
+                            )
+                            return@downLoadTask
+                        }
+
+                        class_ = class_ {
+                            name = downloadTaskClassName
+                        }
+                        getTargetFilePaths = method {
+                            name = getTargetFilePathsMethodData.methodName
+                            parameters = MethodKt.parameters {
+                                values.clear()
+                                values.addAll(getTargetFilePathsMethodData.paramTypeNames)
+                            }
+                        }
+                    }.onFailure {
+                        YLog.error("$TAG: Unable to populate config", it)
+                    }
+                }
+
+                downloadLivePhotoExecutor = downloadLivePhotoExecutor {
+                    runCatching {
+                        val encodeLivePhotoMethodData = bridge.findMethod {
+                            matcher {
+                                modifiers = Modifier.PUBLIC or Modifier.FINAL
+                                returnType = "boolean"
+                                usingStrings {
+                                    add("DownloadLiveExecutor")
+                                    add("encode live photo isFinish: ")
+                                }
+                            }
+                        }.singleOrNull() ?: run {
+                            YLog.error(
+                                "$TAG: Unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
+                            )
+                            return@downloadLivePhotoExecutor
+                        }
+
+                        class_ = class_ {
+                            name = encodeLivePhotoMethodData.className
+                        }
+                        encodeLivePhoto = method {
+                            name = encodeLivePhotoMethodData.methodName
+                            parameters = MethodKt.parameters {
+                                values.clear()
+                                values.addAll(encodeLivePhotoMethodData.paramTypeNames)
+                            }
+                        }
+                    }.onFailure {
+                        YLog.error("$TAG: Unable to populate config", it)
+                    }
+                }
+
+                singleImageToMp4Composer = singleImageToMp4Composer {
+                    runCatching {
+                        val onLoadMethodData = bridge.findMethod {
+                            matcher {
+                                name = "onLoad"
+                                usingStrings {
+                                    add("[onLoad] failed, cause path not exist")
+                                }
+                                invokeMethods {
+                                    add {
+                                        descriptor = "Lcom/ss/android/ugc/aweme/utils/FileUtils;->checkFileExists(Ljava/lang/String;)Z"
+                                    }
+                                    add {
+                                        descriptor =
+                                            "Lcom/ss/android/ugc/aweme/services/external/ui/IStoryService;->convertImgToMp4(Landroid/content/Context;Landroidx/lifecycle/LifecycleOwner;Ljava/lang/String;Ljava/lang/String;ZJLjava/lang/String;Lcom/ss/android/ugc/aweme/services/external/ui/IStoryService\$OnMuxImgToMp4Callback;)V"
+                                    }
+                                }
+                            }
+                        }.singleOrNull() ?: run {
+                            YLog.error(
+                                "$TAG: Unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
+                            )
+                            return@singleImageToMp4Composer
+                        }
+
+                        class_ = class_ {
+                            name = onLoadMethodData.className
+                        }
+                        onLoad = method {
+                            name = onLoadMethodData.methodName
+                            parameters = MethodKt.parameters {
+                                values.clear()
+                                values.addAll(onLoadMethodData.paramTypeNames)
+                            }
+                        }
+                    }.onFailure {
+                        YLog.error("$TAG: Unable to populate config", it)
+                    }
+                }
+
+                multiImageToMp4Composer = multiImageToMp4Composer {
+                    runCatching {
+                        val onLoadMethodData = bridge.findMethod {
+                            matcher {
+                                name = "onLoad"
+                                usingStrings {
+                                    add("images file not exist!")
+                                }
+                                invokeMethods {
+                                    add {
+                                        descriptor = "Lcom/ss/android/ugc/aweme/utils/FileUtils;->checkFileExists(Ljava/lang/String;)Z"
+                                    }
+                                    add {
+                                        descriptor =
+                                            "Lcom/ss/android/ugc/aweme/services/external/ui/IStoryService;->convertImgListToMp4UseMusicUrl(Landroid/app/Activity;Landroidx/lifecycle/LifecycleOwner;Ljava/util/List;Lcom/ss/android/ugc/aweme/music/model/Music;ZZLjava/lang/String;ZLkotlin/jvm/functions/Function1;)V"
+                                    }
+                                }
+                            }
+                        }.singleOrNull()
+
+                        val imagePathListFieldName = onLoadMethodData?.className
+                            ?.toClass(hostAppClassLoader)
+                            ?.resolve()
+                            ?.firstFieldOrNull {
+                                genericType = List::class.parameterizedBy(
+                                    List::class.parameterizedBy(
+                                        String::class.toTypeMatcher()
+                                    )
+                                )
+                            }?.self?.name
+
+                        if (onLoadMethodData == null || imagePathListFieldName == null) {
+                            YLog.error(
+                                "$TAG: Unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods or fields"
+                            )
+                            return@multiImageToMp4Composer
+                        }
+
+                        class_ = class_ {
+                            name = onLoadMethodData.className
+                        }
+                        onLoad = method {
+                            name = onLoadMethodData.methodName
+                            parameters = MethodKt.parameters {
+                                values.clear()
+                                values.addAll(onLoadMethodData.paramTypeNames)
+                            }
+                        }
+                        imagePathList = field {
+                            name = imagePathListFieldName
+                        }
+                    }.onFailure {
+                        YLog.error("$TAG: Unable to populate config", it)
                     }
                 }
 
@@ -1559,6 +1914,15 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                                 values.clear()
                                 values.addAll(getPlayAddrMethodData.paramTypeNames)
                             }
+                        }
+                        hasSuffixWaterMark = field {
+                            name = "hasSuffixWaterMark"
+                        }
+                        hasWaterMark = field {
+                            name = "hasWaterMark"
+                        }
+                        downloadAddr = field {
+                            name = "downloadAddr"
                         }
                     }.onFailure {
                         YLog.error("$TAG: Unable to populate config", it)
@@ -1760,6 +2124,9 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                     downloadUrlList = field {
                         name = "downloadUrlList"
                     }
+                    video = field {
+                        name = "video"
+                    }
                 }
 
                 abTestServiceImpl = aBTestServiceImpl {
@@ -1768,6 +2135,9 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                     }
                     enableSaveImageToVideoLocalWaterMask = method {
                         name = "enableSaveImageToVideoLocalWaterMask"
+                    }
+                    enableVEAddLiveVideoWaterMark = method {
+                        name = "enableVEAddLiveVideoWaterMark"
                     }
                 }
 
