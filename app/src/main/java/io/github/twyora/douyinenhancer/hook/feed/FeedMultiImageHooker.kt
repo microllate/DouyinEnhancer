@@ -47,23 +47,6 @@ object FeedMultiImageHooker : YukiBaseHooker() {
 
         installConvertVvicCoverImageToPngHook()
         installDisableVEAddLiveVideoWaterMarkHook()
-
-        packageInstance.imageResourceRxDownloadListener.selfClass?.resolveMethod(
-            packageInstance.imageResourceRxDownloadListener.onSuccessed()
-        )?.hook {
-            before {
-                val dlInfo = args[0] ?: return@before
-
-                val filePath = dlInfo.invokeMethod<String>(
-                    packageInstance.downloadInfo.getTargetFilePath()
-                )
-                if (filePath == null) {
-                    YLog.error("$TAG: target file path is null")
-                } else {
-                    YLog.debug("$TAG: file path: $filePath")
-                }
-            }
-        }
     }
 
     private fun installInjectPlayUrlIntoImageDownloadHook(): YukiMemberHookCreator.MemberHookCreator.Result? {

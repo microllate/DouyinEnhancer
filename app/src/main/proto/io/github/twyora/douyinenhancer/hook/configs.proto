@@ -216,12 +216,6 @@ message LppDownloadModule {
   optional Method get_visibility = 2;
 }
 
-message ImageResourceRxDownloadListener {
-  optional Class class = 1;
-  optional Field observable_emitter = 2;
-  optional Method on_successed = 3;
-}
-
 message HeifDecoder {
   optional Class class = 1;
   optional Field s_bitmap_factory = 2;
@@ -293,7 +287,6 @@ message HookInfo {
   optional ABTestServiceImpl ab_test_service_impl = 31;
   optional LppDownloadModule lpp_download_module = 32;
   optional AwemeStatistics aweme_statistics = 33;
-  optional ImageResourceRxDownloadListener image_resource_rx_download_listener = 34;
   optional HeifDecoder heif_decoder = 35;
   optional HeifBitmapFactoryImpl heif_bitmap_factory_impl = 36;
   optional DownLoadExecutor down_load_executor = 37;
