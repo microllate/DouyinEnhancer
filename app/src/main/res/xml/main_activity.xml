@@ -36,6 +36,15 @@
         </Preference>
 
         <Preference
+            android:key="update"
+            android:title="@string/pref_about_up_to_date_title"
+            android:summary="@string/pref_about_up_to_date_summary">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="@string/latest_release_page_url" />
+        </Preference>
+
+        <Preference
             android:key="repository"
             android:title="@string/pref_about_repository_title"
             android:summary="@string/pref_about_repository_summary">
@@ -50,19 +59,18 @@
             android:summary="@string/pref_about_telegram_summary">
             <intent
                 android:action="android.intent.action.VIEW"
-                android:data="@string/telegram_url"/>
+                android:data="@string/telegram_url" />
         </Preference>
 
         <Preference
             android:key="build_time"
             android:title="@string/pref_about_build_time_title"
-            android:summary="@string/unknown"/>
+            android:summary="@string/unknown" />
 
         <Preference
             android:key="back_then"
             android:title="@string/pref_about_back_then_title"
-            android:summary="@string/pref_about_back_then_summary" >
-        </Preference>
+            android:summary="@string/pref_about_back_then_summary" />
 
         <Preference
             android:key="activation_status"

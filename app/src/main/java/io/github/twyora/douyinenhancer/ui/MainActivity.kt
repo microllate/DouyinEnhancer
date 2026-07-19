@@ -14,10 +14,18 @@ import android.preference.PreferenceFragment
 import android.preference.SwitchPreference
 import android.widget.Toast
 import com.highcapable.yukihookapi.YukiHookAPI
+import com.highcapable.yukihookapi.hook.log.YLog
 import io.github.twyora.douyinenhancer.BuildConfig
 import io.github.twyora.douyinenhancer.R
+import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.Locale
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import org.json.JSONObject
 
 class MainActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,6 +40,8 @@ class MainActivity : Activity() {
         PreferenceFragment(),
         Preference.OnPreferenceChangeListener,
         Preference.OnPreferenceClickListener {
+        private val scope = MainScope()
+
         @Deprecated("Deprecated in Java")
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
@@ -53,6 +63,14 @@ class MainActivity : Activity() {
                 activationStatus?.title = context.getString(R.string.pref_about_activation_status_enabled_title)
                 activationStatus?.summary = context.getString(R.string.pref_about_activation_status_activated_summary)
             }
+
+            checkUpdate()
+        }
+
+        @Deprecated("Deprecated in Java")
+        override fun onDestroy() {
+            super.onDestroy()
+            scope.cancel()
         }
 
         @Deprecated("Deprecated in Java")
@@ -109,5 +127,55 @@ class MainActivity : Activity() {
                 else -> false
             }
         }
+
+        private fun checkUpdate() = scope.launch {
+            val latestReleaseJson = runCatching {
+                withContext(Dispatchers.IO) {
+                    JSONObject(
+                        URL(
+                            context.getString(
+                                R.string.latest_release_api_url
+                            )
+                        ).readText()
+                    )
+                }
+            }.onFailure {
+                YLog.error("$TAG: fetch latest release failed", it)
+            }.getOrNull()
+            if (latestReleaseJson == null) {
+                YLog.debug("$TAG: skip update check, no release data")
+                return@launch
+            }
+
+            val latestReleaseVer = latestReleaseJson.optString("name").removePrefix("v").removePrefix("V")
+            if (latestReleaseVer.isNotBlank() && BuildConfig.VERSION_NAME != latestReleaseVer) {
+                findPreference("version")?.apply {
+                    summary = "${BuildConfig.VERSION_NAME} ($latestReleaseVer)"
+                }
+                findPreference("update")?.apply {
+                    title = context.getString(R.string.pref_about_update_available_title)
+                    summary = latestReleaseJson.optString("body").takeIf {
+                        it.isNotBlank()
+                    }?.let {
+                        if (it.length > 80) {
+                            it.take(80) + "..."
+                        } else {
+                            it
+                        }
+                    } ?: context.getString(R.string.pref_about_update_available_summary)
+                }
+            } else {
+                findPreference("update")?.apply {
+                    title = context.getString(R.string.pref_about_up_to_date_title)
+                    summary = latestReleaseJson.optString("body").ifEmpty {
+                        context.getString(R.string.pref_about_up_to_date_summary)
+                    }
+                }
+            }
+        }
+    }
+
+    companion object {
+        private val TAG = this::class.simpleName
     }
 }

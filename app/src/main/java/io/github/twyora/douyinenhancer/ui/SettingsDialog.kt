@@ -16,7 +16,6 @@ import androidx.core.content.edit
 import com.highcapable.yukihookapi.hook.factory.injectModuleAppResources
 import com.highcapable.yukihookapi.hook.log.YLog
 import io.fastkv.FastKV
-import io.fastkv.interfaces.FastCipher
 import io.github.twyora.douyinenhancer.BuildConfig
 import io.github.twyora.douyinenhancer.R
 import io.github.twyora.douyinenhancer.config.FastKVConfigManager
@@ -24,6 +23,7 @@ import io.github.twyora.douyinenhancer.config.key.MiscKey
 import io.github.twyora.douyinenhancer.utils.Field
 import io.github.twyora.douyinenhancer.utils.setField
 import java.io.File
+import java.net.URL
 import java.security.DigestInputStream
 import java.security.DigestOutputStream
 import java.security.MessageDigest
@@ -34,7 +34,13 @@ import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 import java.util.zip.ZipOutputStream
 import kotlin.system.exitProcess
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlinx.io.IOException
+import org.json.JSONObject
 
 /**
  * Settings dialog for DouyinEnhancer.
@@ -46,6 +52,7 @@ class SettingsDialog(context: Context) : AlertDialog.Builder(context) {
         PreferenceFragment(),
         Preference.OnPreferenceClickListener {
         private var hiddenFeatureClickCount = 0
+        private val scope = MainScope()
 
         @Deprecated("Deprecated in Java")
         override fun onCreate(savedInstanceState: Bundle?) {
@@ -76,6 +83,14 @@ class SettingsDialog(context: Context) : AlertDialog.Builder(context) {
             findPreference("version")?.onPreferenceClickListener = this
             findPreference("build_time")?.summary =
                 SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(BuildConfig.BUILD_TIMESTAMP)
+
+            checkUpdate()
+        }
+
+        @Deprecated("Deprecated in Java")
+        override fun onDestroy() {
+            super.onDestroy()
+            scope.cancel()
         }
 
         @Deprecated("Deprecated in Java")
@@ -295,6 +310,52 @@ class SettingsDialog(context: Context) : AlertDialog.Builder(context) {
             }
 
             return true
+        }
+
+        private fun checkUpdate() = scope.launch {
+            val latestReleaseJson = runCatching {
+                withContext(Dispatchers.IO) {
+                    JSONObject(
+                        URL(
+                            context.getString(
+                                R.string.latest_release_api_url
+                            )
+                        ).readText()
+                    )
+                }
+            }.onFailure {
+                YLog.error("$TAG: fetch latest release failed", it)
+            }.getOrNull()
+            if (latestReleaseJson == null) {
+                YLog.debug("$TAG: skip update check, no release data")
+                return@launch
+            }
+
+            val latestReleaseVer = latestReleaseJson.optString("name").removePrefix("v").removePrefix("V")
+            if (latestReleaseVer.isNotBlank() && BuildConfig.VERSION_NAME != latestReleaseVer) {
+                findPreference("version")?.apply {
+                    summary = "${BuildConfig.VERSION_NAME} ($latestReleaseVer)"
+                }
+                findPreference("update")?.apply {
+                    title = context.getString(R.string.pref_about_update_available_title)
+                    summary = latestReleaseJson.optString("body").takeIf {
+                        it.isNotBlank()
+                    }?.let {
+                        if (it.length > 80) {
+                            it.take(80) + "..."
+                        } else {
+                            it
+                        }
+                    } ?: context.getString(R.string.pref_about_update_available_summary)
+                }
+            } else {
+                findPreference("update")?.apply {
+                    title = context.getString(R.string.pref_about_up_to_date_title)
+                    summary = latestReleaseJson.optString("body").ifEmpty {
+                        context.getString(R.string.pref_about_up_to_date_summary)
+                    }
+                }
+            }
         }
     }
 

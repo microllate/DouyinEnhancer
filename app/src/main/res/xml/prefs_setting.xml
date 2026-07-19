@@ -83,6 +83,15 @@
         </Preference>
 
         <Preference
+            android:key="update"
+            android:title="@string/pref_about_up_to_date_title"
+            android:summary="@string/pref_about_up_to_date_summary">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="@string/latest_release_page_url" />
+        </Preference>
+
+        <Preference
             android:key="repository"
             android:title="@string/pref_about_repository_title"
             android:summary="@string/pref_about_repository_summary">
