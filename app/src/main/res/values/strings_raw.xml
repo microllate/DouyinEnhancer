@@ -3,4 +3,6 @@
     <string name="author_url">https://github.com/twyora</string>
     <string name="repository_url">https://github.com/twyora/DouyinEnhancer</string>
     <string name="telegram_url">https://t.me/+d8bFo0maZQs4MTk1</string>
+    <string name="latest_release_page_url">https://github.com/twyora/DouyinEnhancer/releases/latest</string>
+    <string name="latest_release_api_url">https://api.github.com/repos/twyora/DouyinEnhancer/releases/latest</string>
 </resources>

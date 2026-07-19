@@ -77,6 +77,10 @@
     <string name="pref_about_version_summary">0.0.1</string>
     <string name="pref_about_author_title">Author</string>
     <string name="pref_about_author_summary">twyora</string>
+    <string name="pref_about_up_to_date_title">Up to date</string>
+    <string name="pref_about_up_to_date_summary">Tap to visit the release page</string>
+    <string name="pref_about_update_available_title">Go to update</string>
+    <string name="pref_about_update_available_summary">Tap to visit the release page</string>
     <string name="pref_about_repository_title">Repository</string>
     <string name="pref_about_repository_summary">Welcome Star and Feedback</string>
     <string name="pref_about_telegram_title">Telegram Group</string>
