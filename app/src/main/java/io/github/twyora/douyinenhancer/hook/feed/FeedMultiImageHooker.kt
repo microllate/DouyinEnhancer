@@ -27,8 +27,6 @@ object FeedMultiImageHooker : YukiBaseHooker() {
     private val packageInstance
         get() = DouyinPackage.instance
 
-    private val ring = CircularFifoQueue<String>(5)
-
     // TODO: FastKVConfigManager.global.getBoolean("verbose", true)
     private val verbose = false
 
@@ -42,7 +40,7 @@ object FeedMultiImageHooker : YukiBaseHooker() {
         installConvertVvicImageToPngHook()
 
         installConvertSingleVvicImageToMp4Hook()
-        installConvertMultiVvicImageToMp4Hook()
+        installConvertMultiVvicImagesToMp4Hook()
         installDisableSaveImageToVideoLocalWaterMaskHook()
 
         installConvertVvicCoverImageToPngHook()
@@ -53,6 +51,7 @@ object FeedMultiImageHooker : YukiBaseHooker() {
         return packageInstance.downloadAction.selfClass?.resolveMethod(
             packageInstance.downloadAction.startDownload()
         )?.hook {
+            val seenAwemeIds = CircularFifoQueue<String>(5)
             before {
                 val aweme = instance.getField<Any>(
                     packageInstance.downloadAction.aweme()
@@ -68,10 +67,10 @@ object FeedMultiImageHooker : YukiBaseHooker() {
                 aweme.invokeMethod<String>(
                     packageInstance.aweme.getAid()
                 )?.let {
-                    if (ring.contains(it)) {
+                    if (seenAwemeIds.contains(it)) {
                         return@before
                     }
-                    ring.add(it)
+                    seenAwemeIds.add(it)
                 }
 
                 val awemeImages = aweme.getField<List<*>>(
@@ -118,7 +117,7 @@ object FeedMultiImageHooker : YukiBaseHooker() {
                             )
                             if (verbose) {
                                 YLog.debug(
-                                    "$TAG: play addr[0]: ${
+                                    "$TAG:play URL used as video download address: ${
                                         playAddr.getField<List<String?>>(
                                             packageInstance.urlModel.urlList()
                                         )?.first {
@@ -187,7 +186,9 @@ object FeedMultiImageHooker : YukiBaseHooker() {
                 }
 
                 vvicImagePathList?.forEach {
-                    overwriteVvicWithPng(it)
+                    if (!overwriteVvicWithPng(it)) {
+                        YLog.error("$TAG: failed to convert vvic cover image to png: $it")
+                    }
                 }
             }
         }?.result {
@@ -205,6 +206,9 @@ object FeedMultiImageHooker : YukiBaseHooker() {
             packageInstance.abTestServiceImpl.enableVEAddLiveVideoWaterMark()
         )?.hook {
             before {
+                if (verbose) {
+                    YLog.debug("$TAG: disabling watermark for live video")
+                }
                 resultFalse()
             }
         }?.result {
@@ -254,7 +258,7 @@ object FeedMultiImageHooker : YukiBaseHooker() {
         )?.hook {
             before {
                 // The instance currently holds both image paths and music paths,
-                // which is hard to filter via DexKit during static analysis, so we can only defer it to runtime
+                // and during the DexKit lookup phase I can't tell them apart, so we have to defer it to runtime
                 val vvicImagePathList = instance.asResolver().field {
                     type = String::class
                 }.mapNotNull {
@@ -268,19 +272,21 @@ object FeedMultiImageHooker : YukiBaseHooker() {
                 }
 
                 vvicImagePathList.forEach {
-                    overwriteVvicWithPng(it)
+                    if (!overwriteVvicWithPng(it)) {
+                        YLog.error("$TAG: failed to convert single vvic image to png in mp4 composer: $it")
+                    }
                 }
             }
         }?.result {
             onConductFailure { _, throwable ->
-                YLog.error("$TAG: failed to convert vvic image to png in mp4 composer", throwable)
+                YLog.error("$TAG: failed to convert single vvic image to png in mp4 composer", throwable)
             }
             onHookingFailure {
-                YLog.error("$TAG: hook failed, vvic image to png conversion in mp4 composer unavailable")
+                YLog.error("$TAG: hook failed, single vvic image to png conversion in mp4 composer unavailable")
             }
         }
 
-    private fun installConvertMultiVvicImageToMp4Hook(): YukiMemberHookCreator.MemberHookCreator.Result? =
+    private fun installConvertMultiVvicImagesToMp4Hook(): YukiMemberHookCreator.MemberHookCreator.Result? =
         packageInstance.multiImageToMp4Composer.selfClass?.resolveMethod(
             packageInstance.multiImageToMp4Composer.onLoad()
         )?.hook {
@@ -296,15 +302,17 @@ object FeedMultiImageHooker : YukiBaseHooker() {
                 }
 
                 vvicImagePathList?.forEach {
-                    overwriteVvicWithPng(it)
+                    if (!overwriteVvicWithPng(it)) {
+                        YLog.error("$TAG: failed to convert multi vvic images to png in mp4 composer: $it")
+                    }
                 }
             }
         }?.result {
             onConductFailure { _, throwable ->
-                YLog.error("$TAG: failed to convert vvic image to png in mutil mp4 composer", throwable)
+                YLog.error("$TAG: failed to convert multi vvic images to png in mutil mp4 composer", throwable)
             }
             onHookingFailure {
-                YLog.error("$TAG: hook failed, vvic image to png conversion in mutil mp4 composer unavailable")
+                YLog.error("$TAG: hook failed, multi vvic images to png conversion in mp4 composer unavailable")
             }
         }
 
@@ -329,7 +337,7 @@ object FeedMultiImageHooker : YukiBaseHooker() {
         val imageBytes = runCatching {
             FileInputStream(imageFile).use { it.readBytes() }
         }.getOrElse {
-            YLog.error("$TAG: Failed to read vvic image for png conversion: ${imageFile.absolutePath}", it)
+            YLog.error("$TAG: failed to read vvic image for png conversion: ${imageFile.absolutePath}", it)
             return false
         }
 
@@ -345,7 +353,7 @@ object FeedMultiImageHooker : YukiBaseHooker() {
             }
         )
         if (bitmap == null) {
-            YLog.error("$TAG: Failed to decode vvic image to bitmap: ${imageFile.absolutePath}")
+            YLog.error("$TAG: failed to decode vvic image to bitmap: ${imageFile.absolutePath}")
             return false
         }
 
