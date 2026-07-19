@@ -81,19 +81,21 @@ object FeedMultiImageHooker : YukiBaseHooker() {
                     return@before
                 }
 
-                val awemeId = aweme.invokeMethod<String>(
+                // skip if this post was already processed
+                aweme.invokeMethod<String>(
                     packageInstance.aweme.getAid()
-                )
-                if (ring.contains(awemeId)) {
-                    return@before
-                } else if (awemeId != null) {
-                    ring.add(awemeId)
+                )?.let {
+                    if (ring.contains(it)) {
+                        return@before
+                    }
+                    ring.add(it)
                 }
 
                 val awemeImages = aweme.getField<List<*>>(
                     packageInstance.aweme.images()
-                )
-                if (awemeImages.isNullOrEmpty()) {
+                ).takeIf {
+                    !it.isNullOrEmpty()
+                } ?: run {
                     YLog.error("$TAG: aweme.images is null or empty")
                     return@before
                 }
@@ -103,22 +105,56 @@ object FeedMultiImageHooker : YukiBaseHooker() {
                         return@forEach
                     }
 
-                    val urlList = imageStruct.getField<List<*>>(
+                    // use the play URL as the image download URL
+                    imageStruct.getField<List<*>>(
                         packageInstance.imageUrlStruct.urlList()
-                    )
-                    if (urlList.isNullOrEmpty()) {
-                        YLog.error("$TAG: image has no play URL, skipping watermark-free injection")
-                        return@forEach
-                    } else {
+                    ).takeIf {
+                        !it.isNullOrEmpty()
+                    }?.let {
+                        imageStruct.setField(
+                            packageInstance.imageUrlStruct.downloadUrlList(),
+                            it
+                        )
                         if (verbose) {
-                            YLog.debug("$TAG: image.urlList[0]: ${urlList.first()}")
+                            YLog.debug("$TAG: image.urlList[0]: ${it.first()}")
                         }
+                    } ?: run {
+                        YLog.warn("$TAG: image has no play URL, skipping watermark-free injection")
                     }
 
-                    imageStruct.setField(
-                        packageInstance.imageUrlStruct.downloadUrlList(),
-                        urlList
-                    )
+                    // also replace the video's download URL when the post has a video
+                    imageStruct.getField<Any>(
+                        packageInstance.imageUrlStruct.video()
+                    )?.let { video ->
+                        video.invokeMethod<Any>(
+                            packageInstance.video.getPlayAddr()
+                        )?.let { playAddr ->
+                            video.setField(
+                                packageInstance.video.downloadAddr(),
+                                playAddr
+                            )
+                            if (verbose) {
+                                YLog.debug(
+                                    "$TAG: play addr[0]: ${
+                                        playAddr.getField<List<String?>>(
+                                            packageInstance.urlModel.urlList()
+                                        )?.first {
+                                            !it.isNullOrBlank()
+                                        }
+                                    }"
+                                )
+                            }
+                        }?.also {
+                            video.setField(
+                                packageInstance.video.hasWaterMark(),
+                                false
+                            )
+                            video.setField(
+                                packageInstance.video.hasSuffixWaterMark(),
+                                false
+                            )
+                        }
+                    }
                 }
             }
         }?.result {

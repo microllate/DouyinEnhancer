@@ -589,6 +589,12 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
             hookInfo.video.getPlayAddr.nameOrNull,
             hookInfo.video.getPlayAddr.parameters.valuesListOrNull
         )
+
+        fun hasSuffixWaterMark() = Field(hookInfo.video.hasSuffixWaterMark.nameOrNull)
+
+        fun hasWaterMark() = Field(hookInfo.video.hasWaterMark.nameOrNull)
+
+        fun downloadAddr() = Field(hookInfo.video.downloadAddr.nameOrNull)
     }
 
     inner class ImageUrlStructModule {
@@ -607,6 +613,10 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
 
         fun downloadUrlList() = Field(
             hookInfo.imageUrlStruct.downloadUrlList.nameOrNull
+        )
+
+        fun video() = Field(
+            hookInfo.imageUrlStruct.video.nameOrNull
         )
     }
 
@@ -1608,9 +1618,6 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                     grouponLargeCard = field {
                         name = "grouponLargeCard"
                     }
-                    isLivePhoto = field {
-                        name = "isLivePhoto"
-                    }
                     isLive = method {
                         name = "isLive"
                     }
@@ -1923,6 +1930,15 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                                 values.addAll(getPlayAddrMethodData.paramTypeNames)
                             }
                         }
+                        hasSuffixWaterMark = field {
+                            name = "hasSuffixWaterMark"
+                        }
+                        hasWaterMark = field {
+                            name = "hasWaterMark"
+                        }
+                        downloadAddr = field {
+                            name = "downloadAddr"
+                        }
                     }.onFailure {
                         YLog.error("$TAG: Unable to populate config", it)
                     }
@@ -2122,6 +2138,9 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                     }
                     downloadUrlList = field {
                         name = "downloadUrlList"
+                    }
+                    video = field {
+                        name = "video"
                     }
                 }
 

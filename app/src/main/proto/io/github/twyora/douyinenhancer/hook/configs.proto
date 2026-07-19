@@ -171,6 +171,9 @@ message Aweme {
 message Video {
   optional Class class = 1;
   optional Method get_play_addr = 2;
+  optional Field has_suffix_water_mark = 3;
+  optional Field has_water_mark = 4;
+  optional Field download_addr = 5;
 }
 
 message ImageUrlStruct {
@@ -178,6 +181,7 @@ message ImageUrlStruct {
   optional Field watermark_free_download_url_list = 2;
   optional Field url_list = 3;
   optional Field download_url_list = 4;
+  optional Field video = 5;
 }
 
 message FeedResponseHandler {
