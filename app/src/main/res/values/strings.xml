@@ -72,6 +72,10 @@
     <string name="pref_misc_enable_hidden_features_already_enabled">Hidden features are already enabled; no further action required</string>
     <string name="pref_misc_enable_hidden_features_restart_required">Hidden features are enabled. Restart the app for changes to take effect</string>
 
+    <string name="pref_category_module">Module</string>
+    <string name="pref_module_disable_verbose_logs_title">Disable verbose logs</string>
+    <string name="pref_module_disable_verbose_logs_summary">Report issues request to include verbose logs</string>
+
     <string name="pref_category_about">About</string>
     <string name="pref_about_version_title">Version</string>
     <string name="pref_about_version_summary">0.0.1</string>
