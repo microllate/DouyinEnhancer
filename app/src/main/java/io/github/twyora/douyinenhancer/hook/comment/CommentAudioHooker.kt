@@ -24,6 +24,9 @@ import org.json.JSONObject
 object CommentAudioHooker : YukiBaseHooker() {
     private val TAG = this::class.simpleName
 
+    private val packageInstance
+        get() = DouyinPackage.instance
+
     private val verbose
         get() = !FastKVConfigManager.module.getBoolean(ModuleKey.DISABLE_VERBOSE_LOGS, false)
 
@@ -54,8 +57,6 @@ object CommentAudioHooker : YukiBaseHooker() {
     }
 
     private fun installForceSaveImageVisibleHook(): YukiMemberHookCreator.MemberHookCreator.Result? {
-        val packageInstance = DouyinPackage.instance
-
         return packageInstance.saveImageActionItem.selfClass?.resolveMethod(
             packageInstance.saveImageActionItem.isVisible()
         )?.hook {
@@ -87,8 +88,6 @@ object CommentAudioHooker : YukiBaseHooker() {
     }
 
     private fun installAddSaveImageToWhiteListHook(): YukiMemberHookCreator.MemberHookCreator.Result? {
-        val packageInstance = DouyinPackage.instance
-
         return packageInstance.commentLongPressWhiteListProvider.selfClass?.resolveMethod(
             packageInstance.commentLongPressWhiteListProvider.buildWhiteList()
         )?.hook {
@@ -122,8 +121,6 @@ object CommentAudioHooker : YukiBaseHooker() {
     }
 
     private fun installInjectAudioUrlOnSaveClickHook(): YukiMemberHookCreator.MemberHookCreator.Result? {
-        val packageInstance = DouyinPackage.instance
-
         return packageInstance.saveImageActionItem.onClickExecutor.selfClass?.resolveMethod(
             packageInstance.saveImageActionItem.onClickExecutor.onClick()
         )?.hook {
@@ -217,8 +214,6 @@ object CommentAudioHooker : YukiBaseHooker() {
     }
 
     private fun installSaveDownloadedAudioHook(): YukiMemberHookCreator.MemberHookCreator.Result? {
-        val packageInstance = DouyinPackage.instance
-
         return packageInstance.commentImageSaveDownloadListener.selfClass?.resolveMethod(
             packageInstance.commentImageSaveDownloadListener.onSuccessed()
         )?.hook {
@@ -310,8 +305,6 @@ object CommentAudioHooker : YukiBaseHooker() {
     }
 
     private fun overrideImageIndex(actionItem: Any, index: Int): Int {
-        val packageInstance = DouyinPackage.instance
-
         val actionParams = actionItem.getField<Any>(
             packageInstance.saveImageActionItem.saveImageActionParams()
         ) ?: return -1
@@ -330,8 +323,6 @@ object CommentAudioHooker : YukiBaseHooker() {
     }
 
     private fun injectAudioUrl(comment: Any, url: List<String>): Boolean {
-        val packageInstance = DouyinPackage.instance
-
         val existingImageUrlList = comment.getField<List<*>>(
             packageInstance.comment.imageList()
         )
