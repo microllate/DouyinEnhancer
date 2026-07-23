@@ -110,7 +110,7 @@ class SettingsDialog(context: Context) : AlertDialog.Builder(context) {
             "version" -> {
                 val prefs = FastKVConfigManager.settings
                 if (!prefs.getBoolean(MiscKey.ENABLE_HIDDEN_FEATURES, false)) {
-                    if (++hiddenFeatureClickCount == 20) {
+                    if (++hiddenFeatureClickCount == HIDDEN_FEATURE_TRIGGER_CLICK_COUNT) {
                         prefs.edit(commit = true) {
                             putBoolean(MiscKey.ENABLE_HIDDEN_FEATURES, true)
                         }
@@ -121,11 +121,14 @@ class SettingsDialog(context: Context) : AlertDialog.Builder(context) {
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
-                    } else if (hiddenFeatureClickCount >= 17) {
+                    } else if (hiddenFeatureClickCount >= HIDDEN_FEATURE_HINT_FROM_CLICK_COUNT) {
                         activity.runOnUiThread {
                             Toast.makeText(
                                 context,
-                                context.getString(R.string.pref_misc_enable_hidden_features_steps_remaining, 20 - hiddenFeatureClickCount),
+                                context.getString(
+                                    R.string.pref_misc_enable_hidden_features_steps_remaining,
+                                    HIDDEN_FEATURE_TRIGGER_CLICK_COUNT - hiddenFeatureClickCount
+                                ),
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
@@ -210,7 +213,7 @@ class SettingsDialog(context: Context) : AlertDialog.Builder(context) {
                                         Toast.LENGTH_SHORT
                                     ).show()
                                 }
-                                YLog.error("$TAG: Export config failed", it)
+                                YLog.error("$TAG: export config failed", it)
                             }.onSuccess {
                                 activity.runOnUiThread {
                                     Toast.makeText(context, R.string.config_export_success, Toast.LENGTH_SHORT).show()
@@ -281,7 +284,7 @@ class SettingsDialog(context: Context) : AlertDialog.Builder(context) {
                                         Toast.LENGTH_SHORT
                                     ).show()
                                 }
-                                YLog.error("$TAG: Import config failed", it)
+                                YLog.error("$TAG: import config failed", it)
                             }.onSuccess {
                                 activity.runOnUiThread {
                                     Toast.makeText(context, R.string.config_import_success, Toast.LENGTH_SHORT).show()
@@ -348,7 +351,7 @@ class SettingsDialog(context: Context) : AlertDialog.Builder(context) {
                 YLog.error("$TAG: fetch latest release failed", it)
             }.getOrNull()
             if (latestReleaseJson == null) {
-                YLog.debug("$TAG: skip update check, no release data")
+                YLog.info("$TAG: skip update check, no release data")
                 return@launch
             }
 
@@ -377,6 +380,11 @@ class SettingsDialog(context: Context) : AlertDialog.Builder(context) {
                     }
                 }
             }
+        }
+
+        companion object {
+            private const val HIDDEN_FEATURE_TRIGGER_CLICK_COUNT = 20
+            private const val HIDDEN_FEATURE_HINT_FROM_CLICK_COUNT = 17
         }
     }
 
@@ -412,7 +420,7 @@ class SettingsDialog(context: Context) : AlertDialog.Builder(context) {
             runCatching {
                 SettingsDialog(context).show()
             }.onFailure {
-                YLog.error("$TAG: SettingDialog show failed", it)
+                YLog.error("$TAG: settingDialog show failed", it)
             }
         }
 

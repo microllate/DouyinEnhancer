@@ -6,6 +6,7 @@ import com.highcapable.yukihookapi.hook.core.YukiMemberHookCreator
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.log.YLog
 import io.github.twyora.douyinenhancer.config.FastKVConfigManager
+import io.github.twyora.douyinenhancer.config.key.ModuleKey
 import io.github.twyora.douyinenhancer.config.key.SaveKey
 import io.github.twyora.douyinenhancer.hook.DouyinPackage
 import io.github.twyora.douyinenhancer.hook.HookOnMainProcess
@@ -23,8 +24,14 @@ import org.json.JSONObject
 object CommentAudioHooker : YukiBaseHooker() {
     private val TAG = this::class.simpleName
 
+    private val verbose
+        get() = !FastKVConfigManager.module.getBoolean(ModuleKey.DISABLE_VERBOSE_LOGS, false)
+
     override fun onHook() {
         if (!FastKVConfigManager.settings.getBoolean(SaveKey.DOWNLOAD_COMMENT_AUDIO, false)) {
+            if (verbose) {
+                YLog.debug("$TAG: download comment audio disabled, skip hook")
+            }
             return
         }
 
@@ -66,6 +73,9 @@ object CommentAudioHooker : YukiBaseHooker() {
                     packageInstance.comment.commentAudio()
                 )
                 if (commentAudio != null) {
+                    if (verbose) {
+                        YLog.debug("$TAG: comment contains audio, showing save image button")
+                    }
                     resultTrue()
                 }
             }
@@ -98,6 +108,9 @@ object CommentAudioHooker : YukiBaseHooker() {
                     packageInstance.comment.commentAudio()
                 )
                 if (commentAudio != null) {
+                    if (verbose) {
+                        YLog.debug("$TAG: comment contains audio, added \"save_image\" to white list")
+                    }
                     whiteList.add("save_image")
                 }
             }
@@ -168,7 +181,9 @@ object CommentAudioHooker : YukiBaseHooker() {
                     return@before
                 }
 
-                YLog.debug("$TAG: injected audio url(s) into comment")
+                if (verbose) {
+                    YLog.debug("$TAG: injected audio url(s) into comment, audio url(s): $audioUrlsToInject")
+                }
             }
             after {
                 val saveImageActionItem = args[0]?.getField<Any>(
@@ -218,7 +233,15 @@ object CommentAudioHooker : YukiBaseHooker() {
                     packageInstance.downloadInfo.url()
                 ) ?: return@before
 
-                if (!dlUrl.contains("mime_type=audio") || !ftypeInfo.mimeType.startsWith("audio/")) {
+                if (!dlUrl.contains("mime_type=audio")) {
+                    if (verbose) {
+                        YLog.debug("$TAG: download url is not an audio url, skip saving audio, url: $dlUrl")
+                    }
+                    return@before
+                } else if (!ftypeInfo.mimeType.startsWith("audio/")) {
+                    if (verbose) {
+                        YLog.debug("$TAG: downloaded file is not an audio file, skip saving audio, mimeType: ${ftypeInfo.mimeType}")
+                    }
                     return@before
                 }
 
@@ -228,6 +251,10 @@ object CommentAudioHooker : YukiBaseHooker() {
                         dlUrl + System.currentTimeMillis().toString()
                     )
                 }.${ftypeInfo.extensions.first()}"
+
+                if (verbose) {
+                    YLog.debug("$TAG: audio file name: $targetFileName")
+                }
 
                 val context = instance.getField<Any>(
                     packageInstance.commentImageSaveDownloadListener.listenerProviderParam()

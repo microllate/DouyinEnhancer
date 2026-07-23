@@ -15,6 +15,8 @@ import com.highcapable.kavaref.extension.toClass
 import com.highcapable.kavaref.extension.toClassOrNull
 import com.highcapable.yukihookapi.hook.log.YLog
 import io.github.twyora.douyinenhancer.BuildConfig
+import io.github.twyora.douyinenhancer.config.FastKVConfigManager
+import io.github.twyora.douyinenhancer.config.key.ModuleKey
 import io.github.twyora.douyinenhancer.generated.AppProperties
 import io.github.twyora.douyinenhancer.utils.Field
 import io.github.twyora.douyinenhancer.utils.Method
@@ -68,8 +70,11 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                 measureTimedValue {
                     readHookInfo(context)
                 }
-            YLog.debug("$TAG: load hookInfo time: $time")
-            YLog.debug("$TAG: hookInfo: $result")
+
+            if (verbose) {
+                YLog.debug("$TAG: load hookInfo time: $time")
+                YLog.debug("$TAG: hookInfo: $result")
+            }
 
             result
         }
@@ -405,6 +410,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
         }
 
         fun nickname() = Field(hookInfo.user.nickname.nameOrNull)
+
         fun uid() = Field(hookInfo.user.uid.nameOrNull)
     }
 
@@ -687,6 +693,9 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
     companion object {
         private val TAG = DouyinPackage::class.simpleName
 
+        private val verbose
+            get() = !FastKVConfigManager.module.getBoolean(ModuleKey.DISABLE_VERBOSE_LOGS, false)
+
         @Volatile
         lateinit var instance: DouyinPackage
 
@@ -699,12 +708,15 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
             val hookInfoFileName =
                 "${AppProperties.PROJECT_APPLICATION_ID}-${androidId.hashCode().toUInt()}"
                     .hashCode().toHexString()
-            YLog.debug("$TAG: hookInfoFileName: $hookInfoFileName")
+
+            if (verbose) {
+                YLog.debug("$TAG: hookInfoFileName: $hookInfoFileName")
+            }
 
             runCatching {
                 val hookInfoFile = File(context.cacheDir, hookInfoFileName)
                 if (!(hookInfoFile.isFile && hookInfoFile.canRead())) {
-                    YLog.debug("$TAG: hookInfoFile is not a file or can not be read")
+                    YLog.warn("$TAG: hookInfoFile is not a file or can not be read")
                     return@runCatching null
                 }
 
@@ -781,10 +793,11 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
             hostVersionCode = hostAppPackageInfo.versionCode
             generation = 0
 
-            try {
+            runCatching {
                 System.loadLibrary("dexkit")
-            } catch (e: Throwable) {
-                YLog.error("Failed to load DexKit native library: ${e.message}")
+            }.onFailure {
+                YLog.error("failed to load DexKit native library", it)
+                return@hookInfo
             }
 
             DexKitBridge.create(context.applicationInfo.sourceDir).use { bridge ->
@@ -809,7 +822,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                                         }
                                     }.singleOrNull() ?: run {
                                     YLog.error(
-                                        "$TAG: Unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
+                                        "$TAG: unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
                                     )
                                     return@commentImageStruct
                                 }
@@ -836,7 +849,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                                         }
                                 }
                         }.onFailure {
-                            YLog.error("$TAG: Unable to populate config", it)
+                            YLog.error("$TAG: unable to populate config", it)
                         }
                     }
 
@@ -919,7 +932,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                                     ?.name
                             if (commentFieldName == null || imageFieldName == null) {
                                 YLog.error(
-                                    "$TAG: Unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
+                                    "$TAG: unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
                                 )
                                 return@commentActionParams
                             }
@@ -937,7 +950,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                                     name = imageFieldName
                                 }
                         }.onFailure {
-                            YLog.error("$TAG: Unable to populate config", it)
+                            YLog.error("$TAG: unable to populate config", it)
                         }
                     }
 
@@ -957,7 +970,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
 
                             if (commentActionParamsFieldName == null) {
                                 YLog.error(
-                                    "$TAG: Unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
+                                    "$TAG: unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
                                 )
                                 return@commentLongPressItemModel
                             }
@@ -971,7 +984,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                                     name = commentActionParamsFieldName
                                 }
                         }.onFailure {
-                            YLog.error("$TAG: Unable to populate config", it)
+                            YLog.error("$TAG: unable to populate config", it)
                         }
                     }
 
@@ -1028,7 +1041,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                                 isVisibleMethodData == null
                             ) {
                                 YLog.error(
-                                    "$TAG: Unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
+                                    "$TAG: unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
                                 )
                                 return@saveImageActionItem
                             }
@@ -1068,7 +1081,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                                 }
                             }
                         }.onFailure {
-                            YLog.error("$TAG: Unable to populate config", it)
+                            YLog.error("$TAG: unable to populate config", it)
                         }
                     }
 
@@ -1112,12 +1125,12 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                                     }
                             } ?: run {
                             YLog.error(
-                                "$TAG: Unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
+                                "$TAG: unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
                             )
                             return@commentExtensionKt
                         }
                     }.onFailure {
-                        YLog.error("$TAG: Unable to populate config", it)
+                        YLog.error("$TAG: unable to populate config", it)
                     }
                 }
 
@@ -1165,7 +1178,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
 
                         if (clsName == null || contextFieldName == null || certFieldName == null) {
                             YLog.error(
-                                "$TAG: Unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated fields"
+                                "$TAG: unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated fields"
                             )
                             return@listenerProviderParam
                         }
@@ -1180,7 +1193,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                             name = certFieldName
                         }
                     }.onFailure {
-                        YLog.error("$TAG: Unable to populate config", it)
+                        YLog.error("$TAG: unable to populate config", it)
                     }
                 }
 
@@ -1224,7 +1237,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                             }?.self?.name
                             if (onSuccessedMethodData == null || notifyResultMethod == null || listenerProviderParamFieldName == null) {
                                 YLog.error(
-                                    "$TAG: Unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
+                                    "$TAG: unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
                                 )
                                 return@commentImageSaveDownloadListener
                             }
@@ -1258,7 +1271,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                             }
                             return@commentImageSaveDownloadListener
                         }.onFailure {
-                            YLog.error("$TAG: Unable to populate config", it)
+                            YLog.error("$TAG: unable to populate config", it)
                         }
                     }
 
@@ -1294,7 +1307,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                                     }?.self
                             if (md5HexFieldMethod == null) {
                                 YLog.error(
-                                    "$TAG: Unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
+                                    "$TAG: unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
                                 )
                                 return@digestUtils
                             }
@@ -1315,7 +1328,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                                         }
                                 }
                         }.onFailure {
-                            YLog.error("$TAG: Unable to populate config", it)
+                            YLog.error("$TAG: unable to populate config", it)
                         }
                     }
 
@@ -1403,7 +1416,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                                 getImageUriMethod == null || createUriMethod == null || getAudioUriMethod == null
                             ) {
                                 YLog.error(
-                                    "$TAG: Unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
+                                    "$TAG: unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
                                 )
                                 return@uGFileUtilsKt
                             }
@@ -1481,7 +1494,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                                     }
                             }
                         }.onFailure {
-                            YLog.error("$TAG: Unable to populate config", it)
+                            YLog.error("$TAG: unable to populate config", it)
                         }
                     }
 
@@ -1545,7 +1558,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                         }?.self?.name
 
                         if (settingsScrollViewFieldName == null) {
-                            YLog.error("$TAG: Unable to populate config, settingsScrollViewFieldName is null")
+                            YLog.error("$TAG: unable to populate config, settingsScrollViewFieldName is null")
                             return@runCatching
                         }
 
@@ -1559,7 +1572,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                             name = "onResume"
                         }
                     }.onFailure {
-                        YLog.error("$TAG: Unable to populate config", it)
+                        YLog.error("$TAG: unable to populate config", it)
                     }
                 }
 
@@ -1692,7 +1705,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                             }
                         }.singleOrNull() ?: run {
                             YLog.error(
-                                "$TAG: Unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
+                                "$TAG: unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
                             )
                             return@downLoadExecutor
                         }
@@ -1708,7 +1721,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                             }
                         }
                     }.onFailure {
-                        YLog.error("$TAG: Unable to populate config", it)
+                        YLog.error("$TAG: unable to populate config", it)
                     }
                 }
 
@@ -1730,7 +1743,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
 
                         if (getTargetFilePathsMethodData == null) {
                             YLog.error(
-                                "$TAG: Unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
+                                "$TAG: unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
                             )
                             return@downLoadTask
                         }
@@ -1746,7 +1759,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                             }
                         }
                     }.onFailure {
-                        YLog.error("$TAG: Unable to populate config", it)
+                        YLog.error("$TAG: unable to populate config", it)
                     }
                 }
 
@@ -1763,7 +1776,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                             }
                         }.singleOrNull() ?: run {
                             YLog.error(
-                                "$TAG: Unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
+                                "$TAG: unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
                             )
                             return@downloadLivePhotoExecutor
                         }
@@ -1779,7 +1792,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                             }
                         }
                     }.onFailure {
-                        YLog.error("$TAG: Unable to populate config", it)
+                        YLog.error("$TAG: unable to populate config", it)
                     }
                 }
 
@@ -1803,7 +1816,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                             }
                         }.singleOrNull() ?: run {
                             YLog.error(
-                                "$TAG: Unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
+                                "$TAG: unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
                             )
                             return@singleImageToMp4Composer
                         }
@@ -1819,7 +1832,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                             }
                         }
                     }.onFailure {
-                        YLog.error("$TAG: Unable to populate config", it)
+                        YLog.error("$TAG: unable to populate config", it)
                     }
                 }
 
@@ -1856,7 +1869,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
 
                         if (onLoadMethodData == null || imagePathListFieldName == null) {
                             YLog.error(
-                                "$TAG: Unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods or fields"
+                                "$TAG: unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods or fields"
                             )
                             return@multiImageToMp4Composer
                         }
@@ -1875,7 +1888,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                             name = imagePathListFieldName
                         }
                     }.onFailure {
-                        YLog.error("$TAG: Unable to populate config", it)
+                        YLog.error("$TAG: unable to populate config", it)
                     }
                 }
 
@@ -1900,7 +1913,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                             }
                         } ?: run {
                             YLog.error(
-                                "$TAG: Unable to populate ${this::class.simpleName} config, possibly due to unfound obfuscated methods"
+                                "$TAG: unable to populate ${this::class.simpleName} config, possibly due to unfound obfuscated methods"
                             )
                             return@video
                         }
@@ -1925,7 +1938,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                             name = "downloadAddr"
                         }
                     }.onFailure {
-                        YLog.error("$TAG: Unable to populate config", it)
+                        YLog.error("$TAG: unable to populate config", it)
                     }
                 }
 
@@ -1972,12 +1985,12 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                             }
                         } ?: run {
                             YLog.error(
-                                "$TAG: Unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
+                                "$TAG: unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
                             )
                             return@feedResponseHandler
                         }
                     }.onFailure {
-                        YLog.error("$TAG: Unable to populate config", it)
+                        YLog.error("$TAG: unable to populate config", it)
                     }
                 }
 
@@ -1997,7 +2010,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                             }
                         }.singleOrNull() ?: run {
                             YLog.error(
-                                "$TAG: Unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
+                                "$TAG: unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
                             )
                             return@commentLongPressWhiteListProvider
                         }
@@ -2013,7 +2026,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                             }
                         }
                     }.onFailure {
-                        YLog.error("$TAG: Unable to populate config", it)
+                        YLog.error("$TAG: unable to populate config", it)
                     }
                 }
 
@@ -2046,7 +2059,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                             }
                         }.singleOrNull() ?: run {
                             YLog.error(
-                                "$TAG: Unable to populate ${this::class.simpleName} config, possibly due to unfound obfuscated methods"
+                                "$TAG: unable to populate ${this::class.simpleName} config, possibly due to unfound obfuscated methods"
                             )
                             return@miscDownloadAddrUtil
                         }
@@ -2062,7 +2075,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                             }
                         }
                     }.onFailure {
-                        YLog.error("$TAG: Unable to populate config", it)
+                        YLog.error("$TAG: unable to populate config", it)
                     }
                 }
 
@@ -2086,7 +2099,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
 
                         if (startDownloadMethod == null || awemeField == null) {
                             YLog.error(
-                                "$TAG: Unable to populate ${this::class.simpleName} config, possibly due to unfound obfuscated methods or fields"
+                                "$TAG: unable to populate ${this::class.simpleName} config, possibly due to unfound obfuscated methods or fields"
                             )
                             return@downloadAction
                         }
@@ -2107,7 +2120,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                             name = awemeField.name
                         }
                     }.onFailure {
-                        YLog.error("$TAG: Unable to populate config", it)
+                        YLog.error("$TAG: unable to populate config", it)
                     }
                 }
 
@@ -2158,7 +2171,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
 
                         if (getVisibilityMethod == null) {
                             YLog.error(
-                                "$TAG: Unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
+                                "$TAG: unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
                             )
                             return@lppDownloadModule
                         }
@@ -2176,7 +2189,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                             }
                         }
                     }.onFailure {
-                        YLog.error("$TAG: Unable to populate config", it)
+                        YLog.error("$TAG: unable to populate config", it)
                     }
                 }
             }

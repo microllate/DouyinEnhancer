@@ -9,6 +9,8 @@ import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.factory.injectModuleAppResources
 import com.highcapable.yukihookapi.hook.log.YLog
 import io.github.twyora.douyinenhancer.R
+import io.github.twyora.douyinenhancer.config.FastKVConfigManager
+import io.github.twyora.douyinenhancer.config.key.ModuleKey
 import io.github.twyora.douyinenhancer.hook.DouyinPackage
 import io.github.twyora.douyinenhancer.hook.HookOnMainProcess
 import io.github.twyora.douyinenhancer.ui.SettingsDialog
@@ -20,9 +22,13 @@ import io.github.twyora.douyinenhancer.utils.resolveMethod
 object SettingsHooker : YukiBaseHooker() {
     private val TAG = this::class.simpleName
 
-    override fun onHook() {
-        val packageInstance = DouyinPackage.instance
+    private val packageInstance
+        get() = DouyinPackage.instance
 
+    private val verbose
+        get() = !FastKVConfigManager.module.getBoolean(ModuleKey.DISABLE_VERBOSE_LOGS, false)
+
+    override fun onHook() {
         packageInstance.douYinSettingNewVersionActivity.selfClass?.resolveMethod(
             packageInstance.douYinSettingNewVersionActivity.onResume()
         )?.hook {
@@ -34,12 +40,14 @@ object SettingsHooker : YukiBaseHooker() {
                 val settingsScrollView = instance.getField<ViewGroup?>(
                     packageInstance.douYinSettingNewVersionActivity.settingsScrollView()
                 ) ?: run {
-                    YLog.error("$TAG: Settings scroll view field not found, cannot inject module entry")
+                    YLog.error("$TAG: settings scroll view field not found, cannot inject module entry")
                     return@after
                 }
 
                 if (settingsScrollView.findViewWithTag<View>(moduleSettingsTag) != null) {
-                    YLog.debug("$TAG: Module settings entry already injected, skipping")
+                    if (verbose) {
+                        YLog.debug("$TAG: module settings entry already injected, skipping")
+                    }
                     return@after
                 }
 
@@ -47,7 +55,7 @@ object SettingsHooker : YukiBaseHooker() {
                     packageInstance.commonItemView.selfClass?.getConstructor(Context::class.java)
                         ?.newInstance(instance) as? ViewGroup
                 if (moduleSettingsCommonItemView == null) {
-                    YLog.error("$TAG: Failed to create module settings entry")
+                    YLog.error("$TAG: failed to create module settings entry")
                     return@after
                 }
 
@@ -80,9 +88,13 @@ object SettingsHooker : YukiBaseHooker() {
                     ?.parent as? ViewGroup
                     ?: (settingsScrollView.getChildAt(0) as? ViewGroup)
                     ?: run {
-                        YLog.error("$TAG: Unable to find a suitable parent for module settings entry")
+                        YLog.error("$TAG: unable to find a suitable parent for module settings entry")
                         return@after
                     }
+
+                if (verbose) {
+                    YLog.debug("$TAG: module settings entry prepared, adding view to settings")
+                }
 
                 targetParent.addView(
                     moduleSettingsCommonItemView,

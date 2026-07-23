@@ -55,7 +55,7 @@ fun List<String>.toClassIfPrimitiveElseString(): Array<Any> = Array(size) {
 
 fun Any.resolveMethod(method: Method): MethodResolver<*>? {
     if (method.name.isNullOrBlank()) {
-        YLog.error("Cannot determine which method to resolve on ${this::class.simpleName}, name is null or blank")
+        YLog.error("cannot determine which method to resolve on ${this::class.simpleName}, name is null or blank")
         return null
     }
     return runCatching {
@@ -67,18 +67,18 @@ fun Any.resolveMethod(method: Method): MethodResolver<*>? {
             superclass()
         }
     }.onFailure {
-        YLog.error("Resolve failed: ${this::class.simpleName}.${method.name}(${method.parameters})")
+        YLog.error("resolve failed: ${this::class.simpleName}.${method.name}(${method.parameters})")
     }.getOrNull()
         .also {
             if (it == null) {
-                YLog.error("Method not found: ${this::class.simpleName}.${method.name}(${method.parameters})")
+                YLog.error("method not found: ${this::class.simpleName}.${method.name}(${method.parameters})")
             }
         }
 }
 
 fun Any.resolveField(field: Field): FieldResolver<*>? {
     if (field.name.isNullOrBlank()) {
-        YLog.error("Cannot determine which field to resolve on ${this::class.simpleName}, name is null or blank")
+        YLog.error("cannot determine which field to resolve on ${this::class.simpleName}, name is null or blank")
         return null
     }
     return runCatching {
@@ -87,18 +87,18 @@ fun Any.resolveField(field: Field): FieldResolver<*>? {
             superclass()
         }
     }.onFailure {
-        YLog.error("Resolve failed: ${this::class.simpleName}.${field.name}")
+        YLog.error("resolve failed: ${this::class.simpleName}.${field.name}")
     }.getOrNull()
         .also {
             if (it == null) {
-                YLog.error("Field not found: ${this::class.simpleName}.${field.name}")
+                YLog.error("field not found: ${this::class.simpleName}.${field.name}")
             }
         }
 }
 
 fun Class<*>.resolveMethod(method: Method): MethodResolver<*>? {
     if (method.name.isNullOrBlank()) {
-        YLog.error("Cannot determine which method to resolve on ${this.simpleName}, name is null or blank")
+        YLog.error("cannot determine which method to resolve on ${this.simpleName}, name is null or blank")
         return null
     }
     return runCatching {
@@ -110,18 +110,18 @@ fun Class<*>.resolveMethod(method: Method): MethodResolver<*>? {
             superclass()
         }
     }.onFailure {
-        YLog.error("Resolve failed: ${this.simpleName}.${method.name}(${method.parameters})")
+        YLog.error("resolve failed: ${this.simpleName}.${method.name}(${method.parameters})")
     }.getOrNull()
         .also {
             if (it == null) {
-                YLog.error("Method not found: ${this.simpleName}.${method.name}(${method.parameters})")
+                YLog.error("method not found: ${this.simpleName}.${method.name}(${method.parameters})")
             }
         }
 }
 
 fun Class<*>.resolveField(field: Field): FieldResolver<*>? {
     if (field.name.isNullOrBlank()) {
-        YLog.error("Cannot determine which field to resolve on ${this.simpleName}, name is null or blank")
+        YLog.error("cannot determine which field to resolve on ${this.simpleName}, name is null or blank")
         return null
     }
     return runCatching {
@@ -130,11 +130,11 @@ fun Class<*>.resolveField(field: Field): FieldResolver<*>? {
             superclass()
         }
     }.onFailure {
-        YLog.error("Resolve failed: ${this.simpleName}.${field.name}")
+        YLog.error("resolve failed: ${this.simpleName}.${field.name}")
     }.getOrNull()
         .also {
             if (it == null) {
-                YLog.error("Field not found: ${this.simpleName}.${field.name}")
+                YLog.error("field not found: ${this.simpleName}.${field.name}")
             }
         }
 }

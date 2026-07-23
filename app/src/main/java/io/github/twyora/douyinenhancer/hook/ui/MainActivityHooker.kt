@@ -3,6 +3,9 @@ package io.github.twyora.douyinenhancer.hook.ui
 import android.app.Activity
 import android.content.Intent
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
+import com.highcapable.yukihookapi.hook.log.YLog
+import io.github.twyora.douyinenhancer.config.FastKVConfigManager
+import io.github.twyora.douyinenhancer.config.key.ModuleKey
 import io.github.twyora.douyinenhancer.hook.DouyinPackage
 import io.github.twyora.douyinenhancer.hook.HookOnMainProcess
 import io.github.twyora.douyinenhancer.ui.SettingsDialog
@@ -12,9 +15,13 @@ import io.github.twyora.douyinenhancer.utils.resolveMethod
 object MainActivityHooker : YukiBaseHooker() {
     private val TAG = this::class.simpleName
 
-    override fun onHook() {
-        val packageInstance = DouyinPackage.instance
+    private val packageInstance
+        get() = DouyinPackage.instance
 
+    private val verbose
+        get() = !FastKVConfigManager.module.getBoolean(ModuleKey.DISABLE_VERBOSE_LOGS, false)
+
+    override fun onHook() {
         packageInstance.mainActivity.selfClass?.resolveMethod(
             packageInstance.mainActivity.onResume()
         )?.hook {
@@ -26,9 +33,16 @@ object MainActivityHooker : YukiBaseHooker() {
                     false
                 )
                 if (shouldStartSettings == true) {
+                    if (verbose) {
+                        YLog.debug("$TAG: start-settings flag detected in onResume intent, showing settings dialog")
+                    }
                     activity.intent?.removeExtra("douyinenhancer_start_settings")
                     SettingsDialog.show(activity)
-                    removeSelf()
+                    removeSelf {
+                        if (verbose) {
+                            YLog.debug("$TAG: settings dialog shown, unregistering onResume hook to prevent re-show")
+                        }
+                    }
                 }
             }
         }
@@ -45,6 +59,9 @@ object MainActivityHooker : YukiBaseHooker() {
                     false
                 )
                 if (shouldStartSettings) {
+                    if (verbose) {
+                        YLog.debug("$TAG: start-settings flag detected in onNewIntent, showing settings dialog")
+                    }
                     intent.removeExtra("douyinenhancer_start_settings")
                     SettingsDialog.show(activity)
                 }
