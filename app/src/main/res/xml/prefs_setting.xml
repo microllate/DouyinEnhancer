@@ -65,6 +65,16 @@
     </PreferenceCategory>
 
     <PreferenceCategory
+        android:key="pref_category_module"
+        android:title="@string/pref_category_module">
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="disable_verbose_logs"
+            android:title="@string/pref_module_disable_verbose_logs_title"
+            android:summary="@string/pref_module_disable_verbose_logs_summary"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory
         android:key="pref_category_about"
         android:title="@string/pref_category_about">
 

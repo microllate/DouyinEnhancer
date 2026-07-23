@@ -11,9 +11,10 @@ import io.github.twyora.douyinenhancer.utils.resolveMethod
 object FeedDownloadModuleHooker : YukiBaseHooker() {
     private val TAG = this::class.simpleName
 
-    override fun onHook() {
-        val packageInstance = DouyinPackage.instance
+    private val packageInstance
+        get() = DouyinPackage.instance
 
+    override fun onHook() {
         packageInstance.lppDownloadModule.selfClass?.resolveMethod(
             packageInstance.lppDownloadModule.getVisibility()
         )?.hook {
@@ -28,7 +29,7 @@ object FeedDownloadModuleHooker : YukiBaseHooker() {
                 // so let's just pick some low-hanging fruit first —
                 // this one can wait till next time, hehe (^///^)
                 YLog.warn(
-                    "$TAG: Feed download button is hidden by the host and the hook logic hasn't been implemented yet — the download button will remain hidden!"
+                    "$TAG: feed download button is hidden by the host and the hook logic hasn't been implemented yet — the download button will remain hidden!"
                 )
             }
         }

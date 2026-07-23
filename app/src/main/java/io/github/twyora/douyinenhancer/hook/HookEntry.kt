@@ -10,6 +10,7 @@ import com.highcapable.yukihookapi.hook.factory.encase
 import com.highcapable.yukihookapi.hook.log.YLog
 import com.highcapable.yukihookapi.hook.xposed.proxy.IYukiHookXposedInit
 import io.github.twyora.douyinenhancer.config.FastKVConfigManager
+import io.github.twyora.douyinenhancer.config.key.ModuleKey
 
 @InjectYukiHookWithXposed
 object HookEntry : IYukiHookXposedInit {
@@ -40,6 +41,15 @@ object HookEntry : IYukiHookXposedInit {
                         // load cached HookInfo and run hooks when app context is available
                         DouyinPackage(appClassLoader!!, context)
                         FastKVConfigManager.init(context)
+
+                        YLog.info(
+                            "verbose logging disabled is ${
+                                FastKVConfigManager.module.getBoolean(
+                                    ModuleKey.DISABLE_VERBOSE_LOGS,
+                                    false
+                                )
+                            }"
+                        )
 
                         HookerRegistry.mainProcessHookers.forEach {
                             loadHooker(it)
