@@ -166,6 +166,14 @@ message Aweme {
   optional Field images = 13;
   optional Field statistics = 14;
   optional Method get_aid = 15;
+  optional Method get_download_status = 16;
+  optional Field aid = 17;
+  optional Field status = 18;
+}
+
+message AwemeStatus {
+  optional Class class = 1;
+  optional Field download_status = 2;
 }
 
 message Video {
@@ -252,6 +260,46 @@ message MultiImageToMp4Composer {
   optional Field image_path_list = 3;
 }
 
+message AbsPermissionChecker {
+  optional Class class = 1;
+  optional Method get_action_check_result = 2;
+}
+
+message ActionCheckResult {
+  optional Class class = 1;
+  optional Field action_status = 2;
+}
+
+message ActionStatus {
+  optional Class class = 1;
+  optional Method value_of = 2;
+  optional Field grayed = 3;
+  optional Field hidden = 4;
+  optional Field normal = 5;
+}
+
+message GalleryShareHelper {
+  optional Class class = 1;
+  optional Method start_download = 2;
+}
+
+message SharePrivacyVideoApi {
+  optional Class class = 1;
+  optional SharePrivacyVideoResponse privacy_video_response = 2;
+  optional Method getDownloadStatus = 3;
+}
+
+message SharePrivacyVideoResponse {
+  optional Class class = 1;
+  optional Field msg = 2;
+  optional Field status = 3;
+}
+
+message RxObservable {
+  optional Class class = 1;
+  optional Method just = 2;
+}
+
 message HookInfo {
   uint64 last_update_time = 1;
   uint32 module_version_code = 2;
@@ -294,4 +342,11 @@ message HookInfo {
   optional SingleImageToMp4Composer single_image_to_mp4_composer = 39;
   optional MultiImageToMp4Composer multi_image_to_mp4_composer = 40;
   optional DownloadLivePhotoExecutor download_live_photo_executor = 41;
+  optional AbsPermissionChecker abs_permission_checker = 42;
+  optional ActionCheckResult action_check_result = 43;
+  optional ActionStatus action_status = 44;
+  optional GalleryShareHelper gallery_share_helper = 45;
+  optional AwemeStatus aweme_status = 46;
+  optional SharePrivacyVideoApi share_privacy_video_api = 47;
+  optional RxObservable rx_observable = 48;
 }
