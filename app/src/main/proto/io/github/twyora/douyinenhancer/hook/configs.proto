@@ -219,11 +219,6 @@ message ABTestServiceImpl {
   optional Method enableVEAddLiveVideoWaterMark = 3;
 }
 
-message LppDownloadModule {
-  optional Class class = 1;
-  optional Method get_visibility = 2;
-}
-
 message HeifDecoder {
   optional Class class = 1;
   optional Field s_bitmap_factory = 2;
@@ -333,7 +328,6 @@ message HookInfo {
   optional DownloadAction download_action = 29;
   optional ImageUrlStruct image_url_struct = 30;
   optional ABTestServiceImpl ab_test_service_impl = 31;
-  optional LppDownloadModule lpp_download_module = 32;
   optional AwemeStatistics aweme_statistics = 33;
   optional HeifDecoder heif_decoder = 35;
   optional HeifBitmapFactoryImpl heif_bitmap_factory_impl = 36;
@@ -349,4 +343,6 @@ message HookInfo {
   optional AwemeStatus aweme_status = 46;
   optional SharePrivacyVideoApi share_privacy_video_api = 47;
   optional RxObservable rx_observable = 48;
+
+  reserved 32;
 }
