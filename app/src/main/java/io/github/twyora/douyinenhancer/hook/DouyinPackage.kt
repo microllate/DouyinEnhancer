@@ -734,8 +734,8 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
         )
 
         fun enableVEAddLiveVideoWaterMark() = Method(
-            hookInfo.abTestServiceImpl.enableVEAddLiveVideoWaterMark.nameOrNull,
-            hookInfo.abTestServiceImpl.enableVEAddLiveVideoWaterMark.parameters.valuesListOrNull
+            hookInfo.abTestServiceImpl.enableVeAddLiveVideoWaterMark.nameOrNull,
+            hookInfo.abTestServiceImpl.enableVeAddLiveVideoWaterMark.parameters.valuesListOrNull
         )
     }
 
@@ -1785,7 +1785,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                                     "[B",
                                     "int",
                                     "int",
-                                    "android.graphics.BitmapFactory\$Options"
+                                    $$"android.graphics.BitmapFactory$Options"
                                 )
                             )
                         }
@@ -2258,7 +2258,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                     enableSaveImageToVideoLocalWaterMask = method {
                         name = "enableSaveImageToVideoLocalWaterMask"
                     }
-                    enableVEAddLiveVideoWaterMark = method {
+                    enableVeAddLiveVideoWaterMark = method {
                         name = "enableVEAddLiveVideoWaterMark"
                     }
                 }
