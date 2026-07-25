@@ -1676,7 +1676,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                                     "[B",
                                     "int",
                                     "int",
-                                    "android.graphics.BitmapFactory\$Options"
+                                    $$"android.graphics.BitmapFactory$Options"
                                 )
                             )
                         }
