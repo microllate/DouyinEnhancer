@@ -11,6 +11,11 @@ on:
       - "doc/*"
       - "LICENSE"
 
+permissions:
+  contents: read
+  actions: write
+  pull-requests: read
+
 jobs:
   build:
     runs-on: ubuntu-latest
