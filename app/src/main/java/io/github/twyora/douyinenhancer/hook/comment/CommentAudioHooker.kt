@@ -327,7 +327,7 @@ object CommentAudioHooker : YukiBaseHooker() {
             packageInstance.comment.imageList()
         )
         val imageUrlList = if (existingImageUrlList.isNullOrEmpty()) {
-            val newImageUrlList = listOf<Any?>(
+            val newImageUrlList = listOf(
                 packageInstance.commentImageStruct.selfClass?.getConstructor()?.newInstance()
             )
             comment.setField(

@@ -7,7 +7,6 @@ import io.github.twyora.douyinenhancer.config.key.ModuleKey
 import io.github.twyora.douyinenhancer.config.key.SaveKey
 import io.github.twyora.douyinenhancer.hook.DouyinPackage
 import io.github.twyora.douyinenhancer.hook.HookOnMainProcess
-import io.github.twyora.douyinenhancer.utils.getField
 import io.github.twyora.douyinenhancer.utils.invokeMethod
 import io.github.twyora.douyinenhancer.utils.resolveMethod
 

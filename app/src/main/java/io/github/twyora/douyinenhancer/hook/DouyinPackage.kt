@@ -12,7 +12,6 @@ import com.highcapable.kavaref.condition.matcher.extension.parameterizedBy
 import com.highcapable.kavaref.condition.matcher.extension.toTypeMatcher
 import com.highcapable.kavaref.condition.type.Modifiers
 import com.highcapable.kavaref.extension.toClass
-import com.highcapable.kavaref.extension.toClassOrNull
 import com.highcapable.yukihookapi.hook.log.YLog
 import io.github.twyora.douyinenhancer.BuildConfig
 import io.github.twyora.douyinenhancer.config.FastKVConfigManager
@@ -1920,7 +1919,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                                     }
                                     add {
                                         descriptor =
-                                            "Lcom/ss/android/ugc/aweme/services/external/ui/IStoryService;->convertImgToMp4(Landroid/content/Context;Landroidx/lifecycle/LifecycleOwner;Ljava/lang/String;Ljava/lang/String;ZJLjava/lang/String;Lcom/ss/android/ugc/aweme/services/external/ui/IStoryService\$OnMuxImgToMp4Callback;)V"
+                                            $$"Lcom/ss/android/ugc/aweme/services/external/ui/IStoryService;->convertImgToMp4(Landroid/content/Context;Landroidx/lifecycle/LifecycleOwner;Ljava/lang/String;Ljava/lang/String;ZJLjava/lang/String;Lcom/ss/android/ugc/aweme/services/external/ui/IStoryService$OnMuxImgToMp4Callback;)V"
                                     }
                                 }
                             }
@@ -2428,7 +2427,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                                 sharePrivacyVideoResponse {
                                     class_ =
                                         class_ {
-                                            name = "com.ss.android.ugc.aweme.feed.share.video.SharePrivacyVideoApi\$PrivacyVideoResponse"
+                                            name = $$"com.ss.android.ugc.aweme.feed.share.video.SharePrivacyVideoApi$PrivacyVideoResponse"
                                         }
                                     msg =
                                         field {
