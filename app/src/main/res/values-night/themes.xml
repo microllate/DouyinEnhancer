@@ -21,5 +21,7 @@
         <item name="android:windowLightNavigationBar" tools:targetApi="p">false</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorSecondary">@color/white_50</item>
     </style>
 </resources>
