@@ -7,14 +7,18 @@ import android.app.Activity.RESULT_CANCELED
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.preference.Preference
 import android.preference.PreferenceCategory
 import android.preference.PreferenceFragment
 import android.preference.SwitchPreference
+import android.view.ContextThemeWrapper
+import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.edit
-import com.highcapable.yukihookapi.hook.factory.injectModuleAppResources
+import com.highcapable.kavaref.KavaRef.Companion.resolve
 import com.highcapable.yukihookapi.hook.log.YLog
 import io.fastkv.FastKV
 import io.github.twyora.douyinenhancer.BuildConfig
@@ -22,6 +26,7 @@ import io.github.twyora.douyinenhancer.R
 import io.github.twyora.douyinenhancer.config.FastKVConfigManager
 import io.github.twyora.douyinenhancer.config.key.MiscKey
 import io.github.twyora.douyinenhancer.config.key.ModuleKey
+import io.github.twyora.douyinenhancer.hook.comment.CommentAudioHooker.hook
 import io.github.twyora.douyinenhancer.utils.Field
 import io.github.twyora.douyinenhancer.utils.setField
 import java.io.File
@@ -49,7 +54,7 @@ import org.json.JSONObject
  *
  * Referenced from [BiliRoaming](https://github.com/yujincheng08/BiliRoaming/blob/master/app/src/main/java/me/iacn/biliroaming/SettingDialog.kt)
  */
-class SettingsDialog(context: Context) : AlertDialog.Builder(context) {
+class SettingsDialog(context: Context) : AlertDialog.Builder(ContextThemeWrapper(context, R.style.MainTheme)) {
     class PrefsFragment :
         PreferenceFragment(),
         Preference.OnPreferenceClickListener,
@@ -390,11 +395,45 @@ class SettingsDialog(context: Context) : AlertDialog.Builder(context) {
 
     init {
         val activity = context as Activity
-        activity.injectModuleAppResources()
 
         val prefsFragment = PrefsFragment()
         activity.fragmentManager.beginTransaction().add(prefsFragment, "Settings").commit()
         activity.fragmentManager.executePendingTransactions()
+
+        val inNightMode =
+            (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+        val nightModeTextHookResult = if (inNightMode) {
+            if (verbose) {
+                YLog.debug("$TAG: night mode on, recoloring settings text white")
+            }
+            Preference::class.resolve().optional().firstMethodOrNull {
+                name = "onBindView"
+            }?.hook {
+                after {
+                    val preference = instance as? Preference ?: run {
+                        YLog.error("$TAG: bound target ${instance::class.qualifiedName} not a Preference, skip recolor")
+                        return@after
+                    }
+                    if (preference is PreferenceCategory) {
+                        if (verbose) {
+                            YLog.debug(
+                                "$TAG: ${preference::class.simpleName} is PreferenceCategory, preference.key: ${preference.key}, skip recolor"
+                            )
+                        }
+                        return@after
+                    }
+
+                    val view = args[0] as? View ?: run {
+                        YLog.error("$TAG: bound target ${instance::class.qualifiedName} has no view, skip recolor")
+                        return@after
+                    }
+                    view.findViewById<TextView>(android.R.id.title)?.setTextColor(activity.resources.getColor(R.color.white))
+                    view.findViewById<TextView>(android.R.id.summary)?.setTextColor(activity.resources.getColor(R.color.white_50))
+                }
+            }
+        } else {
+            null
+        }
 
         setView(prefsFragment.view)
         setTitle(context.getString(R.string.settings_dialog_title))
@@ -407,11 +446,15 @@ class SettingsDialog(context: Context) : AlertDialog.Builder(context) {
                 Toast.makeText(context, context.getString(R.string.restart_required), Toast.LENGTH_SHORT).show()
             }
             activity.fragmentManager.beginTransaction().remove(prefsFragment).commitAllowingStateLoss()
+            nightModeTextHookResult?.remove()
         }
     }
 
     companion object {
         private val TAG = this::class.simpleName
+
+        private val verbose
+            get() = !FastKVConfigManager.module.getBoolean(ModuleKey.DISABLE_VERBOSE_LOGS, false)
 
         private const val EXPORT_CONFIG = 0
         private const val IMPORT_CONFIG = 1
