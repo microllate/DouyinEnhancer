@@ -354,5 +354,5 @@ object FileTypeDetector {
         }
     }
 
-    fun detect(filePath: String, headerSize: Int = 32): FileTypeInfo = detect(File(filePath))
+    fun detect(filePath: String, headerSize: Int = 32): FileTypeInfo = detect(File(filePath), headerSize)
 }

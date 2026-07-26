@@ -1,8 +1,6 @@
 package io.github.twyora.douyinenhancer.hook.settings
 
 import android.app.Activity
-import android.content.Context
-import android.service.voice.VoiceInteractionSession
 import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
@@ -11,7 +9,6 @@ import com.highcapable.yukihookapi.hook.core.YukiMemberHookCreator
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.factory.injectModuleAppResources
 import com.highcapable.yukihookapi.hook.log.YLog
-import com.highcapable.yukihookapi.hook.type.android.ActivityInfoClass
 import io.github.twyora.douyinenhancer.R
 import io.github.twyora.douyinenhancer.config.FastKVConfigManager
 import io.github.twyora.douyinenhancer.config.key.ModuleKey
@@ -34,7 +31,7 @@ object SettingsHooker : YukiBaseHooker() {
 
     override fun onHook() {
         installModuleSettingsEntryHook()
-        installAboutMeLongClickOpenSettingsHook()
+        installAboutAwemeLongClickOpenSettingsHook()
     }
 
     private fun installModuleSettingsEntryHook(): YukiMemberHookCreator.MemberHookCreator.Result? {
@@ -111,7 +108,7 @@ object SettingsHooker : YukiBaseHooker() {
         }
     }
 
-    private fun installAboutMeLongClickOpenSettingsHook(): YukiMemberHookCreator.MemberHookCreator.Result? {
+    private fun installAboutAwemeLongClickOpenSettingsHook(): YukiMemberHookCreator.MemberHookCreator.Result? {
         return packageInstance.douYinSettingNewVersionActivity.selfClass?.resolveMethod(
             packageInstance.douYinSettingNewVersionActivity.onResume()
         )?.hook {
@@ -128,7 +125,7 @@ object SettingsHooker : YukiBaseHooker() {
                     return@after
                 }
 
-                val aboutMeView = settingsScrollView.findViewWithTag<View?>("about_ame") ?: run {
+                val aboutAwemeView = settingsScrollView.findViewWithTag<View?>("about_ame") ?: run {
                     YLog.error("$TAG: about_ame view not found by tag in settings scroll view")
                     return@after
                 }
@@ -136,7 +133,7 @@ object SettingsHooker : YukiBaseHooker() {
                 if (verbose) {
                     YLog.debug("$TAG: attaching long click listener on about_ame view to open settings dialog")
                 }
-                aboutMeView.setOnLongClickListener {
+                aboutAwemeView.setOnLongClickListener {
                     SettingsDialog.show(activity)
                     true
                 }

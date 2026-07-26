@@ -9,6 +9,7 @@ import android.net.Uri
 import android.os.Build
 import android.webkit.MimeTypeMap
 import com.highcapable.kavaref.KavaRef.Companion.asResolver
+import com.highcapable.kavaref.extension.createInstance
 import com.highcapable.yukihookapi.hook.core.YukiMemberHookCreator
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.log.YLog
@@ -18,7 +19,6 @@ import io.github.twyora.douyinenhancer.config.key.ModuleKey
 import io.github.twyora.douyinenhancer.config.key.SaveKey
 import io.github.twyora.douyinenhancer.hook.DouyinPackage
 import io.github.twyora.douyinenhancer.hook.HookOnMainProcess
-import io.github.twyora.douyinenhancer.hook.emoji
 import io.github.twyora.douyinenhancer.utils.FileTypeDetector
 import io.github.twyora.douyinenhancer.utils.HookTransaction
 import io.github.twyora.douyinenhancer.utils.getField
@@ -139,7 +139,7 @@ object CommentEmojiHooker : YukiBaseHooker() {
                 savedActionItem = actionItem
                 savedComment = comment
 
-                injectEmojiUrls(comment, emojiUrls, prepend = true)
+                injectEmojiUrls(comment, emojiUrls)
 
                 if (verbose) {
                     YLog.debug("$TAG: injected ${emojiUrls.size} emoji url(s) into comment, emoji url(s): $emojiUrls")
@@ -269,8 +269,7 @@ object CommentEmojiHooker : YukiBaseHooker() {
                         fileToSave,
                         saveFilePath,
                         DouyinPackage.instance.tokenCert.selfClass
-                            ?.getConstructor(String::class.java)
-                            ?.newInstance("bpea-comment_save_image_to_album")
+                            ?.createInstance("bpea-comment_save_image_to_album")
                     )
 
                 // shows success dialog
@@ -413,13 +412,11 @@ object CommentEmojiHooker : YukiBaseHooker() {
     }
 
     // Writes emoji URLs into comment.imageList[0].downloadUrl.urlList, optionally prepended to existing URLs
-    private fun injectEmojiUrls(comment: Any, emojiUrls: List<String>, prepend: Boolean = true) {
+    private fun injectEmojiUrls(comment: Any, emojiUrls: List<String>) {
         var imageList = comment.getField<List<*>>(DouyinPackage.instance.comment.imageList())
         if (imageList.isNullOrEmpty()) {
             val newStruct =
-                DouyinPackage.instance.commentImageStruct.selfClass
-                    ?.getConstructor()
-                    ?.newInstance()
+                DouyinPackage.instance.commentImageStruct.selfClass?.createInstance()
             imageList = listOf(newStruct)
             comment.setField(DouyinPackage.instance.comment.imageList(), imageList)
         }
@@ -430,28 +427,23 @@ object CommentEmojiHooker : YukiBaseHooker() {
         )
         if (urlModel == null) {
             urlModel =
-                DouyinPackage.instance.urlModel.selfClass
-                    ?.getConstructor()
-                    ?.newInstance()
+                DouyinPackage.instance.urlModel.selfClass?.createInstance()
             targetStruct?.setField(
                 DouyinPackage.instance.commentImageStruct.downloadUrl(),
                 urlModel
             )
         }
 
-        var finalUrls: List<String>? =
-            if (prepend) {
-                val imageUrls = urlModel?.getField<List<String>>(
-                    DouyinPackage.instance.urlModel.urlList()
-                )
-                if (imageUrls.isNullOrEmpty()) {
-                    emojiUrls
-                } else {
-                    emojiUrls + imageUrls
-                }
-            } else {
+        val finalUrls: List<String> = run {
+            val imageUrls = urlModel?.getField<List<String>>(
+                DouyinPackage.instance.urlModel.urlList()
+            )
+            if (imageUrls.isNullOrEmpty()) {
                 emojiUrls
+            } else {
+                emojiUrls + imageUrls
             }
+        }
         urlModel?.setField(DouyinPackage.instance.urlModel.urlList(), finalUrls)
     }
 
@@ -547,11 +539,9 @@ object CommentEmojiHooker : YukiBaseHooker() {
                 // Extract frame
                 var bitmap: Bitmap? = null
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                    try {
+                    runCatching {
                         // Try by index for animated
                         bitmap = retriever.getFrameAtIndex(i)
-                    } catch (e: Exception) {
-                        // Fallback
                     }
                 }
 

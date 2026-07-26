@@ -2,6 +2,7 @@ package io.github.twyora.douyinenhancer.hook.comment
 
 import android.content.Context
 import android.net.Uri
+import com.highcapable.kavaref.extension.createInstance
 import com.highcapable.yukihookapi.hook.core.YukiMemberHookCreator
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.log.YLog
@@ -327,8 +328,8 @@ object CommentAudioHooker : YukiBaseHooker() {
             packageInstance.comment.imageList()
         )
         val imageUrlList = if (existingImageUrlList.isNullOrEmpty()) {
-            val newImageUrlList = listOf<Any?>(
-                packageInstance.commentImageStruct.selfClass?.getConstructor()?.newInstance()
+            val newImageUrlList = listOf(
+                packageInstance.commentImageStruct.selfClass?.createInstance()
             )
             comment.setField(
                 packageInstance.comment.imageList(),
@@ -343,7 +344,7 @@ object CommentAudioHooker : YukiBaseHooker() {
             packageInstance.commentImageStruct.downloadUrl()
         )
         val imageUrlModel = if (existingImageUrlModel == null) {
-            val newImageUrlModel = packageInstance.urlModel.selfClass?.getConstructor()?.newInstance()
+            val newImageUrlModel = packageInstance.urlModel.selfClass?.createInstance()
             imageUrlList.first()?.setField(
                 packageInstance.commentImageStruct.downloadUrl(),
                 newImageUrlModel
