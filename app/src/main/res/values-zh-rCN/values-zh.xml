@@ -15,6 +15,8 @@
     <string name="pref_comment_audio_summary">保存至 Music/douyin/audio 目录</string>
     <string name="pref_feed_video_remove_watermark_title">保存无水印视频</string>
     <string name="pref_feed_video_remove_watermark_summary">保存播放版视频而非特供版水印视频</string>
+    <string name="pref_feed_download_bypass_title">允许保存限制内容</string>
+    <string name="pref_feed_download_bypass_summary">绕过推荐内容保存限制</string>
     <string name="pref_feed_multi_image_remove_watermark_title">保存无水印多图帖</string>
     <string name="pref_feed_multi_image_remove_watermark_summary">去除图片内置水印与边框水印</string>
 

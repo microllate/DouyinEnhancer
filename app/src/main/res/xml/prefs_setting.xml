@@ -31,6 +31,12 @@
 
         <SwitchPreference
             android:defaultValue="false"
+            android:key="feed_download_bypass"
+            android:summary="@string/pref_feed_download_bypass_summary"
+            android:title="@string/pref_feed_download_bypass_title" />
+
+        <SwitchPreference
+            android:defaultValue="false"
             android:key="feed_multi_image_remove_watermark"
             android:summary="@string/pref_feed_multi_image_remove_watermark_summary"
             android:title="@string/pref_feed_multi_image_remove_watermark_title" />

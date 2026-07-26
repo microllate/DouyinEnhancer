@@ -6,6 +6,7 @@ import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.log.YLog
 import io.github.twyora.douyinenhancer.config.FastKVConfigManager
 import io.github.twyora.douyinenhancer.config.key.ModuleKey
+import io.github.twyora.douyinenhancer.config.key.SaveKey
 import io.github.twyora.douyinenhancer.hook.DouyinPackage
 import io.github.twyora.douyinenhancer.hook.HookOnMainProcess
 import io.github.twyora.douyinenhancer.utils.HookTransaction
@@ -26,6 +27,12 @@ object FeedDownloadHooker : YukiBaseHooker() {
         get() = !FastKVConfigManager.module.getBoolean(ModuleKey.DISABLE_VERBOSE_LOGS, false)
 
     override fun onHook() {
+        if (!FastKVConfigManager.settings.getBoolean(SaveKey.FEED_DOWNLOAD_BYPASS, false)) {
+            if (verbose) {
+                YLog.debug("$TAG: feed download bypass disabled, skip feed download hooks")
+            }
+            return
+        }
         val transaction = HookTransaction(TAG)
 
         transaction.add(::installForceActionStatusNormalHook.name) {
@@ -47,7 +54,9 @@ object FeedDownloadHooker : YukiBaseHooker() {
         )?.hook {
             after {
                 val actionCheckResult = result ?: run {
-                    YLog.warn("$TAG: action permission check result is null, cannot force action status to allowed, download may be blocked")
+                    YLog.warn(
+                        "$TAG: action permission check result is null, cannot force action status to allowed, download may be blocked"
+                    )
                     return@after
                 }
                 val actionStatus = actionCheckResult.getField<Any>(
