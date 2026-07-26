@@ -107,7 +107,6 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
     val miscDownloadAddrUtil = MiscDownloadAddrUtilModule()
     val downloadAction = DownloadActionModule()
     val abTestServiceImpl = ABTestServiceImplModule()
-    val lppDownloadModule = LppDownloadModuleModule()
     val awemeStatistics = AwemeStatisticsModule()
     val heifDecoder = HeifDecoderModule()
     val heifBitmapFactoryImpl = HeifBitmapFactoryImplModule()
@@ -117,6 +116,13 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
     val singleImageToMp4Composer = SingleImageToMp4ComposerModule()
     val multiImageToMp4Composer = MultiImageToMp4ComposerModule()
     val mainActivity = MainActivityModule()
+    val absPermissionChecker = AbsPermissionCheckerModule()
+    val actionCheckResult = ActionCheckResultModule()
+    val actionStatus = ActionStatusModule()
+    val galleryShareHelper = GalleryShareHelperModule()
+    val awemeStatus = AwemeStatusModule()
+    val sharePrivacyVideoApi = SharePrivacyVideoApiModule()
+    val rxObservable = RxObservableModule()
 
     inner class CommentImageStructModule {
         val selfClass by weak {
@@ -469,6 +475,61 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
             hookInfo.aweme.getAid.nameOrNull,
             hookInfo.aweme.getAid.parameters.valuesListOrNull
         )
+
+        fun getDownloadStatus() = Method(
+            hookInfo.aweme.getDownloadStatus.nameOrNull,
+            hookInfo.aweme.getDownloadStatus.parameters.valuesListOrNull
+        )
+
+        fun aid() = Field(hookInfo.aweme.aid.nameOrNull)
+
+        fun status() = Field(hookInfo.aweme.status.nameOrNull)
+    }
+
+    inner class AwemeStatusModule {
+        val selfClass by weak {
+            hookInfo.awemeStatus.class_.nameOrNull
+                ?.toClass(classLoader)
+        }
+
+        fun downloadStatus() = Field(hookInfo.awemeStatus.downloadStatus.nameOrNull)
+    }
+
+    inner class SharePrivacyVideoApiModule {
+        val selfClass by weak {
+            hookInfo.sharePrivacyVideoApi.class_.nameOrNull
+                ?.toClass(classLoader)
+        }
+
+        fun getDownloadStatus() = Method(
+            hookInfo.sharePrivacyVideoApi.getDownloadStatus.nameOrNull,
+            hookInfo.sharePrivacyVideoApi.getDownloadStatus.parameters.valuesListOrNull
+        )
+
+        val privacyVideoResponse = SharePrivacyVideoResponseModule()
+
+        inner class SharePrivacyVideoResponseModule {
+            val selfClass by weak {
+                hookInfo.sharePrivacyVideoApi.privacyVideoResponse.class_.nameOrNull
+                    ?.toClass(classLoader)
+            }
+
+            fun msg() = Field(hookInfo.sharePrivacyVideoApi.privacyVideoResponse.msg.nameOrNull)
+
+            fun status() = Field(hookInfo.sharePrivacyVideoApi.privacyVideoResponse.status.nameOrNull)
+        }
+    }
+
+    inner class RxObservableModule {
+        val selfClass by weak {
+            hookInfo.rxObservable.class_.nameOrNull
+                ?.toClass(classLoader)
+        }
+
+        fun just() = Method(
+            hookInfo.rxObservable.just.nameOrNull,
+            hookInfo.rxObservable.just.parameters.valuesListOrNull
+        )
     }
 
     inner class AwemeStatisticsModule {
@@ -679,15 +740,54 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
         )
     }
 
-    inner class LppDownloadModuleModule {
+    inner class AbsPermissionCheckerModule {
         val selfClass by weak {
-            hookInfo.lppDownloadModule.class_.nameOrNull
+            hookInfo.absPermissionChecker.class_.nameOrNull
                 ?.toClass(classLoader)
         }
 
-        fun getVisibility() = Method(
-            hookInfo.lppDownloadModule.getVisibility.nameOrNull,
-            hookInfo.lppDownloadModule.getVisibility.parameters.valuesListOrNull
+        fun getActionCheckResult() = Method(
+            hookInfo.absPermissionChecker.getActionCheckResult.nameOrNull,
+            hookInfo.absPermissionChecker.getActionCheckResult.parameters.valuesListOrNull
+        )
+    }
+
+    inner class ActionCheckResultModule {
+        val selfClass by weak {
+            hookInfo.actionCheckResult.class_.nameOrNull
+                ?.toClass(classLoader)
+        }
+
+        fun actionStatus() = Field(hookInfo.actionCheckResult.actionStatus.nameOrNull)
+    }
+
+    inner class ActionStatusModule {
+        val selfClass by weak {
+            hookInfo.actionStatus.class_.nameOrNull
+                ?.toClass(classLoader)
+        }
+
+        fun valueOf() = Method(
+            hookInfo.actionStatus.valueOf.nameOrNull,
+            hookInfo.actionStatus.valueOf.parameters.valuesListOrNull
+        )
+
+        fun grayed() = Field(hookInfo.actionStatus.grayed.nameOrNull)
+
+        fun hidden() = Field(hookInfo.actionStatus.hidden.nameOrNull)
+
+        fun normal() = Field(hookInfo.actionStatus.normal.nameOrNull)
+    }
+
+    inner class GalleryShareHelperModule {
+        val selfClass by weak {
+            hookInfo.galleryShareHelper.class_.nameOrNull
+                ?.toClass(classLoader)
+        }
+
+        fun startDownload() = Method(
+            hookInfo.galleryShareHelper.startDownload.nameOrNull,
+            hookInfo.galleryShareHelper.startDownload.parameters.valuesListOrNull
         )
     }
 
@@ -1635,6 +1735,15 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                     getAid = method {
                         name = "getAid"
                     }
+                    getDownloadStatus = method {
+                        name = "getDownloadStatus"
+                    }
+                    aid = field {
+                        name = "aid"
+                    }
+                    status = field {
+                        name = "status"
+                    }
                 }
 
                 awemeStatistics = awemeStatistics {
@@ -2155,42 +2264,199 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                     }
                 }
 
-                lppDownloadModule = lppDownloadModule {
-                    runCatching {
-                        val lppDownloadModuleClsName =
-                            "com.ss.android.ugc.aweme.feed.long_press_panel.modules.business.homepage.LppDownloadModule"
-                        val getVisibilityMethod = lppDownloadModuleClsName
-                            .toClass(hostAppClassLoader)
-                            .resolve()
-                            .firstMethodOrNull {
-                                modifiers(Modifiers.PUBLIC, Modifiers.FINAL)
-                                parameters(
-                                    "com.ss.android.ugc.aweme.feed.long_press_panel.model.LongPressPanelParams"
+                absPermissionChecker =
+                    absPermissionChecker {
+                        runCatching {
+                            val clsName =
+                                "com.ss.android.ugc.aweme.permission.AbsPermissionChecker"
+                            val getActionCheckResultData = bridge.findMethod {
+                                matcher {
+                                    declaredClass = clsName
+                                    modifiers = Modifier.PUBLIC or Modifier.FINAL
+                                    usingStrings {
+                                        add("getActionCheckResult")
+                                    }
+                                }
+                            }.singleOrNull() ?: run {
+                                YLog.error(
+                                    "$TAG: unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
                                 )
-                                returnType = Int::class.java
-                            }?.self
+                                return@absPermissionChecker
+                            }
 
-                        if (getVisibilityMethod == null) {
-                            YLog.error(
-                                "$TAG: unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
-                            )
-                            return@lppDownloadModule
-                        }
-
-                        class_ = class_ {
-                            name = lppDownloadModuleClsName
-                        }
-                        getVisibility = method {
-                            name = getVisibilityMethod.name
-                            parameters = MethodKt.parameters {
-                                values.clear()
-                                getVisibilityMethod.parameterTypes.forEach { paramType ->
-                                    values.add(paramType.name)
+                            class_ = class_ {
+                                name = clsName
+                            }
+                            getActionCheckResult = method {
+                                name = getActionCheckResultData.methodName
+                                parameters = MethodKt.parameters {
+                                    values.clear()
+                                    values.addAll(getActionCheckResultData.paramTypeNames)
                                 }
                             }
+
+                            this@hookInfo.actionCheckResult = actionCheckResult {
+                                runCatching {
+                                    val actionCheckResultClsName = getActionCheckResultData.returnType!!.name
+                                    val actionCheckResultActionStatusFieldName =
+                                        actionCheckResultClsName.toClass(hostAppClassLoader).resolve().firstFieldOrNull {
+                                            type = "com.ss.android.ugc.aweme.privacy.model.ActionStatus"
+                                        }?.self?.name ?: run {
+                                            YLog.error(
+                                                "$TAG: unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
+                                            )
+                                            return@actionCheckResult
+                                        }
+
+                                    class_ = class_ {
+                                        name = actionCheckResultClsName
+                                    }
+                                    actionStatus = field {
+                                        name = actionCheckResultActionStatusFieldName
+                                    }
+                                }.onFailure {
+                                    YLog.error("$TAG: unable to populate config", it)
+                                }
+                            }
+                        }.onFailure {
+                            YLog.error("$TAG: unable to populate config", it)
                         }
-                    }.onFailure {
-                        YLog.error("$TAG: unable to populate config", it)
+                    }
+
+                actionStatus =
+                    actionStatus {
+                        class_ = class_ {
+                            name = "com.ss.android.ugc.aweme.privacy.model.ActionStatus"
+                        }
+                        valueOf = method {
+                            name = "valueOf"
+                        }
+                        grayed = field {
+                            name = "GRAYED"
+                        }
+                        hidden = field {
+                            name = "HIDDEN"
+                        }
+                        normal = field {
+                            name = "NORMAL"
+                        }
+                    }
+
+                galleryShareHelper =
+                    galleryShareHelper {
+                        runCatching {
+                            val startDownloadData = bridge.findMethod {
+                                matcher {
+                                    modifiers = Modifier.PUBLIC or Modifier.FINAL
+                                    returnType = "void"
+                                    params {
+                                        add("com.ss.android.ugc.aweme.feed.model.Aweme")
+                                        add("java.lang.String")
+                                    }
+                                    invokeMethods {
+                                        add {
+                                            descriptor =
+                                                "Lcom/ss/android/ugc/aweme/feed/model/Aweme;->getVideo()Lcom/ss/android/ugc/aweme/feed/model/Video;"
+                                        }
+                                        add {
+                                            descriptor =
+                                                "Lcom/ss/android/common/util/NetworkUtils;->isNetworkAvailable(Landroid/content/Context;)Z"
+                                        }
+                                        add {
+                                            descriptor = "Lcom/ss/android/ugc/aweme/feed/model/Aweme;->getDownloadStatus()I"
+                                        }
+                                        add {
+                                            descriptor = "Lcom/ss/android/ugc/aweme/feed/model/Aweme;->getAid()Ljava/lang/String;"
+                                        }
+                                    }
+                                }
+                            }.singleOrNull() ?: run {
+                                YLog.error(
+                                    "$TAG: unable to populate ${this::class.java.enclosingClass.simpleName} config, possibly due to unfound obfuscated methods"
+                                )
+                                return@galleryShareHelper
+                            }
+
+                            class_ = class_ {
+                                name = startDownloadData.className
+                            }
+                            startDownload = method {
+                                name = startDownloadData.methodName
+                                parameters = MethodKt.parameters {
+                                    values.clear()
+                                    values.addAll(startDownloadData.paramTypeNames)
+                                }
+                            }
+                        }.onFailure {
+                            YLog.error("$TAG: unable to populate config", it)
+                        }
+                    }
+
+                awemeStatus =
+                    awemeStatus {
+                        class_ = class_ {
+                            name = "com.ss.android.ugc.aweme.feed.model.AwemeStatus"
+                        }
+                        downloadStatus = field {
+                            name = "downloadStatus"
+                        }
+                    }
+
+                sharePrivacyVideoApi =
+                    sharePrivacyVideoApi {
+                        runCatching {
+                            val getDownloadStatusMethodName =
+                                "com.ss.android.ugc.aweme.feed.share.video.SharePrivacyVideoApi"
+                                    .toClass(hostAppClassLoader)
+                                    .resolve()
+                                    .firstMethodOrNull {
+                                        modifiers(Modifiers.PUBLIC, Modifiers.STATIC, Modifiers.FINAL)
+                                        returnType = "io.reactivex.Observable"
+                                    }?.self?.name
+                            if (getDownloadStatusMethodName == null) {
+                                YLog.error(
+                                    "$TAG: unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
+                                )
+                                return@sharePrivacyVideoApi
+                            }
+
+                            class_ =
+                                class_ {
+                                    name = "com.ss.android.ugc.aweme.feed.share.video.SharePrivacyVideoApi"
+                                }
+                            privacyVideoResponse =
+                                sharePrivacyVideoResponse {
+                                    class_ =
+                                        class_ {
+                                            name = "com.ss.android.ugc.aweme.feed.share.video.SharePrivacyVideoApi\$PrivacyVideoResponse"
+                                        }
+                                    msg =
+                                        field {
+                                            name = "msg"
+                                        }
+                                    status =
+                                        field {
+                                            name = "status"
+                                        }
+                                }
+                            getDownloadStatus =
+                                method {
+                                    name = getDownloadStatusMethodName
+                                }
+                        }.onFailure {
+                            YLog.error("$TAG: unable to populate config", it)
+                        }
+                    }
+
+                rxObservable = rxObservable {
+                    class_ = class_ {
+                        name = "io.reactivex.Observable"
+                    }
+                    just = method {
+                        name = "just"
+                        parameters = MethodKt.parameters {
+                            values.add("java.lang.Object")
+                        }
                     }
                 }
 
