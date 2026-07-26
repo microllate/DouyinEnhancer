@@ -16,7 +16,7 @@ import io.github.twyora.douyinenhancer.utils.resolveMethod
 import io.github.twyora.douyinenhancer.utils.setField
 
 @HookOnMainProcess
-object FeedDownloadModuleHooker : YukiBaseHooker() {
+object FeedDownloadHooker : YukiBaseHooker() {
     private val TAG = this::class.simpleName
 
     private val packageInstance
