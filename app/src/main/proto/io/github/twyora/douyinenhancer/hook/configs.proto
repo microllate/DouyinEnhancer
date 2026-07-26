@@ -295,6 +295,12 @@ message RxObservable {
   optional Method just = 2;
 }
 
+message MainActivity {
+  optional Class class = 1;
+  optional Method on_resume = 2;
+  optional Method on_new_intent = 3;
+}
+
 message HookInfo {
   uint64 last_update_time = 1;
   uint32 module_version_code = 2;
@@ -336,13 +342,14 @@ message HookInfo {
   optional SingleImageToMp4Composer single_image_to_mp4_composer = 39;
   optional MultiImageToMp4Composer multi_image_to_mp4_composer = 40;
   optional DownloadLivePhotoExecutor download_live_photo_executor = 41;
-  optional AbsPermissionChecker abs_permission_checker = 42;
-  optional ActionCheckResult action_check_result = 43;
-  optional ActionStatus action_status = 44;
-  optional GalleryShareHelper gallery_share_helper = 45;
-  optional AwemeStatus aweme_status = 46;
-  optional SharePrivacyVideoApi share_privacy_video_api = 47;
-  optional RxObservable rx_observable = 48;
+  optional MainActivity main_activity = 42;
+  optional AbsPermissionChecker abs_permission_checker = 43;
+  optional ActionCheckResult action_check_result = 44;
+  optional ActionStatus action_status = 45;
+  optional GalleryShareHelper gallery_share_helper = 46;
+  optional AwemeStatus aweme_status = 47;
+  optional SharePrivacyVideoApi share_privacy_video_api = 48;
+  optional RxObservable rx_observable = 49;
 
   reserved 32;
 }

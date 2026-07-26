@@ -395,17 +395,18 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
 
     inner class MainActivityModule {
         val selfClass by weak {
-            "com.ss.android.ugc.aweme.main.MainActivity".toClassOrNull(classLoader)
+            hookInfo.mainActivity.class_.nameOrNull
+                ?.toClass(classLoader)
         }
 
         fun onResume() = Method(
-            "onResume",
-            null
+            hookInfo.mainActivity.onResume.nameOrNull,
+            hookInfo.mainActivity.onResume.parameters.valuesListOrNull
         )
 
         fun onNewIntent() = Method(
-            "onNewIntent",
-            listOf("android.content.Intent")
+            hookInfo.mainActivity.onNewIntent.nameOrNull,
+            hookInfo.mainActivity.onNewIntent.parameters.valuesListOrNull
         )
     }
 
@@ -2458,6 +2459,27 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                         }
                     }
                 }
+
+                mainActivity =
+                    mainActivity {
+                        class_ =
+                            class_ {
+                                name = "com.ss.android.ugc.aweme.main.MainActivity"
+                            }
+                        onResume =
+                            method {
+                                name = "onResume"
+                            }
+                        onNewIntent =
+                            method {
+                                name = "onNewIntent"
+                                parameters =
+                                    MethodKt.parameters {
+                                        values.clear()
+                                        values.add("android.content.Intent")
+                                    }
+                            }
+                    }
             }
         }
     }
