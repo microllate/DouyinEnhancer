@@ -31,7 +31,7 @@ object SettingsHooker : YukiBaseHooker() {
 
     override fun onHook() {
         installModuleSettingsEntryHook()
-        installAboutMeLongClickOpenSettingsHook()
+        installAboutAwemeLongClickOpenSettingsHook()
     }
 
     private fun installModuleSettingsEntryHook(): YukiMemberHookCreator.MemberHookCreator.Result? {
@@ -108,7 +108,7 @@ object SettingsHooker : YukiBaseHooker() {
         }
     }
 
-    private fun installAboutMeLongClickOpenSettingsHook(): YukiMemberHookCreator.MemberHookCreator.Result? {
+    private fun installAboutAwemeLongClickOpenSettingsHook(): YukiMemberHookCreator.MemberHookCreator.Result? {
         return packageInstance.douYinSettingNewVersionActivity.selfClass?.resolveMethod(
             packageInstance.douYinSettingNewVersionActivity.onResume()
         )?.hook {
@@ -125,7 +125,7 @@ object SettingsHooker : YukiBaseHooker() {
                     return@after
                 }
 
-                val aboutMeView = settingsScrollView.findViewWithTag<View?>("about_ame") ?: run {
+                val aboutAwemeView = settingsScrollView.findViewWithTag<View?>("about_ame") ?: run {
                     YLog.error("$TAG: about_ame view not found by tag in settings scroll view")
                     return@after
                 }
@@ -133,7 +133,7 @@ object SettingsHooker : YukiBaseHooker() {
                 if (verbose) {
                     YLog.debug("$TAG: attaching long click listener on about_ame view to open settings dialog")
                 }
-                aboutMeView.setOnLongClickListener {
+                aboutAwemeView.setOnLongClickListener {
                     SettingsDialog.show(activity)
                     true
                 }
