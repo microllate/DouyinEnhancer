@@ -9,6 +9,7 @@ import android.net.Uri
 import android.os.Build
 import android.webkit.MimeTypeMap
 import com.highcapable.kavaref.KavaRef.Companion.asResolver
+import com.highcapable.kavaref.extension.createInstance
 import com.highcapable.yukihookapi.hook.core.YukiMemberHookCreator
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.log.YLog
@@ -268,8 +269,7 @@ object CommentEmojiHooker : YukiBaseHooker() {
                         fileToSave,
                         saveFilePath,
                         DouyinPackage.instance.tokenCert.selfClass
-                            ?.getConstructor(String::class.java)
-                            ?.newInstance("bpea-comment_save_image_to_album")
+                            ?.createInstance("bpea-comment_save_image_to_album")
                     )
 
                 // shows success dialog
@@ -416,9 +416,7 @@ object CommentEmojiHooker : YukiBaseHooker() {
         var imageList = comment.getField<List<*>>(DouyinPackage.instance.comment.imageList())
         if (imageList.isNullOrEmpty()) {
             val newStruct =
-                DouyinPackage.instance.commentImageStruct.selfClass
-                    ?.getConstructor()
-                    ?.newInstance()
+                DouyinPackage.instance.commentImageStruct.selfClass?.createInstance()
             imageList = listOf(newStruct)
             comment.setField(DouyinPackage.instance.comment.imageList(), imageList)
         }
@@ -429,9 +427,7 @@ object CommentEmojiHooker : YukiBaseHooker() {
         )
         if (urlModel == null) {
             urlModel =
-                DouyinPackage.instance.urlModel.selfClass
-                    ?.getConstructor()
-                    ?.newInstance()
+                DouyinPackage.instance.urlModel.selfClass?.createInstance()
             targetStruct?.setField(
                 DouyinPackage.instance.commentImageStruct.downloadUrl(),
                 urlModel
