@@ -59,10 +59,6 @@ val Configs.Method.Parameters.valuesListOrNull
         }
 
 class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
-    init {
-        instance = this
-    }
-
     private val hookInfo: Configs.HookInfo =
         run {
             val (result, time) =
@@ -798,6 +794,10 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
 
         @Volatile
         lateinit var instance: DouyinPackage
+
+        fun init(classLoader: ClassLoader, context: Context) {
+            instance = DouyinPackage(classLoader, context)
+        }
 
         private fun readHookInfo(context: Context): Configs.HookInfo {
             val androidId =

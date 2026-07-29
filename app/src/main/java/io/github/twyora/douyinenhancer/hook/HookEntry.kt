@@ -40,7 +40,7 @@ object HookEntry : IYukiHookXposedInit {
 
                         FastKVConfigManager.init(context)
                         // load cached HookInfo and run hooks when app context is available
-                        DouyinPackage(appClassLoader!!, context)
+                        DouyinPackage.init(appClassLoader!!, context)
 
                         YLog.info(
                             "verbose logging disabled is ${
