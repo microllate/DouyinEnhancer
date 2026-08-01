@@ -26,6 +26,7 @@ import java.io.FileOutputStream
 import java.lang.reflect.Modifier
 import kotlin.time.measureTimedValue
 import org.luckypray.dexkit.DexKitBridge
+import org.luckypray.dexkit.query.enums.StringMatchType
 import org.luckypray.dexkit.query.matchers.base.OpCodesMatcher
 
 val Configs.Class.nameOrNull
@@ -2112,43 +2113,51 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
 
                 downloadAction = downloadAction {
                     runCatching {
-                        val downloadActionClsName = "com.ss.android.ugc.aweme.share.improve.action.DownloadAction"
-                        val resolvedClass = downloadActionClsName
-                            .toClass(hostAppClassLoader)
-                            .resolve()
+                        val downloadActionClassData = bridge.findClass {
+                            matcher {
+                                className("DownloadAction", StringMatchType.EndsWith)
+                            }
+                        }.singleOrNull { classData ->
+                            classData.simpleName == "DownloadAction"
+                        }
+                        val startDownloadMethodData = downloadActionClassData?.let {
+                            bridge.findMethod {
+                                searchClasses = listOf(it)
+                                matcher {
+                                    modifiers = Modifier.PUBLIC or Modifier.FINAL
+                                    paramTypes("com.ss.android.ugc.aweme.sharer.ui.SharePackage")
+                                    addUsingString("downloadImage")
+                                }
+                            }.singleOrNull()
+                        }
+                        val awemeFieldData = downloadActionClassData?.let {
+                            bridge.findField {
+                                searchClasses = listOf(it)
+                                matcher {
+                                    type = "com.ss.android.ugc.aweme.feed.model.Aweme"
+                                }
+                            }.singleOrNull()
+                        }
 
-                        val startDownloadMethod = resolvedClass.firstMethodOrNull {
-                            modifiers(Modifiers.PUBLIC, Modifiers.FINAL)
-                            parameters(
-                                "com.ss.android.ugc.aweme.sharer.ui.SharePackage"
-                            )
-                        }?.self
-
-                        val awemeField = resolvedClass.firstFieldOrNull {
-                            type = "com.ss.android.ugc.aweme.feed.model.Aweme"
-                        }?.self
-
-                        if (startDownloadMethod == null || awemeField == null) {
+                        if (downloadActionClassData == null || startDownloadMethodData == null || awemeFieldData == null) {
                             YLog.error(
-                                "$TAG: unable to populate ${this::class.simpleName} config, possibly due to unfound obfuscated methods or fields"
+                                "$TAG: unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods or fields"
                             )
                             return@downloadAction
                         }
 
                         class_ = class_ {
-                            name = downloadActionClsName
+                            name = downloadActionClassData.name
                         }
                         startDownload = method {
-                            name = startDownloadMethod.name
+                            name = startDownloadMethodData.methodName
                             parameters = MethodKt.parameters {
                                 values.clear()
-                                startDownloadMethod.parameterTypes.forEach { paramType ->
-                                    values.add(paramType.name)
-                                }
+                                values.addAll(startDownloadMethodData.paramTypeNames)
                             }
                         }
                         aweme = field {
-                            name = awemeField.name
+                            name = awemeFieldData.fieldName
                         }
                     }.onFailure {
                         YLog.error("$TAG: unable to populate config", it)
