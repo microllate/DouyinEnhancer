@@ -232,8 +232,7 @@ object CommentEmojiHooker : YukiBaseHooker() {
                 // Downloaded file save path
                 val sourcePath = downloadInfo.invokeMethod<String?>(
                     packageInstance.downloadInfo.getTargetFilePath()
-                )
-                    ?: return@before
+                ) ?: return@before
                 val sourceMimeType = FileTypeDetector.detect(sourcePath).mimeType
                 YLog.info("$TAG: source MIME type: $sourceMimeType")
 
