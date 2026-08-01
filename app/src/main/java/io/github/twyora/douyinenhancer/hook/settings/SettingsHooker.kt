@@ -58,7 +58,7 @@ object SettingsHooker : YukiBaseHooker() {
                 }
 
                 val moduleSettingsCommonItemView =
-                    packageInstance.commonItemView.selfClass?.createInstance(activity) as? ViewGroup ?: run {
+                    packageInstance.commonItemView.selfClass?.createInstance(activity, null) as? ViewGroup ?: run {
                         YLog.error("$TAG: failed to create module settings entry")
                         return@after
                     }
@@ -69,9 +69,12 @@ object SettingsHooker : YukiBaseHooker() {
                 }
                 // ensure the host app can find the module settings icon
                 activity.injectModuleAppResources()
-                moduleSettingsCommonItemView.invokeMethod<Unit>(
-                    packageInstance.commonItemView.setLeftTextAndIcon(),
-                    moduleAppResources.getString(R.string.app_name),
+                moduleSettingsCommonItemView.invokeMethod<Any>(
+                    packageInstance.commonItemView.setLeftText(),
+                    moduleAppResources.getString(R.string.app_name)
+                )
+                moduleSettingsCommonItemView.invokeMethod<Any>(
+                    packageInstance.commonItemView.setLeftIcon(),
                     R.drawable.ic_module_settings
                 )
                 moduleSettingsCommonItemView.invokeMethod<Unit>(

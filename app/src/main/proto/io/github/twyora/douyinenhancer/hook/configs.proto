@@ -77,10 +77,6 @@ message SaveImageActionItem {
   optional Method is_visible = 5;
 }
 
-message TokenCert {
-  optional Class class = 1;
-}
-
 message DigestUtils {
   optional Class class = 1;
   optional Method md5_hex = 2;
@@ -103,11 +99,6 @@ message UGFileUtilsKt {
   optional Method get_audio_uri = 8;
 }
 
-message CommentExtensionKt {
-  optional Class class = 1;
-  optional Method has_valid_image_url = 2;
-}
-
 message ListenerProviderParam {
   optional Class class = 1;
   optional Field context = 2;
@@ -127,7 +118,7 @@ message CommonItemView {
   optional Method set_right_ui_mode = 3;
   optional Method set_left_icon = 4;
   optional Method set_right_text = 5;
-  optional Method set_left_text_and_icon = 6;
+  reserved 6;
 }
 
 message DouYinSettingNewVersionActivity {
@@ -315,12 +306,10 @@ message HookInfo {
   optional CommentActionParams comment_action_params = 10;
   optional CommentLongPressItemModel comment_long_press_item_model = 11;
   optional SaveImageActionItem save_image_action_item = 12;
-  optional CommentExtensionKt comment_extension_kt = 13;
   optional CommentImageSaveDownloadListener comment_image_save_download_listener = 14;
   optional DownloadInfo download_info = 15;
   optional DigestUtils digest_utils = 16;
   optional UGFileUtilsKt ug_file_utils = 17;
-  optional TokenCert token_cert = 18;
   optional CommonItemView common_item_view = 19;
   optional DouYinSettingNewVersionActivity dou_yin_setting_new_version_activity = 20;
   optional User user = 21;
@@ -351,5 +340,5 @@ message HookInfo {
   optional SharePrivacyVideoApi share_privacy_video_api = 48;
   optional RxObservable rx_observable = 49;
 
-  reserved 32;
+  reserved 13, 18, 32;
 }
