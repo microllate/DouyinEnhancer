@@ -38,7 +38,7 @@ object FeedDownloadHooker : YukiBaseHooker() {
         transaction.add(::installForceActionStatusNormalHook.name) {
             installForceActionStatusNormalHook()
         }
-        transaction.add(::installOverridePrivacyVideoDownloadStatusHook.name) {
+        transaction.add(::installOverrideAwemeDownloadStatusHook.name) {
             installOverrideAwemeDownloadStatusHook()
         }
         transaction.add(::installOverridePrivacyVideoDownloadStatusHook.name) {
