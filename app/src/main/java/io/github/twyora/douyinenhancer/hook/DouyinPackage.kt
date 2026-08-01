@@ -1930,7 +1930,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                             }
                         } ?: run {
                             YLog.error(
-                                "$TAG: unable to populate ${this::class.simpleName} config, possibly due to unfound obfuscated methods"
+                                "$TAG: unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
                             )
                             return@video
                         }
