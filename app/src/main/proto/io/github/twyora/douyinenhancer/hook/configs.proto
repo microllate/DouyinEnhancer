@@ -77,10 +77,6 @@ message SaveImageActionItem {
   optional Method is_visible = 5;
 }
 
-message TokenCert {
-  optional Class class = 1;
-}
-
 message DigestUtils {
   optional Class class = 1;
   optional Method md5_hex = 2;
@@ -314,7 +310,6 @@ message HookInfo {
   optional DownloadInfo download_info = 15;
   optional DigestUtils digest_utils = 16;
   optional UGFileUtilsKt ug_file_utils = 17;
-  optional TokenCert token_cert = 18;
   optional CommonItemView common_item_view = 19;
   optional DouYinSettingNewVersionActivity dou_yin_setting_new_version_activity = 20;
   optional User user = 21;
@@ -345,5 +340,5 @@ message HookInfo {
   optional SharePrivacyVideoApi share_privacy_video_api = 48;
   optional RxObservable rx_observable = 49;
 
-  reserved 13, 32;
+  reserved 13, 18, 32;
 }

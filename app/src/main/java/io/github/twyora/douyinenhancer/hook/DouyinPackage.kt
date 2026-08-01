@@ -89,7 +89,6 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
     val downloadInfo = DownloadInfoModule()
     val digestUtils = DigestUtilsModule()
     val ugFileUtils = UGFileUtilsKtModule()
-    val tokenCert = TokenCertModule()
     val commonItemView = CommonItemViewModule()
     val douYinSettingNewVersionActivity = DouYinSettingNewVersionActivityModule()
     val user = UserModule()
@@ -318,13 +317,6 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
             hookInfo.ugFileUtils.getAudioUri.nameOrNull,
             hookInfo.ugFileUtils.getAudioUri.parameters.valuesListOrNull
         )
-    }
-
-    inner class TokenCertModule {
-        val selfClass by weak {
-            hookInfo.tokenCert.class_.nameOrNull
-                ?.toClass(classLoader)
-        }
     }
 
     inner class CommonItemViewModule {
@@ -1534,14 +1526,6 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                         }.onFailure {
                             YLog.error("$TAG: unable to populate config", it)
                         }
-                    }
-
-                tokenCert =
-                    tokenCert {
-                        class_ =
-                            class_ {
-                                name = "com.bytedance.bpea.cert.token.TokenCert"
-                            }
                     }
 
                 commonItemView = commonItemView {
