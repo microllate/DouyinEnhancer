@@ -1838,9 +1838,6 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                                 }
                                 invokeMethods {
                                     add {
-                                        descriptor = "Lcom/ss/android/ugc/aweme/utils/FileUtils;->checkFileExists(Ljava/lang/String;)Z"
-                                    }
-                                    add {
                                         descriptor =
                                             $$"Lcom/ss/android/ugc/aweme/services/external/ui/IStoryService;->convertImgToMp4(Landroid/content/Context;Landroidx/lifecycle/LifecycleOwner;Ljava/lang/String;Ljava/lang/String;ZJLjava/lang/String;Lcom/ss/android/ugc/aweme/services/external/ui/IStoryService$OnMuxImgToMp4Callback;)V"
                                     }
@@ -1878,11 +1875,12 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                                 }
                                 invokeMethods {
                                     add {
-                                        descriptor = "Lcom/ss/android/ugc/aweme/utils/FileUtils;->checkFileExists(Ljava/lang/String;)Z"
+                                        descriptor =
+                                            "Lcom/ss/android/ugc/aweme/services/external/ui/IStoryService;->convertImgListToMp4UseMusicUrl(Landroid/app/Activity;Landroidx/lifecycle/LifecycleOwner;Ljava/util/List;Lcom/ss/android/ugc/aweme/music/model/Music;ZZLjava/lang/String;ZLkotlin/jvm/functions/Function1;)V"
                                     }
                                     add {
                                         descriptor =
-                                            "Lcom/ss/android/ugc/aweme/services/external/ui/IStoryService;->convertImgListToMp4UseMusicUrl(Landroid/app/Activity;Landroidx/lifecycle/LifecycleOwner;Ljava/util/List;Lcom/ss/android/ugc/aweme/music/model/Music;ZZLjava/lang/String;ZLkotlin/jvm/functions/Function1;)V"
+                                            "Lcom/ss/android/ugc/aweme/services/external/ui/IStoryService;->convertSlidesListToMp4UseMusicUrl(Landroid/app/Activity;Landroidx/lifecycle/LifecycleOwner;Ljava/util/List;Lcom/ss/android/ugc/aweme/music/model/Music;ZZLjava/lang/String;ZLkotlin/jvm/functions/Function1;)V"
                                     }
                                 }
                             }
@@ -2084,14 +2082,40 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                                             "Lcom/ss/android/ugc/aweme/feed/model/Aweme;->getVideo()Lcom/ss/android/ugc/aweme/feed/model/Video;"
                                     }
                                     add {
-                                        descriptor =
-                                            "Lcom/bytedance/mt/protector/impl/GsonProtectorUtils;->fromJson(Lcom/google/gson/Gson;Ljava/lang/String;Ljava/lang/Class;)Ljava/lang/Object;"
+                                        descriptor = "Lcom/google/gson/Gson;-><init>()V"
+                                    }
+                                }
+
+                                bridge.findMethod {
+                                    matcher {
+                                        modifiers = Modifier.PUBLIC or Modifier.FINAL
+                                        params {
+                                            add("boolean")
+                                        }
+                                        invokeMethods {
+                                            add {
+                                                descriptor = "Lcom/ss/android/ugc/aweme/feed/model/Aweme;->getDownloadStatus()I"
+                                            }
+                                        }
+                                        usingStrings {
+                                            add("download_time")
+                                            add("is_ug_can_re_download")
+                                            add("download_start")
+                                        }
+                                    }
+                                }.singleOrNull()?.let {
+                                    callerMethods {
+                                        method {
+                                            add {
+                                                descriptor = it.descriptor
+                                            }
+                                        }
                                     }
                                 }
                             }
                         }.singleOrNull() ?: run {
                             YLog.error(
-                                "$TAG: unable to populate ${this::class.simpleName} config, possibly due to unfound obfuscated methods"
+                                "$TAG: unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
                             )
                             return@miscDownloadAddrUtil
                         }
