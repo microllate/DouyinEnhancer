@@ -6,7 +6,6 @@ package io.github.twyora.douyinenhancer.hook
 
 import android.app.AndroidAppHelper
 import android.content.Context
-import android.provider.Settings
 import com.highcapable.kavaref.KavaRef.Companion.resolve
 import com.highcapable.kavaref.condition.matcher.extension.parameterizedBy
 import com.highcapable.kavaref.condition.matcher.extension.toTypeMatcher
@@ -775,18 +774,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
         }
 
         private fun readHookInfo(context: Context): Configs.HookInfo {
-            val androidId =
-                Settings.Secure.getString(
-                    context.contentResolver,
-                    Settings.Secure.ANDROID_ID
-                ) ?: "unknown"
-            val hookInfoFileName =
-                "${AppProperties.PROJECT_APPLICATION_ID}-${androidId.hashCode().toUInt()}"
-                    .hashCode().toHexString()
-
-            if (verbose) {
-                YLog.debug("$TAG: hookInfoFileName: $hookInfoFileName")
-            }
+            val hookInfoFileName = "douyinenhancer_hookInfo"
 
             runCatching {
                 val hookInfoFile = File(context.cacheDir, hookInfoFileName)
