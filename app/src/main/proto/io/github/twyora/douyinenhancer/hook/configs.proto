@@ -118,7 +118,7 @@ message CommonItemView {
   optional Method set_right_ui_mode = 3;
   optional Method set_left_icon = 4;
   optional Method set_right_text = 5;
-  optional Method set_left_text_and_icon = 6;
+  reserved 6;
 }
 
 message DouYinSettingNewVersionActivity {
