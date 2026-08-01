@@ -84,7 +84,15 @@ object CommentEmojiHooker : YukiBaseHooker() {
             packageInstance.saveImageActionItem.isVisible()
         )?.hook {
             before {
-                val comment = args[0] ?: return@before
+                val comment = instance.getField<Any>(
+                    packageInstance.saveImageActionItem.commentActionParams()
+                )?.getField<Any>(
+                    packageInstance.commentActionParams.comment()
+                ) ?: run {
+                    YLog.error("$TAG: failed to get comment from save image action item")
+                    return@before
+                }
+
                 val emojiUrls = extractEmojiUrls(comment)
                 if (!emojiUrls.isNullOrEmpty()) {
                     if (verbose) {
