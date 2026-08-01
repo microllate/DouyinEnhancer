@@ -7,23 +7,31 @@ import android.app.Activity.RESULT_CANCELED
 import android.app.AlertDialog
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Bundle
 import android.preference.Preference
 import android.preference.PreferenceCategory
 import android.preference.PreferenceFragment
+import android.preference.SwitchPreference
+import android.view.ContextThemeWrapper
+import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.edit
+import com.highcapable.kavaref.KavaRef.Companion.resolve
 import com.highcapable.yukihookapi.hook.factory.injectModuleAppResources
 import com.highcapable.yukihookapi.hook.log.YLog
 import io.fastkv.FastKV
-import io.fastkv.interfaces.FastCipher
 import io.github.twyora.douyinenhancer.BuildConfig
 import io.github.twyora.douyinenhancer.R
 import io.github.twyora.douyinenhancer.config.FastKVConfigManager
 import io.github.twyora.douyinenhancer.config.key.MiscKey
+import io.github.twyora.douyinenhancer.config.key.ModuleKey
+import io.github.twyora.douyinenhancer.hook.comment.CommentAudioHooker.hook
 import io.github.twyora.douyinenhancer.utils.Field
 import io.github.twyora.douyinenhancer.utils.setField
 import java.io.File
+import java.net.URL
 import java.security.DigestInputStream
 import java.security.DigestOutputStream
 import java.security.MessageDigest
@@ -34,18 +42,26 @@ import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 import java.util.zip.ZipOutputStream
 import kotlin.system.exitProcess
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import kotlinx.io.IOException
+import org.json.JSONObject
 
 /**
  * Settings dialog for DouyinEnhancer.
  *
  * Referenced from [BiliRoaming](https://github.com/yujincheng08/BiliRoaming/blob/master/app/src/main/java/me/iacn/biliroaming/SettingDialog.kt)
  */
-class SettingsDialog(context: Context) : AlertDialog.Builder(context) {
+class SettingsDialog(context: Context) : AlertDialog.Builder(ContextThemeWrapper(context, R.style.MainTheme)) {
     class PrefsFragment :
         PreferenceFragment(),
-        Preference.OnPreferenceClickListener {
+        Preference.OnPreferenceClickListener,
+        Preference.OnPreferenceChangeListener {
         private var hiddenFeatureClickCount = 0
+        private val scope = MainScope()
 
         @Deprecated("Deprecated in Java")
         override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,10 +88,22 @@ class SettingsDialog(context: Context) : AlertDialog.Builder(context) {
             findPreference("recommend_feed_filter")?.onPreferenceClickListener = this
             findPreference("export_config")?.onPreferenceClickListener = this
             findPreference("import_config")?.onPreferenceClickListener = this
+            (findPreference("disable_verbose_logs") as? SwitchPreference)?.apply {
+                isChecked = FastKVConfigManager.module.getBoolean(ModuleKey.DISABLE_VERBOSE_LOGS, false)
+                onPreferenceChangeListener = this@PrefsFragment
+            }
             findPreference("version")?.summary = BuildConfig.VERSION_NAME
             findPreference("version")?.onPreferenceClickListener = this
             findPreference("build_time")?.summary =
                 SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(BuildConfig.BUILD_TIMESTAMP)
+
+            checkUpdate()
+        }
+
+        @Deprecated("Deprecated in Java")
+        override fun onDestroy() {
+            super.onDestroy()
+            scope.cancel()
         }
 
         @Deprecated("Deprecated in Java")
@@ -88,7 +116,7 @@ class SettingsDialog(context: Context) : AlertDialog.Builder(context) {
             "version" -> {
                 val prefs = FastKVConfigManager.settings
                 if (!prefs.getBoolean(MiscKey.ENABLE_HIDDEN_FEATURES, false)) {
-                    if (++hiddenFeatureClickCount == 20) {
+                    if (++hiddenFeatureClickCount == HIDDEN_FEATURE_TRIGGER_CLICK_COUNT) {
                         prefs.edit(commit = true) {
                             putBoolean(MiscKey.ENABLE_HIDDEN_FEATURES, true)
                         }
@@ -99,11 +127,14 @@ class SettingsDialog(context: Context) : AlertDialog.Builder(context) {
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
-                    } else if (hiddenFeatureClickCount >= 17) {
+                    } else if (hiddenFeatureClickCount >= HIDDEN_FEATURE_HINT_FROM_CLICK_COUNT) {
                         activity.runOnUiThread {
                             Toast.makeText(
                                 context,
-                                context.getString(R.string.pref_misc_enable_hidden_features_steps_remaining, 20 - hiddenFeatureClickCount),
+                                context.getString(
+                                    R.string.pref_misc_enable_hidden_features_steps_remaining,
+                                    HIDDEN_FEATURE_TRIGGER_CLICK_COUNT - hiddenFeatureClickCount
+                                ),
                                 Toast.LENGTH_SHORT
                             ).show()
                         }
@@ -123,6 +154,20 @@ class SettingsDialog(context: Context) : AlertDialog.Builder(context) {
             "export_config" -> onExportConfigClick()
 
             "import_config" -> onImportConfigClick()
+
+            else -> false
+        }
+
+        @Deprecated("Deprecated in Java")
+        override fun onPreferenceChange(preference: Preference, newValue: Any): Boolean = when (preference.key) {
+            "disable_verbose_logs" -> {
+                val verboseLogsDisabled = newValue as Boolean
+                FastKVConfigManager.module.edit(commit = true) {
+                    putBoolean(ModuleKey.DISABLE_VERBOSE_LOGS, verboseLogsDisabled)
+                }
+                YLog.info("!!verbose logging disabled is $verboseLogsDisabled!!")
+                true
+            }
 
             else -> false
         }
@@ -174,7 +219,7 @@ class SettingsDialog(context: Context) : AlertDialog.Builder(context) {
                                         Toast.LENGTH_SHORT
                                     ).show()
                                 }
-                                YLog.error("$TAG: Export config failed", it)
+                                YLog.error("$TAG: export config failed", it)
                             }.onSuccess {
                                 activity.runOnUiThread {
                                     Toast.makeText(context, R.string.config_export_success, Toast.LENGTH_SHORT).show()
@@ -245,7 +290,7 @@ class SettingsDialog(context: Context) : AlertDialog.Builder(context) {
                                         Toast.LENGTH_SHORT
                                     ).show()
                                 }
-                                YLog.error("$TAG: Import config failed", it)
+                                YLog.error("$TAG: import config failed", it)
                             }.onSuccess {
                                 activity.runOnUiThread {
                                     Toast.makeText(context, R.string.config_import_success, Toast.LENGTH_SHORT).show()
@@ -296,6 +341,57 @@ class SettingsDialog(context: Context) : AlertDialog.Builder(context) {
 
             return true
         }
+
+        private fun checkUpdate() = scope.launch {
+            val latestReleaseJson = runCatching {
+                withContext(Dispatchers.IO) {
+                    JSONObject(
+                        URL(
+                            context.getString(
+                                R.string.latest_release_api_url
+                            )
+                        ).readText()
+                    )
+                }
+            }.onFailure {
+                YLog.error("$TAG: fetch latest release failed", it)
+            }.getOrNull()
+            if (latestReleaseJson == null) {
+                YLog.info("$TAG: skip update check, no release data")
+                return@launch
+            }
+
+            val latestReleaseVer = latestReleaseJson.optString("name").removePrefix("v").removePrefix("V")
+            if (latestReleaseVer.isNotBlank() && BuildConfig.VERSION_NAME != latestReleaseVer) {
+                findPreference("version")?.apply {
+                    summary = "${BuildConfig.VERSION_NAME} ($latestReleaseVer)"
+                }
+                findPreference("update")?.apply {
+                    title = context.getString(R.string.pref_about_update_available_title)
+                    summary = latestReleaseJson.optString("body").takeIf {
+                        it.isNotBlank()
+                    }?.let {
+                        if (it.length > 80) {
+                            it.take(80) + "..."
+                        } else {
+                            it
+                        }
+                    } ?: context.getString(R.string.pref_about_update_available_summary)
+                }
+            } else {
+                findPreference("update")?.apply {
+                    title = context.getString(R.string.pref_about_up_to_date_title)
+                    summary = latestReleaseJson.optString("body").ifEmpty {
+                        context.getString(R.string.pref_about_up_to_date_summary)
+                    }
+                }
+            }
+        }
+
+        companion object {
+            private const val HIDDEN_FEATURE_TRIGGER_CLICK_COUNT = 20
+            private const val HIDDEN_FEATURE_HINT_FROM_CLICK_COUNT = 17
+        }
     }
 
     init {
@@ -305,6 +401,41 @@ class SettingsDialog(context: Context) : AlertDialog.Builder(context) {
         val prefsFragment = PrefsFragment()
         activity.fragmentManager.beginTransaction().add(prefsFragment, "Settings").commit()
         activity.fragmentManager.executePendingTransactions()
+
+        val inNightMode =
+            (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
+        val nightModeTextHookResult = if (inNightMode) {
+            if (verbose) {
+                YLog.debug("$TAG: night mode on, recoloring settings text white")
+            }
+            Preference::class.resolve().optional().firstMethodOrNull {
+                name = "onBindView"
+            }?.hook {
+                after {
+                    val preference = instance as? Preference ?: run {
+                        YLog.error("$TAG: bound target ${instance::class.qualifiedName} not a Preference, skip recolor")
+                        return@after
+                    }
+                    if (preference is PreferenceCategory) {
+                        if (verbose) {
+                            YLog.debug(
+                                "$TAG: ${preference::class.simpleName} is PreferenceCategory, preference.key: ${preference.key}, skip recolor"
+                            )
+                        }
+                        return@after
+                    }
+
+                    val view = args[0] as? View ?: run {
+                        YLog.error("$TAG: bound target ${instance::class.qualifiedName} has no view, skip recolor")
+                        return@after
+                    }
+                    view.findViewById<TextView>(android.R.id.title)?.setTextColor(activity.resources.getColor(R.color.white))
+                    view.findViewById<TextView>(android.R.id.summary)?.setTextColor(activity.resources.getColor(R.color.white_50))
+                }
+            }
+        } else {
+            null
+        }
 
         setView(prefsFragment.view)
         setTitle(context.getString(R.string.settings_dialog_title))
@@ -317,11 +448,15 @@ class SettingsDialog(context: Context) : AlertDialog.Builder(context) {
                 Toast.makeText(context, context.getString(R.string.restart_required), Toast.LENGTH_SHORT).show()
             }
             activity.fragmentManager.beginTransaction().remove(prefsFragment).commitAllowingStateLoss()
+            nightModeTextHookResult?.remove()
         }
     }
 
     companion object {
         private val TAG = this::class.simpleName
+
+        private val verbose
+            get() = !FastKVConfigManager.module.getBoolean(ModuleKey.DISABLE_VERBOSE_LOGS, false)
 
         private const val EXPORT_CONFIG = 0
         private const val IMPORT_CONFIG = 1
@@ -330,7 +465,7 @@ class SettingsDialog(context: Context) : AlertDialog.Builder(context) {
             runCatching {
                 SettingsDialog(context).show()
             }.onFailure {
-                YLog.error("$TAG: SettingDialog show failed", it)
+                YLog.error("$TAG: settingDialog show failed", it)
             }
         }
 

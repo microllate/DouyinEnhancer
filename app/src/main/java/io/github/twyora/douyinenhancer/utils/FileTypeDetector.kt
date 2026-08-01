@@ -19,6 +19,7 @@ object FileTypeDetector {
         val HEIC = FileTypeInfo("image/heic", listOf("heic", "heif"), "HEIF Image")
         val HEIF = FileTypeInfo("image/heif", listOf("heif"), "HEIF Image (MIF1)")
         val AVIF = FileTypeInfo("image/avif", listOf("avif"), "AVIF Image")
+        val VVIC = FileTypeInfo("image/vvic", listOf("vvic"), "VVIC Image")
         val ANI = FileTypeInfo("image/x-ani", listOf("ani"), "Animated Cursor")
 
         // Audio
@@ -133,6 +134,10 @@ object FileTypeDetector {
 
                 "mif1" -> {
                     MimeTypes.HEIF
+                }
+
+                "vvic" -> {
+                    MimeTypes.VVIC
                 }
 
                 "avif", "avis" -> {
@@ -349,5 +354,5 @@ object FileTypeDetector {
         }
     }
 
-    fun detect(filePath: String, headerSize: Int = 32): FileTypeInfo = detect(File(filePath))
+    fun detect(filePath: String, headerSize: Int = 32): FileTypeInfo = detect(File(filePath), headerSize)
 }

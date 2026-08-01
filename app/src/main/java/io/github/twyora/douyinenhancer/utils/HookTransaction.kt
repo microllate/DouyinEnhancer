@@ -13,7 +13,7 @@ class HookTransaction(private val tag: String?) {
                 result.remove()
             }.onFailure { e ->
                 YLog.error(
-                    "$tag: Hook at index $index rollback failed, ignore it. Stack trace: ",
+                    "$tag: hook at index $index rollback failed, ignore it. Stack trace: ",
                     e
                 )
             }

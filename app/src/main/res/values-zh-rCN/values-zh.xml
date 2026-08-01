@@ -15,6 +15,8 @@
     <string name="pref_comment_audio_summary">保存至 Music/douyin/audio 目录</string>
     <string name="pref_feed_video_remove_watermark_title">保存无水印视频</string>
     <string name="pref_feed_video_remove_watermark_summary">保存播放版视频而非特供版水印视频</string>
+    <string name="pref_feed_download_bypass_title">允许保存限制内容</string>
+    <string name="pref_feed_download_bypass_summary">绕过推荐内容保存限制</string>
     <string name="pref_feed_multi_image_remove_watermark_title">保存无水印多图帖</string>
     <string name="pref_feed_multi_image_remove_watermark_summary">去除图片内置水印与边框水印</string>
 
@@ -73,18 +75,26 @@
     <string name="pref_misc_enable_hidden_features_already_enabled">隐藏功能已开启，无需执行此操作</string>
     <string name="pref_misc_enable_hidden_features_restart_required">隐藏功能已开启，重启应用后生效</string>
 
+    <string name="pref_category_module">模块</string>
+    <string name="pref_module_disable_verbose_logs_title">禁用详细日志</string>
+    <string name="pref_module_disable_verbose_logs_summary">报告问题要求包含详细日志</string>
+
     <string name="pref_category_about">关于</string>
     <string name="pref_about_version_title">版本</string>
     <string name="pref_about_version_summary">0.0.1</string>
     <string name="pref_about_author_title">作者</string>
     <string name="pref_about_author_summary">twyora</string>
+    <string name="pref_about_up_to_date_title">已是最新版</string>
+    <string name="pref_about_up_to_date_summary">点击前往发布页</string>
+    <string name="pref_about_update_available_title">前往更新</string>
+    <string name="pref_about_update_available_summary">点击前往发布页</string>
     <string name="pref_about_repository_title">仓库地址</string>
     <string name="pref_about_repository_summary">欢迎 Star 和反馈</string>
     <string name="pref_about_telegram_title">TG 群组</string>
     <string name="pref_about_telegram_summary">点击加入 TG 频道</string>
     <string name="pref_about_build_time_title">构建时间</string>
     <string name="pref_about_back_then_title">作者当时🎵</string>
-    <string name="pref_about_back_then_summary">海内兮传四方，唤伊莫相忘</string>
+    <string name="pref_about_back_then_summary">Bon voyage</string>
 
     <string name="add">添加</string>
     <string name="delete">删除</string>
@@ -92,4 +102,14 @@
     <string name="regex_mode">正则模式</string>
     <string name="save_success_restart_required">保存成功，部分配置重启应用后生效</string>
     <string name="restart_required">部分功能需重启应用后生效</string>
+
+    <string name="pref_category_settings">设置</string>
+    <string name="pref_settings_open_module_settings_title">打开模块设置</string>
+    <string name="pref_settings_open_module_settings_summary">启动客户端并打开模块设置</string>
+    <string name="pref_settings_hide_launcher_icon_title">隐藏桌面图标</string>
+    <string name="pref_settings_hide_launcher_icon_summary">不显示本应用在启动器中的图标</string>
+    <string name="pref_about_activation_status_disabled_title">未启用</string>
+    <string name="pref_about_activation_status_deactivated_summary">抖柚未激活</string>
+    <string name="pref_about_activation_status_enabled_title">已启用</string>
+    <string name="pref_about_activation_status_activated_summary">抖柚已激活</string>
 </resources>

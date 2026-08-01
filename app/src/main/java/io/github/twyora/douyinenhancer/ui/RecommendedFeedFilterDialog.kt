@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.Context
 import android.text.InputType
+import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -17,10 +18,10 @@ import io.github.twyora.douyinenhancer.config.key.RecommendedFeedFilterKey
 import io.github.twyora.douyinenhancer.databinding.ItemInputWithDeleteBinding
 import io.github.twyora.douyinenhancer.databinding.RecommendedFeedFilterDialogBinding
 
-class RecommendedFeedFilterDialog(context: Context) : AlertDialog.Builder(context) {
+class RecommendedFeedFilterDialog(context: Context) : AlertDialog.Builder(ContextThemeWrapper(context, R.style.MainTheme)) {
     init {
         val recommendedFeedFilterDialogBinding = RecommendedFeedFilterDialogBinding.inflate(
-            LayoutInflater.from(context)
+            LayoutInflater.from(ContextThemeWrapper(context, R.style.MainTheme))
         )
         val prefs = FastKVConfigManager.settings
 
@@ -253,7 +254,7 @@ class RecommendedFeedFilterDialog(context: Context) : AlertDialog.Builder(contex
     companion object {
         private fun pushKeywordItem(context: Context, container: ViewGroup): ItemInputWithDeleteBinding {
             val itemBinding = ItemInputWithDeleteBinding.inflate(
-                LayoutInflater.from(context),
+                LayoutInflater.from(ContextThemeWrapper(context, R.style.MainTheme)),
                 container,
                 false
             )

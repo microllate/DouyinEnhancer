@@ -8,10 +8,14 @@ import android.app.AndroidAppHelper
 import android.content.Context
 import android.provider.Settings
 import com.highcapable.kavaref.KavaRef.Companion.resolve
+import com.highcapable.kavaref.condition.matcher.extension.parameterizedBy
+import com.highcapable.kavaref.condition.matcher.extension.toTypeMatcher
 import com.highcapable.kavaref.condition.type.Modifiers
 import com.highcapable.kavaref.extension.toClass
 import com.highcapable.yukihookapi.hook.log.YLog
 import io.github.twyora.douyinenhancer.BuildConfig
+import io.github.twyora.douyinenhancer.config.FastKVConfigManager
+import io.github.twyora.douyinenhancer.config.key.ModuleKey
 import io.github.twyora.douyinenhancer.generated.AppProperties
 import io.github.twyora.douyinenhancer.utils.Field
 import io.github.twyora.douyinenhancer.utils.Method
@@ -55,18 +59,17 @@ val Configs.Method.Parameters.valuesListOrNull
         }
 
 class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
-    init {
-        instance = this
-    }
-
     private val hookInfo: Configs.HookInfo =
         run {
             val (result, time) =
                 measureTimedValue {
                     readHookInfo(context)
                 }
-            YLog.debug("$TAG: load hookInfo time: $time")
-            YLog.debug("$TAG: hookInfo: $result")
+
+            if (verbose) {
+                YLog.debug("$TAG: load hookInfo time: $time")
+                YLog.debug("$TAG: hookInfo: $result")
+            }
 
             result
         }
@@ -98,8 +101,22 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
     val miscDownloadAddrUtil = MiscDownloadAddrUtilModule()
     val downloadAction = DownloadActionModule()
     val abTestServiceImpl = ABTestServiceImplModule()
-    val lppDownloadModule = LppDownloadModuleModule()
     val awemeStatistics = AwemeStatisticsModule()
+    val heifDecoder = HeifDecoderModule()
+    val heifBitmapFactoryImpl = HeifBitmapFactoryImplModule()
+    val downLoadExecutor = DownLoadExecutorModule()
+    val downLoadTask = DownLoadTaskModule()
+    val downloadLivePhotoExecutor = DownloadLivePhotoExecutorModule()
+    val singleImageToMp4Composer = SingleImageToMp4ComposerModule()
+    val multiImageToMp4Composer = MultiImageToMp4ComposerModule()
+    val mainActivity = MainActivityModule()
+    val absPermissionChecker = AbsPermissionCheckerModule()
+    val actionCheckResult = ActionCheckResultModule()
+    val actionStatus = ActionStatusModule()
+    val galleryShareHelper = GalleryShareHelperModule()
+    val awemeStatus = AwemeStatusModule()
+    val sharePrivacyVideoApi = SharePrivacyVideoApiModule()
+    val rxObservable = RxObservableModule()
 
     inner class CommentImageStructModule {
         val selfClass by weak {
@@ -358,6 +375,23 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
         )
     }
 
+    inner class MainActivityModule {
+        val selfClass by weak {
+            hookInfo.mainActivity.class_.nameOrNull
+                ?.toClass(classLoader)
+        }
+
+        fun onResume() = Method(
+            hookInfo.mainActivity.onResume.nameOrNull,
+            hookInfo.mainActivity.onResume.parameters.valuesListOrNull
+        )
+
+        fun onNewIntent() = Method(
+            hookInfo.mainActivity.onNewIntent.nameOrNull,
+            hookInfo.mainActivity.onNewIntent.parameters.valuesListOrNull
+        )
+    }
+
     inner class UserModule {
         val selfClass by weak {
             hookInfo.user.class_.nameOrNull
@@ -365,6 +399,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
         }
 
         fun nickname() = Field(hookInfo.user.nickname.nameOrNull)
+
         fun uid() = Field(hookInfo.user.uid.nameOrNull)
     }
 
@@ -417,6 +452,66 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
         fun images() = Field(hookInfo.aweme.images.nameOrNull)
 
         fun statistics() = Field(hookInfo.aweme.statistics.nameOrNull)
+
+        fun getAid() = Method(
+            hookInfo.aweme.getAid.nameOrNull,
+            hookInfo.aweme.getAid.parameters.valuesListOrNull
+        )
+
+        fun getDownloadStatus() = Method(
+            hookInfo.aweme.getDownloadStatus.nameOrNull,
+            hookInfo.aweme.getDownloadStatus.parameters.valuesListOrNull
+        )
+
+        fun aid() = Field(hookInfo.aweme.aid.nameOrNull)
+
+        fun status() = Field(hookInfo.aweme.status.nameOrNull)
+    }
+
+    inner class AwemeStatusModule {
+        val selfClass by weak {
+            hookInfo.awemeStatus.class_.nameOrNull
+                ?.toClass(classLoader)
+        }
+
+        fun downloadStatus() = Field(hookInfo.awemeStatus.downloadStatus.nameOrNull)
+    }
+
+    inner class SharePrivacyVideoApiModule {
+        val selfClass by weak {
+            hookInfo.sharePrivacyVideoApi.class_.nameOrNull
+                ?.toClass(classLoader)
+        }
+
+        fun getDownloadStatus() = Method(
+            hookInfo.sharePrivacyVideoApi.getDownloadStatus.nameOrNull,
+            hookInfo.sharePrivacyVideoApi.getDownloadStatus.parameters.valuesListOrNull
+        )
+
+        val privacyVideoResponse = SharePrivacyVideoResponseModule()
+
+        inner class SharePrivacyVideoResponseModule {
+            val selfClass by weak {
+                hookInfo.sharePrivacyVideoApi.privacyVideoResponse.class_.nameOrNull
+                    ?.toClass(classLoader)
+            }
+
+            fun msg() = Field(hookInfo.sharePrivacyVideoApi.privacyVideoResponse.msg.nameOrNull)
+
+            fun status() = Field(hookInfo.sharePrivacyVideoApi.privacyVideoResponse.status.nameOrNull)
+        }
+    }
+
+    inner class RxObservableModule {
+        val selfClass by weak {
+            hookInfo.rxObservable.class_.nameOrNull
+                ?.toClass(classLoader)
+        }
+
+        fun just() = Method(
+            hookInfo.rxObservable.just.nameOrNull,
+            hookInfo.rxObservable.just.parameters.valuesListOrNull
+        )
     }
 
     inner class AwemeStatisticsModule {
@@ -434,6 +529,91 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
         fun shareCount() = Field(hookInfo.awemeStatistics.shareCount.nameOrNull)
     }
 
+    inner class HeifDecoderModule {
+        val selfClass by weak {
+            hookInfo.heifDecoder.class_.nameOrNull
+                ?.toClass(classLoader)
+        }
+
+        fun sBitmapFactory() = Field(hookInfo.heifDecoder.sBitmapFactory.nameOrNull)
+    }
+
+    inner class HeifBitmapFactoryImplModule {
+        val selfClass by weak {
+            hookInfo.heifBitmapFactoryImpl.class_.nameOrNull
+                ?.toClass(classLoader)
+        }
+
+        fun decodeByteArray() = Method(
+            hookInfo.heifBitmapFactoryImpl.decodeByteArray.nameOrNull,
+            hookInfo.heifBitmapFactoryImpl.decodeByteArray.parameters.valuesListOrNull
+        )
+    }
+
+    inner class DownLoadExecutorModule {
+        val selfClass by weak {
+            hookInfo.downLoadExecutor.class_.nameOrNull
+                ?.toClass(classLoader)
+        }
+
+        fun execute() = Method(
+            hookInfo.downLoadExecutor.execute.nameOrNull,
+            hookInfo.downLoadExecutor.execute.parameters.valuesListOrNull
+        )
+    }
+
+    inner class DownLoadTaskModule {
+        val selfClass by weak {
+            hookInfo.downLoadTask.class_.nameOrNull
+                ?.toClass(classLoader)
+        }
+
+        fun getTargetFilePaths() = Method(
+            hookInfo.downLoadTask.getTargetFilePaths.nameOrNull,
+            hookInfo.downLoadTask.getTargetFilePaths.parameters.valuesListOrNull
+        )
+    }
+
+    inner class DownloadLivePhotoExecutorModule {
+        val selfClass by weak {
+            hookInfo.downloadLivePhotoExecutor.class_.nameOrNull
+                ?.toClass(classLoader)
+        }
+
+        fun encodeLivePhoto() = Method(
+            hookInfo.downloadLivePhotoExecutor.encodeLivePhoto.nameOrNull,
+            hookInfo.downloadLivePhotoExecutor.encodeLivePhoto.parameters.valuesListOrNull
+        )
+    }
+
+    inner class SingleImageToMp4ComposerModule {
+        val selfClass by weak {
+            hookInfo.singleImageToMp4Composer.class_.nameOrNull
+                ?.toClass(classLoader)
+        }
+
+        fun onLoad() = Method(
+            hookInfo.singleImageToMp4Composer.onLoad.nameOrNull,
+            hookInfo.singleImageToMp4Composer.onLoad.parameters.valuesListOrNull
+        )
+    }
+
+    inner class MultiImageToMp4ComposerModule {
+        val selfClass by weak {
+            hookInfo.multiImageToMp4Composer.class_.nameOrNull
+                ?.toClass(classLoader)
+        }
+
+        fun onLoad() = Method(
+            hookInfo.multiImageToMp4Composer.onLoad.nameOrNull,
+            hookInfo.multiImageToMp4Composer.onLoad.parameters.valuesListOrNull
+        )
+
+        fun imagePathList() = Field(
+            hookInfo.multiImageToMp4Composer.imagePathList.nameOrNull
+        )
+    }
+
     inner class VideoModule {
         val selfClass by weak {
             hookInfo.video.class_.nameOrNull
@@ -444,6 +624,12 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
             hookInfo.video.getPlayAddr.nameOrNull,
             hookInfo.video.getPlayAddr.parameters.valuesListOrNull
         )
+
+        fun hasSuffixWaterMark() = Field(hookInfo.video.hasSuffixWaterMark.nameOrNull)
+
+        fun hasWaterMark() = Field(hookInfo.video.hasWaterMark.nameOrNull)
+
+        fun downloadAddr() = Field(hookInfo.video.downloadAddr.nameOrNull)
     }
 
     inner class ImageUrlStructModule {
@@ -462,6 +648,10 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
 
         fun downloadUrlList() = Field(
             hookInfo.imageUrlStruct.downloadUrlList.nameOrNull
+        )
+
+        fun video() = Field(
+            hookInfo.imageUrlStruct.video.nameOrNull
         )
     }
 
@@ -525,25 +715,76 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
             hookInfo.abTestServiceImpl.enableSaveImageToVideoLocalWaterMask.nameOrNull,
             hookInfo.abTestServiceImpl.enableSaveImageToVideoLocalWaterMask.parameters.valuesListOrNull
         )
+
+        fun enableVEAddLiveVideoWaterMark() = Method(
+            hookInfo.abTestServiceImpl.enableVeAddLiveVideoWaterMark.nameOrNull,
+            hookInfo.abTestServiceImpl.enableVeAddLiveVideoWaterMark.parameters.valuesListOrNull
+        )
     }
 
-    inner class LppDownloadModuleModule {
+    inner class AbsPermissionCheckerModule {
         val selfClass by weak {
-            hookInfo.lppDownloadModule.class_.nameOrNull
+            hookInfo.absPermissionChecker.class_.nameOrNull
                 ?.toClass(classLoader)
         }
 
-        fun getVisibility() = Method(
-            hookInfo.lppDownloadModule.getVisibility.nameOrNull,
-            hookInfo.lppDownloadModule.getVisibility.parameters.valuesListOrNull
+        fun getActionCheckResult() = Method(
+            hookInfo.absPermissionChecker.getActionCheckResult.nameOrNull,
+            hookInfo.absPermissionChecker.getActionCheckResult.parameters.valuesListOrNull
+        )
+    }
+
+    inner class ActionCheckResultModule {
+        val selfClass by weak {
+            hookInfo.actionCheckResult.class_.nameOrNull
+                ?.toClass(classLoader)
+        }
+
+        fun actionStatus() = Field(hookInfo.actionCheckResult.actionStatus.nameOrNull)
+    }
+
+    inner class ActionStatusModule {
+        val selfClass by weak {
+            hookInfo.actionStatus.class_.nameOrNull
+                ?.toClass(classLoader)
+        }
+
+        fun valueOf() = Method(
+            hookInfo.actionStatus.valueOf.nameOrNull,
+            hookInfo.actionStatus.valueOf.parameters.valuesListOrNull
+        )
+
+        fun grayed() = Field(hookInfo.actionStatus.grayed.nameOrNull)
+
+        fun hidden() = Field(hookInfo.actionStatus.hidden.nameOrNull)
+
+        fun normal() = Field(hookInfo.actionStatus.normal.nameOrNull)
+    }
+
+    inner class GalleryShareHelperModule {
+        val selfClass by weak {
+            hookInfo.galleryShareHelper.class_.nameOrNull
+                ?.toClass(classLoader)
+        }
+
+        fun startDownload() = Method(
+            hookInfo.galleryShareHelper.startDownload.nameOrNull,
+            hookInfo.galleryShareHelper.startDownload.parameters.valuesListOrNull
         )
     }
 
     companion object {
         private val TAG = DouyinPackage::class.simpleName
 
+        private val verbose
+            get() = !FastKVConfigManager.module.getBoolean(ModuleKey.DISABLE_VERBOSE_LOGS, false)
+
         @Volatile
         lateinit var instance: DouyinPackage
+
+        fun init(classLoader: ClassLoader, context: Context) {
+            instance = DouyinPackage(classLoader, context)
+        }
 
         private fun readHookInfo(context: Context): Configs.HookInfo {
             val androidId =
@@ -554,12 +795,15 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
             val hookInfoFileName =
                 "${AppProperties.PROJECT_APPLICATION_ID}-${androidId.hashCode().toUInt()}"
                     .hashCode().toHexString()
-            YLog.debug("$TAG: hookInfoFileName: $hookInfoFileName")
+
+            if (verbose) {
+                YLog.debug("$TAG: hookInfoFileName: $hookInfoFileName")
+            }
 
             runCatching {
                 val hookInfoFile = File(context.cacheDir, hookInfoFileName)
                 if (!(hookInfoFile.isFile && hookInfoFile.canRead())) {
-                    YLog.debug("$TAG: hookInfoFile is not a file or can not be read")
+                    YLog.warn("$TAG: hookInfoFile is not a file or can not be read")
                     return@runCatching null
                 }
 
@@ -636,10 +880,11 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
             hostVersionCode = hostAppPackageInfo.versionCode
             generation = 0
 
-            try {
+            runCatching {
                 System.loadLibrary("dexkit")
-            } catch (e: Throwable) {
-                YLog.error("Failed to load DexKit native library: ${e.message}")
+            }.onFailure {
+                YLog.error("failed to load DexKit native library", it)
+                return@hookInfo
             }
 
             DexKitBridge.create(context.applicationInfo.sourceDir).use { bridge ->
@@ -664,7 +909,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                                         }
                                     }.singleOrNull() ?: run {
                                     YLog.error(
-                                        "$TAG: Unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
+                                        "$TAG: unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
                                     )
                                     return@commentImageStruct
                                 }
@@ -691,7 +936,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                                         }
                                 }
                         }.onFailure {
-                            YLog.error("$TAG: Unable to populate config", it)
+                            YLog.error("$TAG: unable to populate config", it)
                         }
                     }
 
@@ -774,7 +1019,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                                     ?.name
                             if (commentFieldName == null || imageFieldName == null) {
                                 YLog.error(
-                                    "$TAG: Unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
+                                    "$TAG: unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
                                 )
                                 return@commentActionParams
                             }
@@ -792,7 +1037,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                                     name = imageFieldName
                                 }
                         }.onFailure {
-                            YLog.error("$TAG: Unable to populate config", it)
+                            YLog.error("$TAG: unable to populate config", it)
                         }
                     }
 
@@ -812,7 +1057,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
 
                             if (commentActionParamsFieldName == null) {
                                 YLog.error(
-                                    "$TAG: Unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
+                                    "$TAG: unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
                                 )
                                 return@commentLongPressItemModel
                             }
@@ -826,7 +1071,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                                     name = commentActionParamsFieldName
                                 }
                         }.onFailure {
-                            YLog.error("$TAG: Unable to populate config", it)
+                            YLog.error("$TAG: unable to populate config", it)
                         }
                     }
 
@@ -883,7 +1128,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                                 isVisibleMethodData == null
                             ) {
                                 YLog.error(
-                                    "$TAG: Unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
+                                    "$TAG: unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
                                 )
                                 return@saveImageActionItem
                             }
@@ -923,7 +1168,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                                 }
                             }
                         }.onFailure {
-                            YLog.error("$TAG: Unable to populate config", it)
+                            YLog.error("$TAG: unable to populate config", it)
                         }
                     }
 
@@ -971,7 +1216,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
 
                         if (clsName == null || contextFieldName == null || certFieldName == null) {
                             YLog.error(
-                                "$TAG: Unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated fields"
+                                "$TAG: unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated fields"
                             )
                             return@listenerProviderParam
                         }
@@ -986,7 +1231,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                             name = certFieldName
                         }
                     }.onFailure {
-                        YLog.error("$TAG: Unable to populate config", it)
+                        YLog.error("$TAG: unable to populate config", it)
                     }
                 }
 
@@ -1030,7 +1275,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                             }?.self?.name
                             if (onSuccessedMethodData == null || notifyResultMethod == null || listenerProviderParamFieldName == null) {
                                 YLog.error(
-                                    "$TAG: Unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
+                                    "$TAG: unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
                                 )
                                 return@commentImageSaveDownloadListener
                             }
@@ -1064,7 +1309,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                             }
                             return@commentImageSaveDownloadListener
                         }.onFailure {
-                            YLog.error("$TAG: Unable to populate config", it)
+                            YLog.error("$TAG: unable to populate config", it)
                         }
                     }
 
@@ -1100,7 +1345,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                                     }?.self
                             if (md5HexFieldMethod == null) {
                                 YLog.error(
-                                    "$TAG: Unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
+                                    "$TAG: unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
                                 )
                                 return@digestUtils
                             }
@@ -1121,7 +1366,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                                         }
                                 }
                         }.onFailure {
-                            YLog.error("$TAG: Unable to populate config", it)
+                            YLog.error("$TAG: unable to populate config", it)
                         }
                     }
 
@@ -1209,7 +1454,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                                 getImageUriMethod == null || createUriMethod == null || getAudioUriMethod == null
                             ) {
                                 YLog.error(
-                                    "$TAG: Unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
+                                    "$TAG: unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
                                 )
                                 return@uGFileUtilsKt
                             }
@@ -1287,7 +1532,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                                     }
                             }
                         }.onFailure {
-                            YLog.error("$TAG: Unable to populate config", it)
+                            YLog.error("$TAG: unable to populate config", it)
                         }
                     }
 
@@ -1351,7 +1596,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                         }?.self?.name
 
                         if (settingsScrollViewFieldName == null) {
-                            YLog.error("$TAG: Unable to populate config, settingsScrollViewFieldName is null")
+                            YLog.error("$TAG: unable to populate config, settingsScrollViewFieldName is null")
                             return@runCatching
                         }
 
@@ -1365,7 +1610,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                             name = "onResume"
                         }
                     }.onFailure {
-                        YLog.error("$TAG: Unable to populate config", it)
+                        YLog.error("$TAG: unable to populate config", it)
                     }
                 }
 
@@ -1424,6 +1669,18 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                     statistics = field {
                         name = "statistics"
                     }
+                    getAid = method {
+                        name = "getAid"
+                    }
+                    getDownloadStatus = method {
+                        name = "getDownloadStatus"
+                    }
+                    aid = field {
+                        name = "aid"
+                    }
+                    status = field {
+                        name = "status"
+                    }
                 }
 
                 awemeStatistics = awemeStatistics {
@@ -1441,6 +1698,244 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                     }
                     shareCount = field {
                         name = "shareCount"
+                    }
+                }
+
+                heifDecoder = heifDecoder {
+                    class_ = class_ {
+                        name = "com.bytedance.fresco.heif.HeifDecoder"
+                    }
+                    sBitmapFactory = field {
+                        name = "sBitmapFactory"
+                    }
+                }
+
+                heifBitmapFactoryImpl = heifBitmapFactoryImpl {
+                    class_ = class_ {
+                        name = "com.bytedance.fresco.heif.HeifBitmapFactoryImpl"
+                    }
+                    decodeByteArray = method {
+                        name = "decodeByteArray"
+                        parameters = MethodKt.parameters {
+                            values.clear()
+                            values.addAll(
+                                listOf(
+                                    "[B",
+                                    "int",
+                                    "int",
+                                    $$"android.graphics.BitmapFactory$Options"
+                                )
+                            )
+                        }
+                    }
+                }
+
+                downLoadExecutor = downLoadExecutor {
+                    runCatching {
+                        val executeMethodData = bridge.findMethod {
+                            matcher {
+                                modifiers = Modifier.PUBLIC or Modifier.FINAL
+                                returnType = "boolean"
+                                paramCount = 1
+                                usingStrings {
+                                    add("/douyin")
+                                    add("share_")
+                                    add(".png")
+                                    add("DownLoadExecutor")
+                                }
+                                invokeMethods {
+                                    add {
+                                        descriptor =
+                                            "Lcom/bytedance/android/ug/UGFileUtilsKt;->getExternalStorageDirectory(Ljava/lang/String;Z)Ljava/lang/String;"
+                                    }
+                                }
+                            }
+                        }.singleOrNull() ?: run {
+                            YLog.error(
+                                "$TAG: unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
+                            )
+                            return@downLoadExecutor
+                        }
+
+                        class_ = class_ {
+                            name = executeMethodData.className
+                        }
+                        execute = method {
+                            name = executeMethodData.methodName
+                            parameters = MethodKt.parameters {
+                                values.clear()
+                                values.addAll(executeMethodData.paramTypeNames)
+                            }
+                        }
+                    }.onFailure {
+                        YLog.error("$TAG: unable to populate config", it)
+                    }
+                }
+
+                downLoadTask = downLoadTask {
+                    runCatching {
+                        val downloadTaskClassName = this@hookInfo.downLoadExecutor.execute.parameters.valuesListOrNull?.firstOrNull()
+                            ?: run {
+                                YLog.error(
+                                    "$TAG: Unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated classes"
+                                )
+                                return@downLoadTask
+                            }
+                        val getTargetFilePathsMethodData = bridge.findMethod {
+                            matcher {
+                                declaredClass = downloadTaskClassName
+                                returnType = "java.util.List"
+                            }
+                        }.singleOrNull()
+
+                        if (getTargetFilePathsMethodData == null) {
+                            YLog.error(
+                                "$TAG: unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
+                            )
+                            return@downLoadTask
+                        }
+
+                        class_ = class_ {
+                            name = downloadTaskClassName
+                        }
+                        getTargetFilePaths = method {
+                            name = getTargetFilePathsMethodData.methodName
+                            parameters = MethodKt.parameters {
+                                values.clear()
+                                values.addAll(getTargetFilePathsMethodData.paramTypeNames)
+                            }
+                        }
+                    }.onFailure {
+                        YLog.error("$TAG: unable to populate config", it)
+                    }
+                }
+
+                downloadLivePhotoExecutor = downloadLivePhotoExecutor {
+                    runCatching {
+                        val encodeLivePhotoMethodData = bridge.findMethod {
+                            matcher {
+                                modifiers = Modifier.PUBLIC or Modifier.FINAL
+                                returnType = "boolean"
+                                usingStrings {
+                                    add("DownloadLiveExecutor")
+                                    add("encode live photo isFinish: ")
+                                }
+                            }
+                        }.singleOrNull() ?: run {
+                            YLog.error(
+                                "$TAG: unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
+                            )
+                            return@downloadLivePhotoExecutor
+                        }
+
+                        class_ = class_ {
+                            name = encodeLivePhotoMethodData.className
+                        }
+                        encodeLivePhoto = method {
+                            name = encodeLivePhotoMethodData.methodName
+                            parameters = MethodKt.parameters {
+                                values.clear()
+                                values.addAll(encodeLivePhotoMethodData.paramTypeNames)
+                            }
+                        }
+                    }.onFailure {
+                        YLog.error("$TAG: unable to populate config", it)
+                    }
+                }
+
+                singleImageToMp4Composer = singleImageToMp4Composer {
+                    runCatching {
+                        val onLoadMethodData = bridge.findMethod {
+                            matcher {
+                                name = "onLoad"
+                                usingStrings {
+                                    add("[onLoad] failed, cause path not exist")
+                                }
+                                invokeMethods {
+                                    add {
+                                        descriptor = "Lcom/ss/android/ugc/aweme/utils/FileUtils;->checkFileExists(Ljava/lang/String;)Z"
+                                    }
+                                    add {
+                                        descriptor =
+                                            $$"Lcom/ss/android/ugc/aweme/services/external/ui/IStoryService;->convertImgToMp4(Landroid/content/Context;Landroidx/lifecycle/LifecycleOwner;Ljava/lang/String;Ljava/lang/String;ZJLjava/lang/String;Lcom/ss/android/ugc/aweme/services/external/ui/IStoryService$OnMuxImgToMp4Callback;)V"
+                                    }
+                                }
+                            }
+                        }.singleOrNull() ?: run {
+                            YLog.error(
+                                "$TAG: unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
+                            )
+                            return@singleImageToMp4Composer
+                        }
+
+                        class_ = class_ {
+                            name = onLoadMethodData.className
+                        }
+                        onLoad = method {
+                            name = onLoadMethodData.methodName
+                            parameters = MethodKt.parameters {
+                                values.clear()
+                                values.addAll(onLoadMethodData.paramTypeNames)
+                            }
+                        }
+                    }.onFailure {
+                        YLog.error("$TAG: unable to populate config", it)
+                    }
+                }
+
+                multiImageToMp4Composer = multiImageToMp4Composer {
+                    runCatching {
+                        val onLoadMethodData = bridge.findMethod {
+                            matcher {
+                                name = "onLoad"
+                                usingStrings {
+                                    add("images file not exist!")
+                                }
+                                invokeMethods {
+                                    add {
+                                        descriptor = "Lcom/ss/android/ugc/aweme/utils/FileUtils;->checkFileExists(Ljava/lang/String;)Z"
+                                    }
+                                    add {
+                                        descriptor =
+                                            "Lcom/ss/android/ugc/aweme/services/external/ui/IStoryService;->convertImgListToMp4UseMusicUrl(Landroid/app/Activity;Landroidx/lifecycle/LifecycleOwner;Ljava/util/List;Lcom/ss/android/ugc/aweme/music/model/Music;ZZLjava/lang/String;ZLkotlin/jvm/functions/Function1;)V"
+                                    }
+                                }
+                            }
+                        }.singleOrNull()
+
+                        val imagePathListFieldName = onLoadMethodData?.className
+                            ?.toClass(hostAppClassLoader)
+                            ?.resolve()
+                            ?.firstFieldOrNull {
+                                genericType = List::class.parameterizedBy(
+                                    List::class.parameterizedBy(
+                                        String::class.toTypeMatcher()
+                                    )
+                                )
+                            }?.self?.name
+
+                        if (onLoadMethodData == null || imagePathListFieldName == null) {
+                            YLog.error(
+                                "$TAG: unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods or fields"
+                            )
+                            return@multiImageToMp4Composer
+                        }
+
+                        class_ = class_ {
+                            name = onLoadMethodData.className
+                        }
+                        onLoad = method {
+                            name = onLoadMethodData.methodName
+                            parameters = MethodKt.parameters {
+                                values.clear()
+                                values.addAll(onLoadMethodData.paramTypeNames)
+                            }
+                        }
+                        imagePathList = field {
+                            name = imagePathListFieldName
+                        }
+                    }.onFailure {
+                        YLog.error("$TAG: unable to populate config", it)
                     }
                 }
 
@@ -1465,7 +1960,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                             }
                         } ?: run {
                             YLog.error(
-                                "$TAG: Unable to populate ${this::class.simpleName} config, possibly due to unfound obfuscated methods"
+                                "$TAG: unable to populate ${this::class.simpleName} config, possibly due to unfound obfuscated methods"
                             )
                             return@video
                         }
@@ -1480,8 +1975,17 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                                 values.addAll(getPlayAddrMethodData.paramTypeNames)
                             }
                         }
+                        hasSuffixWaterMark = field {
+                            name = "hasSuffixWaterMark"
+                        }
+                        hasWaterMark = field {
+                            name = "hasWaterMark"
+                        }
+                        downloadAddr = field {
+                            name = "downloadAddr"
+                        }
                     }.onFailure {
-                        YLog.error("$TAG: Unable to populate config", it)
+                        YLog.error("$TAG: unable to populate config", it)
                     }
                 }
 
@@ -1528,12 +2032,12 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                             }
                         } ?: run {
                             YLog.error(
-                                "$TAG: Unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
+                                "$TAG: unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
                             )
                             return@feedResponseHandler
                         }
                     }.onFailure {
-                        YLog.error("$TAG: Unable to populate config", it)
+                        YLog.error("$TAG: unable to populate config", it)
                     }
                 }
 
@@ -1553,7 +2057,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                             }
                         }.singleOrNull() ?: run {
                             YLog.error(
-                                "$TAG: Unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
+                                "$TAG: unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
                             )
                             return@commentLongPressWhiteListProvider
                         }
@@ -1569,7 +2073,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                             }
                         }
                     }.onFailure {
-                        YLog.error("$TAG: Unable to populate config", it)
+                        YLog.error("$TAG: unable to populate config", it)
                     }
                 }
 
@@ -1602,7 +2106,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                             }
                         }.singleOrNull() ?: run {
                             YLog.error(
-                                "$TAG: Unable to populate ${this::class.simpleName} config, possibly due to unfound obfuscated methods"
+                                "$TAG: unable to populate ${this::class.simpleName} config, possibly due to unfound obfuscated methods"
                             )
                             return@miscDownloadAddrUtil
                         }
@@ -1618,7 +2122,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                             }
                         }
                     }.onFailure {
-                        YLog.error("$TAG: Unable to populate config", it)
+                        YLog.error("$TAG: unable to populate config", it)
                     }
                 }
 
@@ -1642,7 +2146,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
 
                         if (startDownloadMethod == null || awemeField == null) {
                             YLog.error(
-                                "$TAG: Unable to populate ${this::class.simpleName} config, possibly due to unfound obfuscated methods or fields"
+                                "$TAG: unable to populate ${this::class.simpleName} config, possibly due to unfound obfuscated methods or fields"
                             )
                             return@downloadAction
                         }
@@ -1663,7 +2167,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                             name = awemeField.name
                         }
                     }.onFailure {
-                        YLog.error("$TAG: Unable to populate config", it)
+                        YLog.error("$TAG: unable to populate config", it)
                     }
                 }
 
@@ -1680,6 +2184,9 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                     downloadUrlList = field {
                         name = "downloadUrlList"
                     }
+                    video = field {
+                        name = "video"
+                    }
                 }
 
                 abTestServiceImpl = aBTestServiceImpl {
@@ -1689,46 +2196,227 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                     enableSaveImageToVideoLocalWaterMask = method {
                         name = "enableSaveImageToVideoLocalWaterMask"
                     }
-                }
-
-                lppDownloadModule = lppDownloadModule {
-                    runCatching {
-                        val lppDownloadModuleClsName =
-                            "com.ss.android.ugc.aweme.feed.long_press_panel.modules.business.homepage.LppDownloadModule"
-                        val getVisibilityMethod = lppDownloadModuleClsName
-                            .toClass(hostAppClassLoader)
-                            .resolve()
-                            .firstMethodOrNull {
-                                modifiers(Modifiers.PUBLIC, Modifiers.FINAL)
-                                parameters(
-                                    "com.ss.android.ugc.aweme.feed.long_press_panel.model.LongPressPanelParams"
-                                )
-                                returnType = Int::class.java
-                            }?.self
-
-                        if (getVisibilityMethod == null) {
-                            YLog.error(
-                                "$TAG: Unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
-                            )
-                            return@lppDownloadModule
-                        }
-
-                        class_ = class_ {
-                            name = lppDownloadModuleClsName
-                        }
-                        getVisibility = method {
-                            name = getVisibilityMethod.name
-                            parameters = MethodKt.parameters {
-                                values.clear()
-                                getVisibilityMethod.parameterTypes.forEach { paramType ->
-                                    values.add(paramType.name)
-                                }
-                            }
-                        }
-                    }.onFailure {
-                        YLog.error("$TAG: Unable to populate config", it)
+                    enableVeAddLiveVideoWaterMark = method {
+                        name = "enableVEAddLiveVideoWaterMark"
                     }
                 }
+
+                absPermissionChecker =
+                    absPermissionChecker {
+                        runCatching {
+                            val clsName =
+                                "com.ss.android.ugc.aweme.permission.AbsPermissionChecker"
+                            val getActionCheckResultData = bridge.findMethod {
+                                matcher {
+                                    declaredClass = clsName
+                                    modifiers = Modifier.PUBLIC or Modifier.FINAL
+                                    usingStrings {
+                                        add("getActionCheckResult")
+                                    }
+                                }
+                            }.singleOrNull() ?: run {
+                                YLog.error(
+                                    "$TAG: unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
+                                )
+                                return@absPermissionChecker
+                            }
+
+                            class_ = class_ {
+                                name = clsName
+                            }
+                            getActionCheckResult = method {
+                                name = getActionCheckResultData.methodName
+                                parameters = MethodKt.parameters {
+                                    values.clear()
+                                    values.addAll(getActionCheckResultData.paramTypeNames)
+                                }
+                            }
+
+                            this@hookInfo.actionCheckResult = actionCheckResult {
+                                runCatching {
+                                    val actionCheckResultClsName = getActionCheckResultData.returnType!!.name
+                                    val actionCheckResultActionStatusFieldName =
+                                        actionCheckResultClsName.toClass(hostAppClassLoader).resolve().firstFieldOrNull {
+                                            type = "com.ss.android.ugc.aweme.privacy.model.ActionStatus"
+                                        }?.self?.name ?: run {
+                                            YLog.error(
+                                                "$TAG: unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
+                                            )
+                                            return@actionCheckResult
+                                        }
+
+                                    class_ = class_ {
+                                        name = actionCheckResultClsName
+                                    }
+                                    actionStatus = field {
+                                        name = actionCheckResultActionStatusFieldName
+                                    }
+                                }.onFailure {
+                                    YLog.error("$TAG: unable to populate config", it)
+                                }
+                            }
+                        }.onFailure {
+                            YLog.error("$TAG: unable to populate config", it)
+                        }
+                    }
+
+                actionStatus =
+                    actionStatus {
+                        class_ = class_ {
+                            name = "com.ss.android.ugc.aweme.privacy.model.ActionStatus"
+                        }
+                        valueOf = method {
+                            name = "valueOf"
+                        }
+                        grayed = field {
+                            name = "GRAYED"
+                        }
+                        hidden = field {
+                            name = "HIDDEN"
+                        }
+                        normal = field {
+                            name = "NORMAL"
+                        }
+                    }
+
+                galleryShareHelper =
+                    galleryShareHelper {
+                        runCatching {
+                            val startDownloadData = bridge.findMethod {
+                                matcher {
+                                    modifiers = Modifier.PUBLIC or Modifier.FINAL
+                                    returnType = "void"
+                                    params {
+                                        add("com.ss.android.ugc.aweme.feed.model.Aweme")
+                                        add("java.lang.String")
+                                    }
+                                    invokeMethods {
+                                        add {
+                                            descriptor =
+                                                "Lcom/ss/android/ugc/aweme/feed/model/Aweme;->getVideo()Lcom/ss/android/ugc/aweme/feed/model/Video;"
+                                        }
+                                        add {
+                                            descriptor =
+                                                "Lcom/ss/android/common/util/NetworkUtils;->isNetworkAvailable(Landroid/content/Context;)Z"
+                                        }
+                                        add {
+                                            descriptor = "Lcom/ss/android/ugc/aweme/feed/model/Aweme;->getDownloadStatus()I"
+                                        }
+                                        add {
+                                            descriptor = "Lcom/ss/android/ugc/aweme/feed/model/Aweme;->getAid()Ljava/lang/String;"
+                                        }
+                                    }
+                                }
+                            }.singleOrNull() ?: run {
+                                YLog.error(
+                                    "$TAG: unable to populate ${this::class.java.enclosingClass.simpleName} config, possibly due to unfound obfuscated methods"
+                                )
+                                return@galleryShareHelper
+                            }
+
+                            class_ = class_ {
+                                name = startDownloadData.className
+                            }
+                            startDownload = method {
+                                name = startDownloadData.methodName
+                                parameters = MethodKt.parameters {
+                                    values.clear()
+                                    values.addAll(startDownloadData.paramTypeNames)
+                                }
+                            }
+                        }.onFailure {
+                            YLog.error("$TAG: unable to populate config", it)
+                        }
+                    }
+
+                awemeStatus =
+                    awemeStatus {
+                        class_ = class_ {
+                            name = "com.ss.android.ugc.aweme.feed.model.AwemeStatus"
+                        }
+                        downloadStatus = field {
+                            name = "downloadStatus"
+                        }
+                    }
+
+                sharePrivacyVideoApi =
+                    sharePrivacyVideoApi {
+                        runCatching {
+                            val getDownloadStatusMethodName =
+                                "com.ss.android.ugc.aweme.feed.share.video.SharePrivacyVideoApi"
+                                    .toClass(hostAppClassLoader)
+                                    .resolve()
+                                    .firstMethodOrNull {
+                                        modifiers(Modifiers.PUBLIC, Modifiers.STATIC, Modifiers.FINAL)
+                                        returnType = "io.reactivex.Observable"
+                                    }?.self?.name
+                            if (getDownloadStatusMethodName == null) {
+                                YLog.error(
+                                    "$TAG: unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
+                                )
+                                return@sharePrivacyVideoApi
+                            }
+
+                            class_ =
+                                class_ {
+                                    name = "com.ss.android.ugc.aweme.feed.share.video.SharePrivacyVideoApi"
+                                }
+                            privacyVideoResponse =
+                                sharePrivacyVideoResponse {
+                                    class_ =
+                                        class_ {
+                                            name = $$"com.ss.android.ugc.aweme.feed.share.video.SharePrivacyVideoApi$PrivacyVideoResponse"
+                                        }
+                                    msg =
+                                        field {
+                                            name = "msg"
+                                        }
+                                    status =
+                                        field {
+                                            name = "status"
+                                        }
+                                }
+                            getDownloadStatus =
+                                method {
+                                    name = getDownloadStatusMethodName
+                                }
+                        }.onFailure {
+                            YLog.error("$TAG: unable to populate config", it)
+                        }
+                    }
+
+                rxObservable = rxObservable {
+                    class_ = class_ {
+                        name = "io.reactivex.Observable"
+                    }
+                    just = method {
+                        name = "just"
+                        parameters = MethodKt.parameters {
+                            values.add("java.lang.Object")
+                        }
+                    }
+                }
+
+                mainActivity =
+                    mainActivity {
+                        class_ =
+                            class_ {
+                                name = "com.ss.android.ugc.aweme.main.MainActivity"
+                            }
+                        onResume =
+                            method {
+                                name = "onResume"
+                            }
+                        onNewIntent =
+                            method {
+                                name = "onNewIntent"
+                                parameters =
+                                    MethodKt.parameters {
+                                        values.clear()
+                                        values.add("android.content.Intent")
+                                    }
+                            }
+                    }
             }
         }
     }

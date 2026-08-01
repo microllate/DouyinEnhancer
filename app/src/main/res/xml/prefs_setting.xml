@@ -31,6 +31,12 @@
 
         <SwitchPreference
             android:defaultValue="false"
+            android:key="feed_download_bypass"
+            android:summary="@string/pref_feed_download_bypass_summary"
+            android:title="@string/pref_feed_download_bypass_title" />
+
+        <SwitchPreference
+            android:defaultValue="false"
             android:key="feed_multi_image_remove_watermark"
             android:summary="@string/pref_feed_multi_image_remove_watermark_summary"
             android:title="@string/pref_feed_multi_image_remove_watermark_title" />
@@ -65,6 +71,16 @@
     </PreferenceCategory>
 
     <PreferenceCategory
+        android:key="pref_category_module"
+        android:title="@string/pref_category_module">
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="disable_verbose_logs"
+            android:title="@string/pref_module_disable_verbose_logs_title"
+            android:summary="@string/pref_module_disable_verbose_logs_summary"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory
         android:key="pref_category_about"
         android:title="@string/pref_category_about">
 
@@ -80,6 +96,15 @@
             <intent
                 android:action="android.intent.action.VIEW"
                 android:data="@string/author_url" />
+        </Preference>
+
+        <Preference
+            android:key="update"
+            android:title="@string/pref_about_up_to_date_title"
+            android:summary="@string/pref_about_up_to_date_summary">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="@string/latest_release_page_url" />
         </Preference>
 
         <Preference

@@ -4,6 +4,7 @@ import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.log.YLog
 import io.github.twyora.douyinenhancer.config.FastKVConfigManager
 import io.github.twyora.douyinenhancer.config.key.MiscKey
+import io.github.twyora.douyinenhancer.config.key.ModuleKey
 import io.github.twyora.douyinenhancer.config.key.RecommendedFeedFilterKey
 import io.github.twyora.douyinenhancer.hook.DouyinPackage
 import io.github.twyora.douyinenhancer.hook.HookOnMainProcess
@@ -14,6 +15,12 @@ import io.github.twyora.douyinenhancer.utils.resolveMethod
 @HookOnMainProcess
 object RecommendedFeedHooker : YukiBaseHooker() {
     private val TAG = this::class.simpleName
+
+    private val packageInstance
+        get() = DouyinPackage.instance
+
+    private val verbose
+        get() = !FastKVConfigManager.module.getBoolean(ModuleKey.DISABLE_VERBOSE_LOGS, false)
 
     private val hiddenFeaturesEnabled
         get() = FastKVConfigManager.settings.getBoolean(MiscKey.ENABLE_HIDDEN_FEATURES, false)
@@ -101,10 +108,11 @@ object RecommendedFeedHooker : YukiBaseHooker() {
 
     override fun onHook() {
         if (!FastKVConfigManager.settings.getBoolean(RecommendedFeedFilterKey.MAIN_SWITCH, false)) {
+            if (verbose) {
+                YLog.debug("$TAG: recommended feed filter master switch disabled, skip feed filter hook")
+            }
             return
         }
-
-        val packageInstance = DouyinPackage.instance
 
         packageInstance.feedResponseHandler.selfClass?.resolveMethod(
             packageInstance.feedResponseHandler.processAwemeList()
@@ -117,12 +125,16 @@ object RecommendedFeedHooker : YukiBaseHooker() {
                     val awemeObj = iter.next() ?: continue
 
                     if (blockAdEnabled && awemeObj.invokeMethod<Boolean?>(packageInstance.aweme.getAd()) == true) {
-                        YLog.debug("$TAG: filtered by ad")
+                        if (verbose) {
+                            YLog.debug("$TAG: filtered by ad")
+                        }
                         iter.remove()
                         continue
                     } else if (blockEcomEnabled && awemeObj.invokeMethod<Boolean?>(packageInstance.aweme.isEcomAweme()) == true) {
                         // NOTE: this filter logic has not been rigorously verified
-                        YLog.debug("$TAG: filtered by ecom aweme")
+                        if (verbose) {
+                            YLog.debug("$TAG: filtered by ecom aweme")
+                        }
                         iter.remove()
                         continue
                     } else if (blockGrouponLargeCardEnabled && awemeObj.getField<Any?>(
@@ -130,19 +142,25 @@ object RecommendedFeedHooker : YukiBaseHooker() {
                         ) != null
                     ) {
                         // NOTE: this filter logic has not been rigorously verified
-                        YLog.debug("$TAG: filtered by groupon large card")
+                        if (verbose) {
+                            YLog.debug("$TAG: filtered by groupon large card")
+                        }
                         iter.remove()
                         continue
                     } else if (blockLiveEnabled && awemeObj.invokeMethod<Boolean?>(packageInstance.aweme.isLive()) == true) {
                         // NOTE: this filter logic has not been rigorously verified
-                        YLog.debug("$TAG: filtered by live")
+                        if (verbose) {
+                            YLog.debug("$TAG: filtered by live")
+                        }
                         iter.remove()
                         continue
                     } else if (blockMultiImageEnabled &&
                         awemeObj.invokeMethod<Boolean?>(packageInstance.aweme.isMultiImage()) == true
                     ) {
                         // NOTE: this filter logic has not been rigorously verified
-                        YLog.debug("$TAG: filtered by multi image")
+                        if (verbose) {
+                            YLog.debug("$TAG: filtered by multi image")
+                        }
                         iter.remove()
                         continue
                     } else if (run {
@@ -164,7 +182,9 @@ object RecommendedFeedHooker : YukiBaseHooker() {
                             return@run duration != 0 && (duration !in hideShortDurationLimit..hideLongDurationLimit)
                         }
                     ) {
-                        YLog.debug("$TAG: filtered by duration")
+                        if (verbose) {
+                            YLog.debug("$TAG: filtered by duration")
+                        }
                         iter.remove()
                         continue
                     } else if (shouldFilterByInteractionStats(awemeObj)) {
@@ -178,20 +198,18 @@ object RecommendedFeedHooker : YukiBaseHooker() {
             }
         }?.result {
             onConductFailure { param, throwable ->
-                YLog.error("$TAG: Feed hook runtime error", throwable)
+                YLog.error("$TAG: feed hook runtime error", throwable)
             }
             onHookingFailure { throwable ->
-                YLog.error("$TAG: Failed to hook feed method", throwable)
+                YLog.error("$TAG: failed to hook feed method", throwable)
             }
             onHooked {
-                YLog.info("$TAG: Feed hook installed")
+                YLog.info("$TAG: feed hook installed")
             }
         }
     }
 
     private fun shouldFilterByInteractionStats(aweme: Any): Boolean {
-        val packageInstance = DouyinPackage.instance
-
         val statsMinLEMax = hideCollectCountMin <= hideCollectCountMax ||
             hideCommentCountMin <= hideCommentCountMax ||
             hideDiggCountMin <= hideDiggCountMax ||
@@ -206,7 +224,9 @@ object RecommendedFeedHooker : YukiBaseHooker() {
         if (hideCollectCountMin <= hideCollectCountMax) {
             val collectCount = statsObj.getField<Long?>(packageInstance.awemeStatistics.collectCount())
             if (collectCount != null && (collectCount !in hideCollectCountMin..hideCollectCountMax)) {
-                YLog.debug("$TAG: filtered by collect count: $collectCount")
+                if (verbose) {
+                    YLog.debug("$TAG: filtered by collect count: $collectCount")
+                }
                 return true
             }
         }
@@ -214,7 +234,9 @@ object RecommendedFeedHooker : YukiBaseHooker() {
         if (hideCommentCountMin <= hideCommentCountMax) {
             val commentCount = statsObj.getField<Long?>(packageInstance.awemeStatistics.commentCount())
             if (commentCount != null && (commentCount !in hideCommentCountMin..hideCommentCountMax)) {
-                YLog.debug("$TAG: filtered by comment count: $commentCount")
+                if (verbose) {
+                    YLog.debug("$TAG: filtered by comment count: $commentCount")
+                }
                 return true
             }
         }
@@ -222,7 +244,9 @@ object RecommendedFeedHooker : YukiBaseHooker() {
         if (hideDiggCountMin <= hideDiggCountMax) {
             val diggCount = statsObj.getField<Long?>(packageInstance.awemeStatistics.diggCount())
             if (diggCount != null && (diggCount !in hideDiggCountMin..hideDiggCountMax)) {
-                YLog.debug("$TAG: filtered by digg count: $diggCount")
+                if (verbose) {
+                    YLog.debug("$TAG: filtered by digg count: $diggCount")
+                }
                 return true
             }
         }
@@ -230,7 +254,9 @@ object RecommendedFeedHooker : YukiBaseHooker() {
         if (hideShareCountMin <= hideShareCountMax) {
             val shareCount = statsObj.getField<Long?>(packageInstance.awemeStatistics.shareCount())
             if (shareCount != null && (shareCount !in hideShareCountMin..hideShareCountMax)) {
-                YLog.debug("$TAG: filtered by share count: $shareCount")
+                if (verbose) {
+                    YLog.debug("$TAG: filtered by share count: $shareCount")
+                }
                 return true
             }
         }
@@ -239,8 +265,6 @@ object RecommendedFeedHooker : YukiBaseHooker() {
     }
 
     private fun shouldFilterByKeyword(aweme: Any): Boolean {
-        val packageInstance = DouyinPackage.instance
-
         val titleRegexes = kwdFilterTitleRegexes
         if (!titleRegexes.isNullOrEmpty()) {
             val title = aweme.getField<String?>(
@@ -250,7 +274,9 @@ object RecommendedFeedHooker : YukiBaseHooker() {
                     title.contains(it)
                 }
             ) {
-                YLog.debug("$TAG: filtered by title: $title")
+                if (verbose) {
+                    YLog.debug("$TAG: filtered by title: $title")
+                }
                 return true
             }
         }
@@ -261,7 +287,9 @@ object RecommendedFeedHooker : YukiBaseHooker() {
             if (authorObj != null) {
                 val uid = authorObj.getField<String?>(packageInstance.user.uid())
                 if (uid != null && uid in uidFilters) {
-                    YLog.debug("$TAG: filtered by author uid: $uid")
+                    if (verbose) {
+                        YLog.debug("$TAG: filtered by author uid: $uid")
+                    }
                     return true
                 }
             }
@@ -273,7 +301,9 @@ object RecommendedFeedHooker : YukiBaseHooker() {
             if (authorObj != null) {
                 val nickname = authorObj.getField<String?>(packageInstance.user.nickname())
                 if (!nickname.isNullOrBlank() && nickname in nicknameFilters) {
-                    YLog.debug("$TAG: filtered by author nickname: $nickname")
+                    if (verbose) {
+                        YLog.debug("$TAG: filtered by author nickname: $nickname")
+                    }
                     return true
                 }
             }
@@ -286,7 +316,9 @@ object RecommendedFeedHooker : YukiBaseHooker() {
                     desc.contains(it)
                 }
             ) {
-                YLog.debug("$TAG: filtered by desc: $desc")
+                if (verbose) {
+                    YLog.debug("$TAG: filtered by desc: $desc")
+                }
                 return true
             }
         }

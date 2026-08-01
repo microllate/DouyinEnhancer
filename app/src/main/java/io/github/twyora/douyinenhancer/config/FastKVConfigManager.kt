@@ -6,8 +6,10 @@ import io.fastkv.FastKV
 
 object FastKVConfigManager {
     lateinit var settings: SharedPreferences
+    lateinit var module: SharedPreferences
 
     fun init(context: Context) {
         settings = FastKV.adapt(context, "douyinenhancer_prefs")
+        module = FastKV.adapt(context, "douyinenhancer_module")
     }
 }
