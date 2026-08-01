@@ -2185,64 +2185,64 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                     }
                 }
 
-                absPermissionChecker =
-                    absPermissionChecker {
-                        runCatching {
-                            val clsName =
-                                "com.ss.android.ugc.aweme.permission.AbsPermissionChecker"
-                            val getActionCheckResultData = bridge.findMethod {
-                                matcher {
-                                    declaredClass = clsName
-                                    modifiers = Modifier.PUBLIC or Modifier.FINAL
-                                    usingStrings {
-                                        add("getActionCheckResult")
-                                    }
-                                }
-                            }.singleOrNull() ?: run {
-                                YLog.error(
-                                    "$TAG: unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
-                                )
-                                return@absPermissionChecker
-                            }
-
-                            class_ = class_ {
-                                name = clsName
-                            }
-                            getActionCheckResult = method {
-                                name = getActionCheckResultData.methodName
-                                parameters = MethodKt.parameters {
-                                    values.clear()
-                                    values.addAll(getActionCheckResultData.paramTypeNames)
+                absPermissionChecker = absPermissionChecker {
+                    runCatching {
+                        val clsName =
+                            "com.ss.android.ugc.aweme.permission.AbsPermissionChecker"
+                        val getActionCheckResultData = bridge.findMethod {
+                            matcher {
+                                declaredClass = clsName
+                                modifiers = Modifier.PUBLIC or Modifier.FINAL
+                                addUsingField {
+                                    descriptor =
+                                        "Lcom/ss/android/ugc/aweme/privacy/model/ActionStatus;->NORMAL:Lcom/ss/android/ugc/aweme/privacy/model/ActionStatus;"
                                 }
                             }
-
-                            this@hookInfo.actionCheckResult = actionCheckResult {
-                                runCatching {
-                                    val actionCheckResultClsName = getActionCheckResultData.returnType!!.name
-                                    val actionCheckResultActionStatusFieldName =
-                                        actionCheckResultClsName.toClass(hostAppClassLoader).resolve().firstFieldOrNull {
-                                            type = "com.ss.android.ugc.aweme.privacy.model.ActionStatus"
-                                        }?.self?.name ?: run {
-                                            YLog.error(
-                                                "$TAG: unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
-                                            )
-                                            return@actionCheckResult
-                                        }
-
-                                    class_ = class_ {
-                                        name = actionCheckResultClsName
-                                    }
-                                    actionStatus = field {
-                                        name = actionCheckResultActionStatusFieldName
-                                    }
-                                }.onFailure {
-                                    YLog.error("$TAG: unable to populate config", it)
-                                }
-                            }
-                        }.onFailure {
-                            YLog.error("$TAG: unable to populate config", it)
+                        }.singleOrNull() ?: run {
+                            YLog.error(
+                                "$TAG: unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
+                            )
+                            return@absPermissionChecker
                         }
+
+                        class_ = class_ {
+                            name = clsName
+                        }
+                        getActionCheckResult = method {
+                            name = getActionCheckResultData.methodName
+                            parameters = MethodKt.parameters {
+                                values.clear()
+                                values.addAll(getActionCheckResultData.paramTypeNames)
+                            }
+                        }
+
+                        this@hookInfo.actionCheckResult = actionCheckResult {
+                            runCatching {
+                                val actionCheckResultClsName = getActionCheckResultData.returnType!!.name
+                                val actionCheckResultActionStatusFieldName =
+                                    actionCheckResultClsName.toClass(hostAppClassLoader).resolve().firstFieldOrNull {
+                                        type = "com.ss.android.ugc.aweme.privacy.model.ActionStatus"
+                                    }?.self?.name ?: run {
+                                        YLog.error(
+                                            "$TAG: unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
+                                        )
+                                        return@actionCheckResult
+                                    }
+
+                                class_ = class_ {
+                                    name = actionCheckResultClsName
+                                }
+                                actionStatus = field {
+                                    name = actionCheckResultActionStatusFieldName
+                                }
+                            }.onFailure {
+                                YLog.error("$TAG: unable to populate config", it)
+                            }
+                        }
+                    }.onFailure {
+                        YLog.error("$TAG: unable to populate config", it)
                     }
+                }
 
                 actionStatus =
                     actionStatus {
