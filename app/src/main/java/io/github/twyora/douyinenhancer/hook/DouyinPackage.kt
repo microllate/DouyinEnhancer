@@ -116,6 +116,8 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
     val awemeStatus = AwemeStatusModule()
     val sharePrivacyVideoApi = SharePrivacyVideoApiModule()
     val rxObservable = RxObservableModule()
+    val feedItemList = FeedItemListModule()
+    val listenAwemeFilter = ListenAwemeFilterModule()
 
     inner class CommentImageStructModule {
         val selfClass by weak {
@@ -498,6 +500,30 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
         fun just() = Method(
             hookInfo.rxObservable.just.nameOrNull,
             hookInfo.rxObservable.just.parameters.valuesListOrNull
+        )
+    }
+
+    inner class FeedItemListModule {
+        val selfClass by weak {
+            hookInfo.feedItemList.class_.nameOrNull?.toClass(classLoader)
+        }
+
+        fun statusCode() = Field(hookInfo.feedItemList.statusCode.nameOrNull)
+
+        fun getStatusCodeP() = Method(
+            hookInfo.feedItemList.getStatusCodeP.nameOrNull,
+            hookInfo.feedItemList.getStatusCodeP.parameters.valuesListOrNull
+        )
+    }
+
+    inner class ListenAwemeFilterModule {
+        val selfClass by weak {
+            hookInfo.listenAwemeFilter.class_.nameOrNull?.toClass(classLoader)
+        }
+
+        fun accept() = Method(
+            hookInfo.listenAwemeFilter.accept.nameOrNull,
+            hookInfo.listenAwemeFilter.accept.parameters.valuesListOrNull
         )
     }
 
@@ -2386,6 +2412,60 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                         parameters = MethodKt.parameters {
                             values.add("java.lang.Object")
                         }
+                    }
+                }
+
+                feedItemList = feedItemList {
+                    class_ = class_ {
+                        name = "com.ss.android.ugc.aweme.feed.model.FeedItemList"
+                    }
+                    statusCode = field {
+                        name = "status_code"
+                    }
+                    getStatusCodeP = method {
+                        name = "getStatusCodeP"
+                    }
+                }
+
+                listenAwemeFilter = listenAwemeFilter {
+                    runCatching {
+                        val acceptMethodData = bridge.findMethod {
+                            matcher {
+                                modifiers = Modifier.PUBLIC or Modifier.FINAL
+                                returnType = "boolean"
+                                params {
+                                    add("com.ss.android.ugc.aweme.feed.model.Aweme")
+                                    add("java.lang.String")
+                                }
+                                addUsingString("listen_video_status")
+                                invokeMethods {
+                                    add {
+                                        declaredClass("com.ss.android.ugc.aweme.back_ground_play.settings.BgPlayWithHaveCopyrightConfig")
+                                        returnType = "boolean"
+                                    }
+                                }
+                            }
+                        }.singleOrNull()
+
+                        if (acceptMethodData == null) {
+                            YLog.error(
+                                "$TAG: unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
+                            )
+                            return@listenAwemeFilter
+                        }
+
+                        class_ = class_ {
+                            name = acceptMethodData.declaredClassName
+                        }
+                        accept = method {
+                            name = acceptMethodData.methodName
+                            parameters = MethodKt.parameters {
+                                values.clear()
+                                values.addAll(acceptMethodData.paramTypeNames)
+                            }
+                        }
+                    }.onFailure {
+                        YLog.error("$TAG: unable to populate config", it)
                     }
                 }
 
