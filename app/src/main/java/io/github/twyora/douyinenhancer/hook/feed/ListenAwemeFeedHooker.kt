@@ -4,6 +4,7 @@ import com.highcapable.yukihookapi.hook.core.YukiMemberHookCreator
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.log.YLog
 import io.github.twyora.douyinenhancer.config.FastKVConfigManager
+import io.github.twyora.douyinenhancer.config.key.FeedKey
 import io.github.twyora.douyinenhancer.config.key.ModuleKey
 import io.github.twyora.douyinenhancer.hook.DouyinPackage
 import io.github.twyora.douyinenhancer.hook.HookOnMainProcess
@@ -22,6 +23,12 @@ object ListenAwemeFeedHooker : YukiBaseHooker() {
         get() = !FastKVConfigManager.module.getBoolean(ModuleKey.DISABLE_VERBOSE_LOGS, false)
 
     override fun onHook() {
+        if (!FastKVConfigManager.settings.getBoolean(FeedKey.BYPASS_LISTEN_AWEME_RESTRICTION, false)) {
+            if (verbose) {
+                YLog.debug("$TAG: bypass listen aweme restriction disabled, skip listen aweme hooks")
+            }
+            return
+        }
         installBypassListenAwemeFilterHook()
         installForceListenAwemeFeedItemListStatusOkHook()
     }
