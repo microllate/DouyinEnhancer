@@ -286,17 +286,6 @@ message RxObservable {
   optional Method just = 2;
 }
 
-message FeedItemList {
-  optional Class class = 1;
-  optional Field status_code = 2;
-  optional Method get_status_code_p = 3;
-}
-
-message ListenAwemeFilter {
-  optional Class class = 1;
-  optional Method accept = 2;
-}
-
 message MainActivity {
   optional Class class = 1;
   optional Method on_resume = 2;
@@ -350,8 +339,6 @@ message HookInfo {
   optional AwemeStatus aweme_status = 47;
   optional SharePrivacyVideoApi share_privacy_video_api = 48;
   optional RxObservable rx_observable = 49;
-  optional FeedItemList feed_item_list = 50;
-  optional ListenAwemeFilter listen_aweme_filter = 51;
 
   reserved 13, 18, 32;
 }
