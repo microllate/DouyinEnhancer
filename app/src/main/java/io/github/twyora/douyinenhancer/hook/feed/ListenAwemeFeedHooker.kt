@@ -33,8 +33,8 @@ object ListenAwemeFeedHooker : YukiBaseHooker() {
         installForceListenAwemeFeedItemListStatusOkHook()
     }
 
-    private fun installBypassListenAwemeFilterHook(): YukiMemberHookCreator.MemberHookCreator.Result? {
-        return packageInstance.listenAwemeFilter.selfClass?.resolveMethod(
+    private fun installBypassListenAwemeFilterHook(): YukiMemberHookCreator.MemberHookCreator.Result? =
+        packageInstance.listenAwemeFilter.selfClass?.resolveMethod(
             packageInstance.listenAwemeFilter.accept()
         )?.hook {
             before {
@@ -55,10 +55,9 @@ object ListenAwemeFeedHooker : YukiBaseHooker() {
                 YLog.error("$TAG: hook failed, listen aweme filter cannot be bypassed, some aweme may be filtered out")
             }
         }
-    }
 
-    private fun installForceListenAwemeFeedItemListStatusOkHook(): YukiMemberHookCreator.MemberHookCreator.Result? {
-        return packageInstance.feedItemList.selfClass?.resolveMethod(
+    private fun installForceListenAwemeFeedItemListStatusOkHook(): YukiMemberHookCreator.MemberHookCreator.Result? =
+        packageInstance.feedItemList.selfClass?.resolveMethod(
             packageInstance.feedItemList.getStatusCodeP()
         )?.hook {
             before {
@@ -84,5 +83,4 @@ object ListenAwemeFeedHooker : YukiBaseHooker() {
                 YLog.error("$TAG: hook failed, feed item list status cannot be fixed, listen aweme feed may fail to load")
             }
         }
-    }
 }
