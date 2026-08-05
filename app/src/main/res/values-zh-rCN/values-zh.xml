@@ -22,7 +22,7 @@
 
     <string name="pref_category_feed">内容</string>
     <string name="recommended_feed_filter_dialog_title">推荐流过滤器</string>
-    <string name="pref_feed_bypass_listen_aweme_restriction_title">绕过听抖音限制</string>
+    <string name="pref_feed_bypass_listen_aweme_restriction_title">解除听抖音限制</string>
     <string name="pref_feed_bypass_listen_aweme_restriction_summary">进入听抖音模式时不再进行音频版权校验</string>
     <string name="recommended_feed_filter_main_switch_title">总开关</string>
     <string name="recommended_feed_filter_main_switch_summary">开启后可以使用推荐流过滤功能</string>
