@@ -10,7 +10,6 @@ import io.github.twyora.douyinenhancer.hook.DouyinPackage
 import io.github.twyora.douyinenhancer.hook.HookOnMainProcess
 import io.github.twyora.douyinenhancer.utils.getField
 import io.github.twyora.douyinenhancer.utils.resolveMethod
-import io.github.twyora.douyinenhancer.utils.setField
 
 @HookOnMainProcess
 object ListenAwemeFeedHooker : YukiBaseHooker() {
@@ -30,7 +29,7 @@ object ListenAwemeFeedHooker : YukiBaseHooker() {
             return
         }
         installBypassListenAwemeFilterHook()
-        installForceListenAwemeFeedItemListStatusOkHook()
+        // installForceListenAwemeFeedItemListStatusOkHook()
     }
 
     private fun installBypassListenAwemeFilterHook(): YukiMemberHookCreator.MemberHookCreator.Result? =
@@ -56,31 +55,31 @@ object ListenAwemeFeedHooker : YukiBaseHooker() {
             }
         }
 
-    private fun installForceListenAwemeFeedItemListStatusOkHook(): YukiMemberHookCreator.MemberHookCreator.Result? =
-        packageInstance.feedItemList.selfClass?.resolveMethod(
-            packageInstance.feedItemList.getStatusCodeP()
-        )?.hook {
-            before {
-                val statusCode = instance.getField<Int>(
-                    packageInstance.feedItemList.statusCode()
-                )
-                if (statusCode == 0) {
-                    // I don't know why statusCode being 0 represents an invalid status
-                    if (verbose) {
-                        YLog.debug("$TAG: feed item list status invalid ($statusCode), marking valid to let listen aweme feed load")
-                    }
-                    instance.setField(
-                        packageInstance.feedItemList.statusCode(),
-                        1
-                    )
-                }
-            }
-        }?.result {
-            onConductFailure { _, throwable ->
-                YLog.error("$TAG: failed to fix feed item list status, listen aweme feed may fail to load", throwable)
-            }
-            onHookingFailure {
-                YLog.error("$TAG: hook failed, feed item list status cannot be fixed, listen aweme feed may fail to load")
-            }
-        }
+    // forcing statusCode to 1 blocks other feeds from loading and prevents favorites from loading
+//    private fun installForceListenAwemeFeedItemListStatusOkHook(): YukiMemberHookCreator.MemberHookCreator.Result? {
+//        // com.ss.android.ugc.aweme.feed.model.FeedItemList->getStatusCodeP()I
+//        return packageInstance.feedItemList.selfClass?.resolveMethod(
+//            packageInstance.feedItemList.getStatusCodeP()
+//        )?.hook {
+//            before {
+//                val statusCode = instance.getField<Int>(
+//                    packageInstance.feedItemList.statusCode()
+//                )
+//                if (statusCode == 0) {
+//                    // I don't know why statusCode being 0 represents an invalid status
+//                    if (verbose) {
+//                        YLog.debug("$TAG: feed item list status invalid ($statusCode), marking valid to let listen aweme feed load")
+//                    }
+//                    result = 1
+//                }
+//            }
+//        }?.result {
+//            onConductFailure { _, throwable ->
+//                YLog.error("$TAG: failed to fix feed item list status, listen aweme feed may fail to load", throwable)
+//            }
+//            onHookingFailure {
+//                YLog.error("$TAG: hook failed, feed item list status cannot be fixed, listen aweme feed may fail to load")
+//            }
+//        }
+//    }
 }

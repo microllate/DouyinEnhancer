@@ -116,7 +116,6 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
     val awemeStatus = AwemeStatusModule()
     val sharePrivacyVideoApi = SharePrivacyVideoApiModule()
     val rxObservable = RxObservableModule()
-    val feedItemList = FeedItemListModule()
     val listenAwemeFilter = ListenAwemeFilterModule()
 
     inner class CommentImageStructModule {
@@ -500,19 +499,6 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
         fun just() = Method(
             hookInfo.rxObservable.just.nameOrNull,
             hookInfo.rxObservable.just.parameters.valuesListOrNull
-        )
-    }
-
-    inner class FeedItemListModule {
-        val selfClass by weak {
-            hookInfo.feedItemList.class_.nameOrNull?.toClass(classLoader)
-        }
-
-        fun statusCode() = Field(hookInfo.feedItemList.statusCode.nameOrNull)
-
-        fun getStatusCodeP() = Method(
-            hookInfo.feedItemList.getStatusCodeP.nameOrNull,
-            hookInfo.feedItemList.getStatusCodeP.parameters.valuesListOrNull
         )
     }
 
@@ -2412,18 +2398,6 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                         parameters = MethodKt.parameters {
                             values.add("java.lang.Object")
                         }
-                    }
-                }
-
-                feedItemList = feedItemList {
-                    class_ = class_ {
-                        name = "com.ss.android.ugc.aweme.feed.model.FeedItemList"
-                    }
-                    statusCode = field {
-                        name = "status_code"
-                    }
-                    getStatusCodeP = method {
-                        name = "getStatusCodeP"
                     }
                 }
 
