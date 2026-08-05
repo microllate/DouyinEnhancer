@@ -21,6 +21,8 @@
 
     <string name="pref_category_feed">Feed</string>
     <string name="recommended_feed_filter_dialog_title">Recommended Feed Filter</string>
+    <string name="pref_feed_bypass_listen_aweme_restriction_title">Bypass Listen Aweme Restriction</string>
+    <string name="pref_feed_bypass_listen_aweme_restriction_summary">Skip the audio check when entering listen aweme mode</string>
     <string name="recommended_feed_filter_main_switch_title">Main switch</string>
     <string name="recommended_feed_filter_main_switch_summary">Turn on to use recommended feed filtering features</string>
     <string name="recommended_feed_filter_block_ad_title">✦ Block ads</string>
