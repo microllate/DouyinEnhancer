@@ -2,8 +2,6 @@
 
 ## In Progress
 
-- [ ] Remove copyright restriction of Douyin Audio Mode
-
 ## TODO
 
 - [ ] Save favorited emojis to album
@@ -22,6 +20,7 @@
 
 - [x] ~~More reliable way to inject module settings into the host app's settings page~~ Long-press
   "About Aweme" to open module settings dialog
+- [x] Remove copyright restriction of Douyin Audio Mode
 - [x] Adapt module to Douyin v38.8.0
 - [x] Add dark mode support for module settings page
 - [x] Download restricted content
