@@ -29,7 +29,6 @@ object ListenAwemeFeedHooker : YukiBaseHooker() {
             return
         }
         installBypassListenAwemeFilterHook()
-        // installForceListenAwemeFeedItemListStatusOkHook()
     }
 
     private fun installBypassListenAwemeFilterHook(): YukiMemberHookCreator.MemberHookCreator.Result? =
@@ -54,32 +53,4 @@ object ListenAwemeFeedHooker : YukiBaseHooker() {
                 YLog.error("$TAG: hook failed, listen aweme filter cannot be bypassed, some aweme may be filtered out")
             }
         }
-
-    // forcing statusCode to 1 blocks other feeds from loading and prevents favorites from loading
-//    private fun installForceListenAwemeFeedItemListStatusOkHook(): YukiMemberHookCreator.MemberHookCreator.Result? {
-//        // com.ss.android.ugc.aweme.feed.model.FeedItemList->getStatusCodeP()I
-//        return packageInstance.feedItemList.selfClass?.resolveMethod(
-//            packageInstance.feedItemList.getStatusCodeP()
-//        )?.hook {
-//            before {
-//                val statusCode = instance.getField<Int>(
-//                    packageInstance.feedItemList.statusCode()
-//                )
-//                if (statusCode == 0) {
-//                    // I don't know why statusCode being 0 represents an invalid status
-//                    if (verbose) {
-//                        YLog.debug("$TAG: feed item list status invalid ($statusCode), marking valid to let listen aweme feed load")
-//                    }
-//                    result = 1
-//                }
-//            }
-//        }?.result {
-//            onConductFailure { _, throwable ->
-//                YLog.error("$TAG: failed to fix feed item list status, listen aweme feed may fail to load", throwable)
-//            }
-//            onHookingFailure {
-//                YLog.error("$TAG: hook failed, feed item list status cannot be fixed, listen aweme feed may fail to load")
-//            }
-//        }
-//    }
 }
