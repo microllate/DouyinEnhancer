@@ -2,12 +2,13 @@
 
 ## In Progress
 
+- [ ] Disable double-tap-to-like gesture while watching the feed
+
 ## TODO
 
 - [ ] Save favorited emojis to album
 - [ ] Clear-screen playback without hiding danmaku
 - [ ] Pause video after opening the comment panel
-- [ ] Disable double-tap-to-like gesture while watching videos
 - [ ] Hide specific overlays on video during playback (e.g. like button, caption)
 - [ ] Hide the "Post" button in the center of the tab bar
 - [ ] Auto-advance to next video when feed video ends
