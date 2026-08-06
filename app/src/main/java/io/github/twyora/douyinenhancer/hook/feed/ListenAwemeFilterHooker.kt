@@ -12,7 +12,7 @@ import io.github.twyora.douyinenhancer.utils.getField
 import io.github.twyora.douyinenhancer.utils.resolveMethod
 
 @HookOnMainProcess
-object ListenAwemeFeedHooker : YukiBaseHooker() {
+object ListenAwemeFilterHooker : YukiBaseHooker() {
     private val TAG = this::class.simpleName
 
     private val packageInstance
