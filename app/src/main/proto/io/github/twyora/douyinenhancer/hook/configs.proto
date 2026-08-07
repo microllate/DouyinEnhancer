@@ -297,6 +297,11 @@ message MainActivity {
   optional Method on_new_intent = 3;
 }
 
+message BaseListFragmentPanel {
+  optional Class class = 1;
+  optional Method handle_double_click = 2;
+}
+
 message HookInfo {
   uint64 last_update_time = 1;
   uint32 module_version_code = 2;
@@ -345,6 +350,7 @@ message HookInfo {
   optional SharePrivacyVideoApi share_privacy_video_api = 48;
   optional RxObservable rx_observable = 49;
   optional ListenAwemeFilter listen_aweme_filter = 50;
+  optional BaseListFragmentPanel base_list_fragment_panel = 51;
 
   reserved 13, 18, 32;
 }
