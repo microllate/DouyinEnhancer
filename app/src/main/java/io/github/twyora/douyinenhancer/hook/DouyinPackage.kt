@@ -117,6 +117,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
     val sharePrivacyVideoApi = SharePrivacyVideoApiModule()
     val rxObservable = RxObservableModule()
     val listenAwemeFilter = ListenAwemeFilterModule()
+    val baseListFragmentPanel = BaseListFragmentPanelModule()
 
     inner class CommentImageStructModule {
         val selfClass by weak {
@@ -510,6 +511,17 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
         fun accept() = Method(
             hookInfo.listenAwemeFilter.accept.nameOrNull,
             hookInfo.listenAwemeFilter.accept.parameters.valuesListOrNull
+        )
+    }
+
+    inner class BaseListFragmentPanelModule {
+        val selfClass by weak {
+            hookInfo.baseListFragmentPanel.class_.nameOrNull?.toClass(classLoader)
+        }
+
+        fun handleDoubleClick() = Method(
+            hookInfo.baseListFragmentPanel.handleDoubleClick.nameOrNull,
+            hookInfo.baseListFragmentPanel.handleDoubleClick.parameters.valuesListOrNull
         )
     }
 
@@ -2463,6 +2475,19 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                                     }
                             }
                     }
+
+                baseListFragmentPanel = baseListFragmentPanel {
+                    class_ = class_ {
+                        name = "com.ss.android.ugc.aweme.feed.panel.BaseListFragmentPanel"
+                    }
+                    handleDoubleClick = method {
+                        name = "handleDoubleClick"
+                        parameters = MethodKt.parameters {
+                            values.clear()
+                            values.add("android.view.MotionEvent")
+                        }
+                    }
+                }
             }
         }
     }
