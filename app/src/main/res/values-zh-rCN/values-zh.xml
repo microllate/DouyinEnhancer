@@ -21,6 +21,8 @@
     <string name="pref_feed_multi_image_remove_watermark_summary">去除图片内置水印与边框水印</string>
 
     <string name="pref_category_feed">内容</string>
+    <string name="pref_feed_disable_double_tap_digg_title">禁用双击点赞</string>
+    <string name="pref_feed_disable_double_tap_digg_summary">阻止内容流中双击触发点赞操作</string>
     <string name="recommended_feed_filter_dialog_title">推荐流过滤器</string>
     <string name="pref_feed_bypass_listen_aweme_restriction_title">解除听抖音限制</string>
     <string name="pref_feed_bypass_listen_aweme_restriction_summary">进入听抖音模式时不再进行音频版权校验</string>

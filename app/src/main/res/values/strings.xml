@@ -20,6 +20,8 @@
     <string name="pref_feed_multi_image_remove_watermark_summary">Remove in-image and border watermarks</string>
 
     <string name="pref_category_feed">Feed</string>
+    <string name="pref_feed_disable_double_tap_digg_title">Disable double-tap digg</string>
+    <string name="pref_feed_disable_double_tap_digg_summary">Prevent double-tap from triggering digg in feed</string>
     <string name="recommended_feed_filter_dialog_title">Recommended Feed Filter</string>
     <string name="pref_feed_bypass_listen_aweme_restriction_title">Bypass Listen Aweme Restriction</string>
     <string name="pref_feed_bypass_listen_aweme_restriction_summary">Skip the audio check when entering listen aweme mode</string>
