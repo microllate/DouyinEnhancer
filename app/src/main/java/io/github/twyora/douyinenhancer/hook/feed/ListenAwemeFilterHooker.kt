@@ -35,7 +35,11 @@ object ListenAwemeFilterHooker : YukiBaseHooker() {
         packageInstance.listenAwemeFilter.selfClass?.resolveMethod(
             packageInstance.listenAwemeFilter.accept()
         )?.hook {
-            before {
+            after {
+                if (result == true) {
+                    return@after
+                }
+
                 if (verbose) {
                     val aweme = args[0]
                     val awemeId = aweme?.getField<String>(

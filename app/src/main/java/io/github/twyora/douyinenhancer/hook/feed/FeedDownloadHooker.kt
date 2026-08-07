@@ -71,10 +71,6 @@ object FeedDownloadHooker : YukiBaseHooker() {
                     packageInstance.actionStatus.normal().name
                 )
 
-                if (verbose && actionStatus != normalStatus) {
-                    YLog.debug("$TAG: action status: $actionStatus (target allowed: $normalStatus)")
-                }
-
                 if (actionStatus != normalStatus) {
                     YLog.info("$TAG: forcing action status from $actionStatus to $normalStatus to allow download")
                     actionCheckResult.setField(
