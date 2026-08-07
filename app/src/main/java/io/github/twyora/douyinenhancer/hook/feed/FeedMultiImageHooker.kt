@@ -120,15 +120,7 @@ object FeedMultiImageHooker : YukiBaseHooker() {
                                 playAddr
                             )
                             if (verbose) {
-                                YLog.debug(
-                                    "$TAG:play URL used as video download address: ${
-                                        playAddr.getField<List<String?>>(
-                                            packageInstance.urlModel.urlList()
-                                        )?.first {
-                                            !it.isNullOrBlank()
-                                        }
-                                    }"
-                                )
+                                YLog.debug("$TAG:play URL used as video download address")
                             }
                         }?.also {
                             video.setField(
