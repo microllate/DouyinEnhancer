@@ -50,8 +50,9 @@ class MainActivity : Activity() {
             findPreference("open_module_settings")?.onPreferenceClickListener = this
             (findPreference("hide_launcher_icon") as? SwitchPreference)?.let {
                 val aliasName = ComponentName(activity, MainActivity::class.java.name + "Alias")
-                val isHidden = activity.packageManager.getComponentEnabledSetting(aliasName) ==
-                    PackageManager.COMPONENT_ENABLED_STATE_DISABLED
+                val isHidden = activity.packageManager.getComponentEnabledSetting(
+                    aliasName
+                ) == PackageManager.COMPONENT_ENABLED_STATE_DISABLED
                 it.isChecked = isHidden
             }
             findPreference("hide_launcher_icon")?.onPreferenceChangeListener = this
@@ -163,6 +164,13 @@ class MainActivity : Activity() {
                             it
                         }
                     } ?: context.getString(R.string.pref_about_update_available_summary)
+                }
+                activity.runOnUiThread {
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.notify_update_available),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             } else {
                 findPreference("update")?.apply {

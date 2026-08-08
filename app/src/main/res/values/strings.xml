@@ -105,6 +105,7 @@
     <string name="regex_mode">Regex mode</string>
     <string name="save_success_restart_required">Saved successfully. Some configurations will take effect after restarting the app</string>
     <string name="restart_required">Some features will take effect after restarting the app</string>
+    <string name="notify_update_available">Douyin Enhancer has an update</string>
 
     <string name="pref_category_settings">Settings</string>
     <string name="pref_settings_open_module_settings_title">Open module settings</string>
