@@ -118,6 +118,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
     val rxObservable = RxObservableModule()
     val listenAwemeFilter = ListenAwemeFilterModule()
     val baseListFragmentPanel = BaseListFragmentPanelModule()
+    val videoEvent = VideoEventModule()
 
     inner class CommentImageStructModule {
         val selfClass by weak {
@@ -523,6 +524,22 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
             hookInfo.baseListFragmentPanel.handleDoubleClick.nameOrNull,
             hookInfo.baseListFragmentPanel.handleDoubleClick.parameters.valuesListOrNull
         )
+
+        fun handleVideoEvent() = Method(
+            hookInfo.baseListFragmentPanel.handleVideoEvent.nameOrNull,
+            hookInfo.baseListFragmentPanel.handleVideoEvent.parameters.valuesListOrNull
+        )
+
+        fun getCurrentAweme() = Method(
+            hookInfo.baseListFragmentPanel.getCurrentAweme.nameOrNull,
+            hookInfo.baseListFragmentPanel.getCurrentAweme.parameters.valuesListOrNull
+        )
+    }
+
+    inner class VideoEventModule {
+        val selfClass by weak {
+            hookInfo.videoEvent.class_.nameOrNull?.toClass(classLoader)
+        }
     }
 
     inner class AwemeStatisticsModule {
@@ -2477,15 +2494,121 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                     }
 
                 baseListFragmentPanel = baseListFragmentPanel {
-                    class_ = class_ {
-                        name = "com.ss.android.ugc.aweme.feed.panel.BaseListFragmentPanel"
-                    }
-                    handleDoubleClick = method {
-                        name = "handleDoubleClick"
-                        parameters = MethodKt.parameters {
-                            values.clear()
-                            values.add("android.view.MotionEvent")
+                    runCatching {
+                        val baseListFragmentPanelClassData =
+                            bridge.getClassData("com.ss.android.ugc.aweme.feed.panel.BaseListFragmentPanel")
+                        val handleDoubleClickMethodData = baseListFragmentPanelClassData?.let {
+                            bridge.findMethod {
+                                searchClasses = listOf(it)
+                                matcher {
+                                    name = "handleDoubleClick"
+                                    params {
+                                        add("android.view.MotionEvent")
+                                    }
+                                }
+                            }.singleOrNull()
                         }
+                        val handleVideoEventMethodData = baseListFragmentPanelClassData?.let {
+                            bridge.findMethod {
+                                searchClasses = listOf(it)
+                                matcher {
+                                    name = "handleVideoEvent"
+                                    paramCount = 1
+                                    returnType = "void"
+                                }
+                            }.singleOrNull()
+                        }
+                        val getCurrentAwemeMethodData = baseListFragmentPanelClassData?.let {
+                            bridge.findMethod {
+                                searchClasses = listOf(it)
+                                matcher {
+                                    name = "getCurrentAweme"
+                                    paramCount = 0
+                                }
+                            }.singleOrNull()
+                        }
+
+                        if (baseListFragmentPanelClassData == null || handleDoubleClickMethodData == null ||
+                            handleVideoEventMethodData == null ||
+                            getCurrentAwemeMethodData == null
+                        ) {
+                            YLog.error(
+                                "$TAG: unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
+                            )
+                            return@baseListFragmentPanel
+                        }
+
+                        class_ = class_ {
+                            name = baseListFragmentPanelClassData.name
+                        }
+                        handleDoubleClick = method {
+                            name = handleDoubleClickMethodData.methodName
+                            parameters = MethodKt.parameters {
+                                values.clear()
+                                values.addAll(handleDoubleClickMethodData.paramTypeNames)
+                            }
+                        }
+                        handleVideoEvent = method {
+                            name = handleVideoEventMethodData.methodName
+                            parameters = MethodKt.parameters {
+                                values.clear()
+                                values.addAll(handleVideoEventMethodData.paramTypeNames)
+                            }
+                        }
+                        getCurrentAweme = method {
+                            name = getCurrentAwemeMethodData.methodName
+                            parameters = MethodKt.parameters {
+                                values.clear()
+                                values.addAll(getCurrentAwemeMethodData.paramTypeNames)
+                            }
+                        }
+                    }.onFailure {
+                        YLog.error("$TAG: unable to populate config", it)
+                    }
+                }
+
+                videoEvent = videoEvent {
+                    runCatching {
+                        val videoEventClassData = bridge.findClass {
+                            matcher {
+                                usingStrings {
+                                    add {
+                                        value = "VideoEvent"
+                                        matchType = StringMatchType.Contains
+                                    }
+                                    add {
+                                        value = "param"
+                                        matchType = StringMatchType.Contains
+                                    }
+                                    add {
+                                        value = "videoType"
+                                        matchType = StringMatchType.Contains
+                                    }
+                                    add {
+                                        value = "isPlaying"
+                                        matchType = StringMatchType.Contains
+                                    }
+                                }
+                                methods {
+                                    add {
+                                        name = "toString"
+                                    }
+                                }
+                            }
+                        }.singleOrNull()
+
+                        if (videoEventClassData == null) {
+                            YLog.error(
+                                "$TAG: unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated class"
+                            )
+                            return@videoEvent
+                        }
+
+                        class_ = class_ {
+                            name = videoEventClassData.name
+                        }
+                    }.onFailure {
+                        YLog.error("$TAG: unable to populate config", it)
                     }
                 }
             }

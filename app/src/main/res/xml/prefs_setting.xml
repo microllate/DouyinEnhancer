@@ -42,34 +42,39 @@
             android:title="@string/pref_feed_multi_image_remove_watermark_title" />
     </PreferenceCategory>
 
-    <PreferenceCategory
-        android:title="@string/pref_category_feed">
+    <PreferenceCategory android:title="@string/pref_category_feed">
         <Preference
             android:key="recommend_feed_filter"
-            android:title="@string/recommended_feed_filter_dialog_title"/>
+            android:title="@string/recommended_feed_filter_dialog_title" />
 
         <SwitchPreference
             android:defaultValue="false"
             android:key="disable_feed_double_tap_digg"
             android:summary="@string/pref_feed_disable_double_tap_digg_summary"
             android:title="@string/pref_feed_disable_double_tap_digg_title" />
-    </PreferenceCategory>
 
-    <SwitchPreference
-        android:defaultValue="false"
-        android:key="bypass_listen_aweme_restriction"
-        android:summary="@string/pref_feed_bypass_listen_aweme_restriction_summary"
-        android:title="@string/pref_feed_bypass_listen_aweme_restriction_title" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="feed_double_tap_open_comment"
+            android:summary="@string/pref_feed_double_tap_open_comment_summary"
+            android:title="@string/pref_feed_double_tap_open_comment_title" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="bypass_listen_aweme_restriction"
+            android:summary="@string/pref_feed_bypass_listen_aweme_restriction_summary"
+            android:title="@string/pref_feed_bypass_listen_aweme_restriction_title" />
+    </PreferenceCategory>
 
     <PreferenceCategory
         android:key="pref_category_backup"
         android:title="@string/pref_category_backup">
         <Preference
             android:key="export_config"
-            android:title="@string/pref_backup_export_title"/>
+            android:title="@string/pref_backup_export_title" />
         <Preference
             android:key="import_config"
-            android:title="@string/pref_backup_import_title"/>
+            android:title="@string/pref_backup_import_title" />
     </PreferenceCategory>
 
     <PreferenceCategory
@@ -89,7 +94,7 @@
             android:defaultValue="true"
             android:key="disable_verbose_logs"
             android:title="@string/pref_module_disable_verbose_logs_title"
-            android:summary="@string/pref_module_disable_verbose_logs_summary"/>
+            android:summary="@string/pref_module_disable_verbose_logs_summary" />
     </PreferenceCategory>
 
     <PreferenceCategory
@@ -134,19 +139,18 @@
             android:summary="@string/pref_about_telegram_summary">
             <intent
                 android:action="android.intent.action.VIEW"
-                android:data="@string/telegram_url"/>
+                android:data="@string/telegram_url" />
         </Preference>
 
         <Preference
             android:key="build_time"
             android:title="@string/pref_about_build_time_title"
-            android:summary="@string/unknown"/>
+            android:summary="@string/unknown" />
 
         <Preference
             android:key="back_then"
             android:title="@string/pref_about_back_then_title"
-            android:summary="@string/pref_about_back_then_summary" >
-        </Preference>
+            android:summary="@string/pref_about_back_then_summary"></Preference>
 
     </PreferenceCategory>
 

@@ -300,6 +300,12 @@ message MainActivity {
 message BaseListFragmentPanel {
   optional Class class = 1;
   optional Method handle_double_click = 2;
+  optional Method handle_video_event = 3;
+  optional Method get_current_aweme = 4;
+}
+
+message VideoEvent {
+  optional Class class = 1;
 }
 
 message HookInfo {
@@ -351,6 +357,7 @@ message HookInfo {
   optional RxObservable rx_observable = 49;
   optional ListenAwemeFilter listen_aweme_filter = 50;
   optional BaseListFragmentPanel base_list_fragment_panel = 51;
+  optional VideoEvent video_event = 52;
 
   reserved 13, 18, 32;
 }
