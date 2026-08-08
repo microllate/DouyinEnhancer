@@ -2528,7 +2528,9 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                             }.singleOrNull()
                         }
 
-                        if (baseListFragmentPanelClassData == null || handleDoubleClickMethodData == null || handleVideoEventMethodData == null || getCurrentAwemeMethodData == null
+                        if (baseListFragmentPanelClassData == null || handleDoubleClickMethodData == null ||
+                            handleVideoEventMethodData == null ||
+                            getCurrentAwemeMethodData == null
                         ) {
                             YLog.error(
                                 "$TAG: unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
