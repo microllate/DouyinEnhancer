@@ -106,6 +106,7 @@
     <string name="regex_mode">正则模式</string>
     <string name="save_success_restart_required">保存成功，部分配置重启应用后生效</string>
     <string name="restart_required">部分功能需重启应用后生效</string>
+    <string name="notify_update_available">抖柚更新啦</string>
 
     <string name="pref_category_settings">设置</string>
     <string name="pref_settings_open_module_settings_title">打开模块设置</string>

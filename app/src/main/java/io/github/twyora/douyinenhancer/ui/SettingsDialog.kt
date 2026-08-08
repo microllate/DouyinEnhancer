@@ -378,6 +378,21 @@ class SettingsDialog(context: Context) : AlertDialog.Builder(ContextThemeWrapper
                         }
                     } ?: context.getString(R.string.pref_about_update_available_summary)
                 }
+                val counter = FastKVConfigManager.module.getInt(ModuleKey.NOTIFY_UPDATE_COOLDOWN, NOTIFY_UPDATE_COOLDOWN_PERIOD)
+                val newCounter =
+                    (counter - 1 + NOTIFY_UPDATE_COOLDOWN_PERIOD) % NOTIFY_UPDATE_COOLDOWN_PERIOD
+                FastKVConfigManager.module.edit(true) {
+                    putInt(ModuleKey.NOTIFY_UPDATE_COOLDOWN, newCounter)
+                }
+                if (newCounter == 0) {
+                    activity.runOnUiThread {
+                        Toast.makeText(
+                            context,
+                            context.getString(R.string.notify_update_available),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
             } else {
                 findPreference("update")?.apply {
                     title = context.getString(R.string.pref_about_up_to_date_title)
@@ -457,6 +472,8 @@ class SettingsDialog(context: Context) : AlertDialog.Builder(ContextThemeWrapper
 
         private val verbose
             get() = !FastKVConfigManager.module.getBoolean(ModuleKey.DISABLE_VERBOSE_LOGS, false)
+
+        private const val NOTIFY_UPDATE_COOLDOWN_PERIOD = 3
 
         private const val EXPORT_CONFIG = 0
         private const val IMPORT_CONFIG = 1
