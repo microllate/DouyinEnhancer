@@ -13,7 +13,8 @@ import io.github.twyora.douyinenhancer.utils.resolveMethod
 object FeedDoubleTapDiggHooker : YukiBaseHooker() {
     private val TAG = this::class.simpleName
 
-    private val packageInstance = DouyinPackage.instance
+    private val packageInstance
+        get() = DouyinPackage.instance
 
     private val verbose
         get() = !FastKVConfigManager.module.getBoolean(ModuleKey.DISABLE_VERBOSE_LOGS, false)
