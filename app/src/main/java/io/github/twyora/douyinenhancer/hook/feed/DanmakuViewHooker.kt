@@ -54,6 +54,13 @@ object DanmakuViewHooker : YukiBaseHooker() {
                     danmakuViewIds.add(danmakuView.id)
                 }
             }
+        }?.result {
+            onConductFailure { _, throwable ->
+                YLog.error("$TAG: failed to assign danmaku view id", throwable)
+            }
+            onHookingFailure { throwable ->
+                YLog.error("$TAG: failed to hook danmaku view id assignment", throwable)
+            }
         }
     }
 
@@ -75,6 +82,13 @@ object DanmakuViewHooker : YukiBaseHooker() {
                 danmakuViewIds.forEach {
                     whiteList.add(it)
                 }
+            }
+        }?.result {
+            onConductFailure { _, throwable ->
+                YLog.error("$TAG: failed to add danmaku view id to clean mode white list", throwable)
+            }
+            onHookingFailure { throwable ->
+                YLog.error("$TAG: failed to hook clean mode white list adding", throwable)
             }
         }
     }
@@ -104,6 +118,13 @@ object DanmakuViewHooker : YukiBaseHooker() {
                 YLog.info("$TAG: ${view::class.qualifiedName}{id=0x${view.id.toString(16)}} is a danmaku view holder trying to hide itself; intercept it")
 
                 resultNull()
+            }
+        }?.result {
+            onConductFailure { _, throwable ->
+                YLog.error("$TAG: failed to block danmaku view hiding", throwable)
+            }
+            onHookingFailure { throwable ->
+                YLog.error("$TAG: failed to hook danmaku view hiding block", throwable)
             }
         }
     }
