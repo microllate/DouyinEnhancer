@@ -37,19 +37,19 @@ object DanmakuViewHooker : YukiBaseHooker() {
         )?.hook {
             after {
                 val danmakuView = instance as? View ?: run {
-                    YLog.error("$TAG: danmakuView is null")
+                    YLog.error("$TAG: ${instance::class.qualifiedName} is not View")
                     return@after
                 }
 
                 if (danmakuView.id == View.NO_ID) {
                     val danmakuViewId = danmakuViewIds.first()
                     if (verbose) {
-                        YLog.debug("$TAG: danmaku view has no view id, setting to $danmakuViewId")
+                        YLog.debug("$TAG: assign danmaku view id($danmakuViewId) to view without id")
                     }
                     danmakuView.id = danmakuViewId
                 } else {
                     if (verbose) {
-                        YLog.debug("$TAG: danmaku view id: ${danmakuView.id}")
+                        YLog.debug("$TAG: collect existing danmaku view id(${danmakuView.id})")
                     }
                     danmakuViewIds.add(danmakuView.id)
                 }
@@ -64,12 +64,12 @@ object DanmakuViewHooker : YukiBaseHooker() {
             before {
                 @Suppress("UNCHECKED_CAST")
                 val whiteList = args[4] as? MutableList<Int> ?: run {
-                    YLog.error("$TAG: whiteList is null")
+                    YLog.error("$TAG: ${args[4]?.javaClass?.name} is not a mutable list of int\n")
                     return@before
                 }
 
                 if (verbose) {
-                    YLog.debug("$TAG: adding danmakuViewId into clean mode white list")
+                    YLog.debug("$TAG: add danmaku view ids into clean mode white list")
                 }
 
                 danmakuViewIds.forEach {
@@ -85,11 +85,11 @@ object DanmakuViewHooker : YukiBaseHooker() {
         )?.hook {
             before {
                 val view = args[0] as? View ?: run {
-                    YLog.error("$TAG: view is null")
+                    YLog.error("$TAG: ${args[0]?.javaClass?.name} is not a View")
                     return@before
                 }
                 val visibility = args[1] as? Int ?: run {
-                    YLog.error("$TAG: visibility is null")
+                    YLog.error("$TAG: ${args[1]?.javaClass?.name} is not a visibility value int")
                     return@before
                 }
                 if (visibility == View.VISIBLE) {
@@ -101,7 +101,7 @@ object DanmakuViewHooker : YukiBaseHooker() {
                     }) {
                     return@before
                 }
-                YLog.info("$TAG: ${view::class.qualifiedName}{id=${view.id.toString(16)}} is a danmaku view holder trying to hide itself; intercept it")
+                YLog.info("$TAG: ${view::class.qualifiedName}{id=0x${view.id.toString(16)}} is a danmaku view holder trying to hide itself; intercept it")
 
                 resultNull()
             }
