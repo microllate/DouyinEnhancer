@@ -28,8 +28,8 @@
     <string name="recommended_feed_filter_dialog_title">推荐流过滤器</string>
     <string name="pref_feed_bypass_listen_aweme_restriction_title">解除听抖音限制</string>
     <string name="pref_feed_bypass_listen_aweme_restriction_summary">进入听抖音模式时不再进行音频版权校验</string>
-    <string name="pref_feed_keep_danmaku_visible_title">阻止弹幕隐藏</string>
-    <string name="pref_feed_keep_danmaku_visible_summary">使弹幕在清屏模式下仍然保持可见</string>
+    <string name="pref_ui_keep_danmaku_visible_title">阻止弹幕隐藏</string>
+    <string name="pref_ui_keep_danmaku_visible_summary">使弹幕在清屏模式下仍然保持可见</string>
     <string name="recommended_feed_filter_main_switch_title">总开关</string>
     <string name="recommended_feed_filter_main_switch_summary">开启后可以使用推荐流过滤功能</string>
     <string name="recommended_feed_filter_block_ad_title">✦ 屏蔽广告</string>
@@ -77,6 +77,7 @@
     <string name="config_import_chooser">选择配置</string>
 
     <string name="pref_category_misc">杂项</string>
+    <string name="pref_category_ui">界面</string>
     <string name="pref_misc_enable_hidden_features_title">✦ 启用隐藏功能</string>
     <string name="pref_misc_enable_hidden_features_summary">打开后可以使用隐藏功能</string>
     <string name="pref_misc_enable_hidden_features_steps_remaining">再执行 %1$d 步即可开启隐藏功能</string>

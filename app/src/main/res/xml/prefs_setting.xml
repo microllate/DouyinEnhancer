@@ -64,12 +64,14 @@
             android:key="bypass_listen_aweme_restriction"
             android:summary="@string/pref_feed_bypass_listen_aweme_restriction_summary"
             android:title="@string/pref_feed_bypass_listen_aweme_restriction_title" />
+    </PreferenceCategory>
 
+    <PreferenceCategory android:title="@string/pref_category_ui">
         <SwitchPreference
             android:defaultValue="false"
             android:key="keep_danmaku_visible"
-            android:summary="@string/pref_feed_keep_danmaku_visible_summary"
-            android:title="@string/pref_feed_keep_danmaku_visible_title" />
+            android:summary="@string/pref_ui_keep_danmaku_visible_summary"
+            android:title="@string/pref_ui_keep_danmaku_visible_title" />
     </PreferenceCategory>
 
     <PreferenceCategory

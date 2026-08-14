@@ -1,4 +1,4 @@
-package io.github.twyora.douyinenhancer.hook.feed
+package io.github.twyora.douyinenhancer.hook.ui
 
 import android.view.View
 import androidx.collection.ArraySet
@@ -6,8 +6,8 @@ import com.highcapable.yukihookapi.hook.core.YukiMemberHookCreator
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.log.YLog
 import io.github.twyora.douyinenhancer.config.FastKVConfigManager
-import io.github.twyora.douyinenhancer.config.key.FeedKey
 import io.github.twyora.douyinenhancer.config.key.ModuleKey
+import io.github.twyora.douyinenhancer.config.key.UiKey
 import io.github.twyora.douyinenhancer.hook.DouyinPackage
 import io.github.twyora.douyinenhancer.hook.HookOnMainProcess
 import io.github.twyora.douyinenhancer.utils.resolveMethod
@@ -27,7 +27,7 @@ object DanmakuViewHooker : YukiBaseHooker() {
     }
 
     override fun onHook() {
-        if (!FastKVConfigManager.settings.getBoolean(FeedKey.KEEP_DANMAKU_VISIBLE, false)) {
+        if (!FastKVConfigManager.settings.getBoolean(UiKey.KEEP_DANMAKU_VISIBLE, false)) {
             if (verbose) {
                 YLog.debug("$TAG: keep danmaku visible disabled, skip danmaku hooks")
             }
