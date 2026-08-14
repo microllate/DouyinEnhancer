@@ -1,6 +1,7 @@
 package io.github.twyora.douyinenhancer.hook.feed
 
 import android.view.View
+import androidx.collection.ArraySet
 import com.highcapable.yukihookapi.hook.core.YukiMemberHookCreator
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.log.YLog
@@ -20,7 +21,9 @@ object DanmakuViewHooker : YukiBaseHooker() {
     private val verbose
         get() = !FastKVConfigManager.module.getBoolean(ModuleKey.DISABLE_VERBOSE_LOGS, false)
 
-    private var danmakuViewId: Int = View.generateViewId()
+    private val danmakuViewIds = ArraySet<Int>().apply {
+        add(View.generateViewId())
+    }
 
     override fun onHook() {
         installAssignDanmakuViewIdHook()
@@ -39,15 +42,16 @@ object DanmakuViewHooker : YukiBaseHooker() {
                 }
 
                 if (danmakuView.id == View.NO_ID) {
+                    val danmakuViewId = danmakuViewIds.first()
                     if (verbose) {
-                        YLog.debug("$TAG: danmaku view has no view id, setting to ${danmakuViewId}")
+                        YLog.debug("$TAG: danmaku view has no view id, setting to $danmakuViewId")
                     }
                     danmakuView.id = danmakuViewId
                 } else {
                     if (verbose) {
                         YLog.debug("$TAG: danmaku view id: ${danmakuView.id}")
                     }
-//                    danmakuViewId = danmakuView.id
+                    danmakuViewIds.add(danmakuView.id)
                 }
             }
         }
@@ -65,10 +69,12 @@ object DanmakuViewHooker : YukiBaseHooker() {
                 }
 
                 if (verbose) {
-                    YLog.debug("$TAG: adding danmakuViewId(${danmakuViewId}) into clean mode white list")
+                    YLog.debug("$TAG: adding danmakuViewId into clean mode white list")
                 }
 
-                whiteList.add(danmakuViewId)
+                danmakuViewIds.forEach {
+                    whiteList.add(it)
+                }
             }
         }
     }
@@ -90,7 +96,9 @@ object DanmakuViewHooker : YukiBaseHooker() {
                     return@before
                 }
 
-                if (view.findViewById<View?>(danmakuViewId) == null) {
+                if (danmakuViewIds.none {
+                        view.findViewById<View?>(it) != null
+                    }) {
                     return@before
                 }
                 YLog.info("$TAG: ${view::class.qualifiedName}{id=${view.id.toString(16)}} is a danmaku view holder trying to hide itself; intercept it")
