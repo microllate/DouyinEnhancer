@@ -119,6 +119,8 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
     val listenAwemeFilter = ListenAwemeFilterModule()
     val baseListFragmentPanel = BaseListFragmentPanelModule()
     val videoEvent = VideoEventModule()
+    val cleanModePresenter = CleanModePresenterModule()
+    val danmakuView = DanmakuViewModule()
 
     inner class CommentImageStructModule {
         val selfClass by weak {
@@ -798,6 +800,33 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
         fun startDownload() = Method(
             hookInfo.galleryShareHelper.startDownload.nameOrNull,
             hookInfo.galleryShareHelper.startDownload.parameters.valuesListOrNull
+        )
+    }
+
+    inner class CleanModePresenterModule {
+        val selfClass by weak {
+            hookInfo.cleanModePresenter.class_.nameOrNull?.toClass(classLoader)
+        }
+
+        fun enterCleanMode() = Method(
+            hookInfo.cleanModePresenter.enterCleanMode.nameOrNull,
+            hookInfo.cleanModePresenter.enterCleanMode.parameters.valuesListOrNull
+        )
+
+        fun setVisibility() = Method(
+            hookInfo.cleanModePresenter.setVisibility.nameOrNull,
+            hookInfo.cleanModePresenter.setVisibility.parameters.valuesListOrNull
+        )
+    }
+
+    inner class DanmakuViewModule {
+        val selfClass by weak {
+            hookInfo.danmakuView.class_.nameOrNull?.toClass(classLoader)
+        }
+
+        fun onAttachedToWindow() = Method(
+            hookInfo.danmakuView.onAttachedToWindow.nameOrNull,
+            hookInfo.danmakuView.onAttachedToWindow.parameters.valuesListOrNull
         )
     }
 
@@ -2609,6 +2638,90 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                         }
                     }.onFailure {
                         YLog.error("$TAG: unable to populate config", it)
+                    }
+                }
+
+                cleanModePresenter = cleanModePresenter {
+                    runCatching {
+                        val cleanModePresenterClassData = bridge.getClassData(
+                            "com.ss.android.ugc.aweme.feed.plato.business.contentconsumption.cleanmode.CleanModePresenter"
+                        )
+                        val enterCleanModeMethodData = cleanModePresenterClassData?.let {
+                            bridge.findMethod {
+                                searchClasses = listOf(it)
+                                matcher {
+                                    params {
+                                        add("int")
+                                        add("int")
+                                        add("java.lang.String")
+                                        add("boolean")
+                                        add("java.util.List")
+                                    }
+                                    invokeMethods {
+                                        add {
+                                            descriptor =
+                                                "Lcom/ss/android/ugc/aweme/feed/adapter/IFeedViewHolder;->blockCommonCleanModeEvent(Z)Z"
+                                        }
+                                    }
+                                }
+                            }.singleOrNull()
+                        }
+                        val setVisibilityMethodData = cleanModePresenterClassData?.let {
+                            bridge.findMethod {
+                                searchClasses = listOf(it)
+                                matcher {
+                                    modifiers = Modifier.PUBLIC or Modifier.FINAL
+                                    returnType = "void"
+                                    params {
+                                        add("android.view.View")
+                                        add("int")
+                                    }
+                                    invokeMethods {
+                                        add {
+                                            descriptor = "Landroid/view/View;->setVisibility(I)V"
+                                        }
+                                    }
+                                }
+                            }.singleOrNull()
+                        }
+
+                        if (cleanModePresenterClassData == null ||
+                            enterCleanModeMethodData == null || setVisibilityMethodData == null
+                        ) {
+                            YLog.error(
+                                "$TAG: unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
+                            )
+                            return@cleanModePresenter
+                        }
+
+                        class_ = class_ {
+                            name = cleanModePresenterClassData.name
+                        }
+                        enterCleanMode = method {
+                            name = enterCleanModeMethodData.methodName
+                            parameters = MethodKt.parameters {
+                                values.clear()
+                                values.addAll(enterCleanModeMethodData.paramTypeNames)
+                            }
+                        }
+                        setVisibility = method {
+                            name = setVisibilityMethodData.methodName
+                            parameters = MethodKt.parameters {
+                                values.clear()
+                                values.addAll(setVisibilityMethodData.paramTypeNames)
+                            }
+                        }
+                    }.onFailure {
+                        YLog.error("$TAG: unable to populate config", it)
+                    }
+                }
+
+                danmakuView = danmakuView {
+                    class_ = class_ {
+                        name = "com.bytedance.common.ultra.danmaku.view.DanmakuView"
+                    }
+                    onAttachedToWindow = method {
+                        name = "onAttachedToWindow"
                     }
                 }
             }

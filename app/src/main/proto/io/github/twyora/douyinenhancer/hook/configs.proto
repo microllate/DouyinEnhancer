@@ -308,6 +308,17 @@ message VideoEvent {
   optional Class class = 1;
 }
 
+message CleanModePresenter {
+  optional Class class = 1;
+  optional Method enter_clean_mode = 2;
+  optional Method set_visibility = 3;
+}
+
+message DanmakuView {
+  optional Class class = 1;
+  optional Method on_attached_to_window = 2;
+}
+
 message HookInfo {
   uint64 last_update_time = 1;
   uint32 module_version_code = 2;
@@ -358,6 +369,8 @@ message HookInfo {
   optional ListenAwemeFilter listen_aweme_filter = 50;
   optional BaseListFragmentPanel base_list_fragment_panel = 51;
   optional VideoEvent video_event = 52;
+  optional CleanModePresenter clean_mode_presenter = 53;
+  optional DanmakuView danmaku_view = 54;
 
   reserved 13, 18, 32;
 }
