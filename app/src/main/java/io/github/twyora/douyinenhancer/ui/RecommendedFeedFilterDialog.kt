@@ -93,6 +93,8 @@ class RecommendedFeedFilterDialog(context: Context) : AlertDialog.Builder(Contex
                 editInput.setText(it)
             }
         }
+        recommendedFeedFilterDialogBinding.switchAuthorNicknameRegex.isChecked =
+            prefs.getBoolean(RecommendedFeedFilterKey.AUTHOR_NICKNAME_REGEX_MODE, false)
         recommendedFeedFilterDialogBinding.switchDescRegex.isChecked = prefs.getBoolean(RecommendedFeedFilterKey.DESC_REGEX_MODE, false)
         prefs.getStringSet(RecommendedFeedFilterKey.DESC_KEYWORDS, null)?.forEach {
             pushKeywordItem(context, recommendedFeedFilterDialogBinding.groupAwemeDesc).apply {
@@ -220,6 +222,19 @@ class RecommendedFeedFilterDialog(context: Context) : AlertDialog.Builder(Contex
                 return@setPositiveButton
             }
 
+            val authorNicknameRegexMode = recommendedFeedFilterDialogBinding.switchAuthorNicknameRegex.isChecked
+            if (authorNicknameRegexMode && runCatching {
+                    upKeywords.forEach {
+                        it.toRegex()
+                    }
+                }.isFailure
+            ) {
+                (context as? Activity)?.runOnUiThread {
+                    Toast.makeText(context, context.getString(R.string.save_failed_invalid_regex), Toast.LENGTH_SHORT).show()
+                }
+                return@setPositiveButton
+            }
+
             prefs.edit(commit = true) {
                 putBoolean(RecommendedFeedFilterKey.MAIN_SWITCH, mainSwitch)
                 putBoolean(RecommendedFeedFilterKey.BLOCK_AD, blockAd)
@@ -240,6 +255,7 @@ class RecommendedFeedFilterDialog(context: Context) : AlertDialog.Builder(Contex
                 putBoolean(RecommendedFeedFilterKey.TITLE_REGEX_MODE, titleRegexMode)
                 putStringSet(RecommendedFeedFilterKey.TITLE_KEYWORDS, titleKeywords)
                 putStringSet(RecommendedFeedFilterKey.AUTHOR_UID_KEYWORDS, uidKeywords)
+                putBoolean(RecommendedFeedFilterKey.AUTHOR_NICKNAME_REGEX_MODE, authorNicknameRegexMode)
                 putStringSet(RecommendedFeedFilterKey.AUTHOR_NICKNAME_KEYWORDS, upKeywords)
                 putBoolean(RecommendedFeedFilterKey.DESC_REGEX_MODE, descRegexMode)
                 putStringSet(RecommendedFeedFilterKey.DESC_KEYWORDS, descKeywords)

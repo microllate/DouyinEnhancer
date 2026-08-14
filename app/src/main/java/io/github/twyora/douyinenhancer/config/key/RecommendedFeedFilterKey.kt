@@ -20,6 +20,7 @@ object RecommendedFeedFilterKey {
     const val TITLE_REGEX_MODE = "recommended_feed_filter_title_regex_mode"
     const val TITLE_KEYWORDS = "recommended_feed_filter_group_aweme_title"
     const val AUTHOR_UID_KEYWORDS = "recommended_feed_filter_group_author_uid"
+    const val AUTHOR_NICKNAME_REGEX_MODE = "recommended_feed_filter_author_nickname_regex_mode"
     const val AUTHOR_NICKNAME_KEYWORDS = "recommended_feed_filter_group_author_nickname"
     const val DESC_REGEX_MODE = "recommended_feed_filter_desc_regex_mode"
     const val DESC_KEYWORDS = "recommended_feed_filter_group_aweme_desc"
