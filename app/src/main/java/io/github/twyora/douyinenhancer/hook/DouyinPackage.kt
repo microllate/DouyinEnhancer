@@ -808,14 +808,14 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
             hookInfo.cleanModePresenter.class_.nameOrNull?.toClass(classLoader)
         }
 
-        fun setViewVisibility() = Method(
-            hookInfo.cleanModePresenter.setViewVisibility.nameOrNull,
-            hookInfo.cleanModePresenter.setViewVisibility.parameters.valuesListOrNull
-        )
-
         fun enterCleanMode() = Method(
             hookInfo.cleanModePresenter.enterCleanMode.nameOrNull,
             hookInfo.cleanModePresenter.enterCleanMode.parameters.valuesListOrNull
+        )
+
+        fun setVisibility() = Method(
+            hookInfo.cleanModePresenter.setVisibility.nameOrNull,
+            hookInfo.cleanModePresenter.setVisibility.parameters.valuesListOrNull
         )
     }
 
@@ -2646,21 +2646,6 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                         val cleanModePresenterClassData = bridge.getClassData(
                             "com.ss.android.ugc.aweme.feed.plato.business.contentconsumption.cleanmode.CleanModePresenter"
                         )
-                        val setViewVisibilityMethodData = cleanModePresenterClassData?.let {
-                            bridge.findMethod {
-                                searchClasses = listOf(it)
-                                matcher {
-                                    modifiers = Modifier.PUBLIC or Modifier.FINAL
-                                    returnType = "void"
-                                    params {
-                                        add("android.view.View")
-                                        add("int")
-                                        add("int")
-                                        add("boolean")
-                                    }
-                                }
-                            }.singleOrNull()
-                        }
                         val enterCleanModeMethodData = cleanModePresenterClassData?.let {
                             bridge.findMethod {
                                 searchClasses = listOf(it)
@@ -2681,9 +2666,27 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                                 }
                             }.singleOrNull()
                         }
+                        val setVisibilityMethodData = cleanModePresenterClassData?.let {
+                            bridge.findMethod {
+                                searchClasses = listOf(it)
+                                matcher {
+                                    modifiers = Modifier.PUBLIC or Modifier.FINAL
+                                    returnType = "void"
+                                    params {
+                                        add("android.view.View")
+                                        add("int")
+                                    }
+                                    invokeMethods {
+                                        add {
+                                            descriptor = "Landroid/view/View;->setVisibility(I)V"
+                                        }
+                                    }
+                                }
+                            }.singleOrNull()
+                        }
 
-                        if (cleanModePresenterClassData == null || setViewVisibilityMethodData == null ||
-                            enterCleanModeMethodData == null
+                        if (cleanModePresenterClassData == null ||
+                            enterCleanModeMethodData == null || setVisibilityMethodData == null
                         ) {
                             YLog.error(
                                 "$TAG: unable to populate ${this::class.java.enclosingClass?.simpleName} config, possibly due to unfound obfuscated methods"
@@ -2694,18 +2697,18 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                         class_ = class_ {
                             name = cleanModePresenterClassData.name
                         }
-                        setViewVisibility = method {
-                            name = setViewVisibilityMethodData.methodName
-                            parameters = MethodKt.parameters {
-                                values.clear()
-                                values.addAll(setViewVisibilityMethodData.paramTypeNames)
-                            }
-                        }
                         enterCleanMode = method {
                             name = enterCleanModeMethodData.methodName
                             parameters = MethodKt.parameters {
                                 values.clear()
                                 values.addAll(enterCleanModeMethodData.paramTypeNames)
+                            }
+                        }
+                        setVisibility = method {
+                            name = setVisibilityMethodData.methodName
+                            parameters = MethodKt.parameters {
+                                values.clear()
+                                values.addAll(setVisibilityMethodData.paramTypeNames)
                             }
                         }
                     }.onFailure {

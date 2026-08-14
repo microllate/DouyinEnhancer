@@ -1,7 +1,6 @@
 package io.github.twyora.douyinenhancer.hook.feed
 
 import android.view.View
-import com.highcapable.kavaref.KavaRef.Companion.resolve
 import com.highcapable.yukihookapi.hook.core.YukiMemberHookCreator
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.log.YLog
@@ -26,7 +25,7 @@ object DanmakuViewHooker : YukiBaseHooker() {
     override fun onHook() {
         installAssignDanmakuViewIdHook()
         installAddDanmakuViewIdToCleanModeWhiteListHook()
-        installPreventDanmakuViewHiddenInCleanModeHook()
+        installBlockDanmakuViewHidingHook()
     }
 
     private fun installAssignDanmakuViewIdHook(): YukiMemberHookCreator.MemberHookCreator.Result? {
@@ -74,38 +73,26 @@ object DanmakuViewHooker : YukiBaseHooker() {
         }
     }
 
-    private fun installPreventDanmakuViewHiddenInCleanModeHook(): YukiMemberHookCreator.MemberHookCreator.Result? {
+    private fun installBlockDanmakuViewHidingHook(): YukiMemberHookCreator.MemberHookCreator.Result? {
         return packageInstance.cleanModePresenter.selfClass?.resolveMethod(
-            packageInstance.cleanModePresenter.setViewVisibility()
+            packageInstance.cleanModePresenter.setVisibility()
         )?.hook {
             before {
-                val enteringCleanMode = args[3] as? Boolean ?: run {
-                    YLog.error("$TAG: ${args[3]?.javaClass?.name} is not Boolean")
+                val view = args[0] as? View ?: run {
+                    YLog.error("$TAG: view is null")
                     return@before
                 }
-                if (!enteringCleanMode) {
-                    return@before
-                }
-
-                val visibility = args[2] as? Int ?: run {
-                    YLog.error("$TAG: ${args[2]?.javaClass?.name} is not Int")
+                val visibility = args[1] as? Int ?: run {
+                    YLog.error("$TAG: visibility is null")
                     return@before
                 }
                 if (visibility == View.VISIBLE) {
                     return@before
                 }
 
-                val view = args[0] as? View ?: run {
-                    YLog.error(
-                        "$TAG: ${args[0]?.javaClass?.name} is not View"
-                    )
-                    return@before
-                }
-
                 if (view.findViewById<View?>(danmakuViewId) == null) {
                     return@before
                 }
-
                 YLog.info("$TAG: ${view::class.qualifiedName}{id=${view.id.toString(16)}} is a danmaku view holder trying to hide itself; intercept it")
 
                 resultNull()
