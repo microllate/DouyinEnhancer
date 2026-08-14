@@ -119,10 +119,17 @@ object DanmakuViewHooker : YukiBaseHooker() {
 
                 if (danmakuViewIds.none {
                         view.findViewById<View?>(it) != null
-                    }) {
+                    }
+                ) {
                     return@before
                 }
-                YLog.info("$TAG: ${view::class.qualifiedName}{id=0x${view.id.toString(16)}} is a danmaku view holder trying to hide itself; intercept it")
+                YLog.info(
+                    "$TAG: ${view::class.qualifiedName}{id=0x${
+                        view.id.toString(
+                            16
+                        )
+                    }} is a danmaku view holder trying to hide itself; intercept it"
+                )
 
                 resultNull()
             }
