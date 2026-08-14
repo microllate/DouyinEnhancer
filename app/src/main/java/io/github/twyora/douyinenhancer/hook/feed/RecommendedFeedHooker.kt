@@ -90,8 +90,20 @@ object RecommendedFeedHooker : YukiBaseHooker() {
         FastKVConfigManager.settings.getStringSet(RecommendedFeedFilterKey.AUTHOR_UID_KEYWORDS, null)
     }
 
-    private val kwdFilterAuthorNicknames by lazy {
-        FastKVConfigManager.settings.getStringSet(RecommendedFeedFilterKey.AUTHOR_NICKNAME_KEYWORDS, null)
+    private val kwdFilterAuthorNicknameRegexMode by lazy {
+        FastKVConfigManager.settings.getBoolean(RecommendedFeedFilterKey.AUTHOR_NICKNAME_REGEX_MODE, false)
+    }
+    private val kwdFilterAuthorNicknameRegexes by lazy {
+        val nicknameList = FastKVConfigManager.settings.getStringSet(RecommendedFeedFilterKey.AUTHOR_NICKNAME_KEYWORDS, null)
+        if (kwdFilterAuthorNicknameRegexMode) {
+            nicknameList?.map {
+                it.toRegex()
+            }
+        } else {
+            nicknameList?.map {
+                Regex.escape(it).toRegex()
+            }
+        }
     }
 
     private val kwdFilterDescRegexMode by lazy {
@@ -295,12 +307,15 @@ object RecommendedFeedHooker : YukiBaseHooker() {
             }
         }
 
-        val nicknameFilters = kwdFilterAuthorNicknames
-        if (!nicknameFilters.isNullOrEmpty()) {
+        val nicknameRegexes = kwdFilterAuthorNicknameRegexes
+        if (!nicknameRegexes.isNullOrEmpty()) {
             val authorObj = aweme.getField<Any?>(packageInstance.aweme.author())
             if (authorObj != null) {
                 val nickname = authorObj.getField<String?>(packageInstance.user.nickname())
-                if (!nickname.isNullOrBlank() && nickname in nicknameFilters) {
+                if (!nickname.isNullOrBlank() && nicknameRegexes.any {
+                        nickname.contains(it)
+                    }
+                ) {
                     if (verbose) {
                         YLog.debug("$TAG: filtered by author nickname: $nickname")
                     }
