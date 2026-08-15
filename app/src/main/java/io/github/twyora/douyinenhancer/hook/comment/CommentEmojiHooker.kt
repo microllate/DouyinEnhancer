@@ -46,7 +46,7 @@ object CommentEmojiHooker : YukiBaseHooker() {
     override fun onHook() {
         if (!FastKVConfigManager.settings.getBoolean(SaveKey.UNLOCK_COMMENT_EMOJI, false)) {
             if (verbose) {
-                YLog.debug("$TAG: unlock comment emoji disabled, skip hook")
+                YLog.debug("$TAG: unlock comment emoji is disabled, skipping hook")
             }
             return
         }
@@ -101,7 +101,7 @@ object CommentEmojiHooker : YukiBaseHooker() {
                 )
                 if (!emojiUrls.isNullOrEmpty()) {
                     if (verbose) {
-                        YLog.debug("$TAG: emoji comment detected, forcing save button visible, emoji count: ${emojiUrls.size}")
+                        YLog.debug("$TAG: emoji comment detected, forcing save image button visible")
                     }
                     // force the visibility check to return true — show save button
                     resultTrue()
@@ -109,15 +109,10 @@ object CommentEmojiHooker : YukiBaseHooker() {
             }
         }?.result {
             onConductFailure { _, throwable ->
-                YLog.error("$TAG: save emoji button hook runtime error", throwable)
+                YLog.error("$TAG: failed to make save image button visible for emoji", throwable)
             }
             onHookingFailure { throwable ->
-                YLog.error("$TAG: failed to hook save emoji button", throwable)
-            }
-            onHooked {
-                YLog.info(
-                    "$TAG: save emoji button hook installed successfully. The button will be shown for emoji comments"
-                )
+                YLog.error("$TAG: failed to hook save image button for emoji", throwable)
             }
         }
     }
@@ -134,6 +129,7 @@ object CommentEmojiHooker : YukiBaseHooker() {
                 val actionItem = args[0]?.getField<Any>(
                     packageInstance.saveImageActionItem.onClickExecutor.hostItem()
                 ) ?: run {
+                    YLog.error("$TAG: ${args[0]?.javaClass?.name} is not the click executor held by save image action item")
                     return@before
                 }
 
@@ -142,6 +138,7 @@ object CommentEmojiHooker : YukiBaseHooker() {
                 )?.getField<Any>(
                     packageInstance.commentActionParams.comment()
                 ) ?: run {
+                    YLog.error("$TAG: failed to get comment from ${actionItem::class.qualifiedName}")
                     return@before
                 }
                 val emojiUrls = comment.getField<Any>(
@@ -151,11 +148,12 @@ object CommentEmojiHooker : YukiBaseHooker() {
                 )?.getField<List<String>>(
                     packageInstance.urlModel.urlList()
                 ) ?: run {
+                    YLog.error("$TAG: failed to get emoji URLs from ${comment::class.qualifiedName}")
                     return@before
                 }
 
                 if (emojiUrls.isEmpty()) {
-                    YLog.warn("$TAG: emoji urls list is empty, skip emoji injection")
+                    YLog.warn("$TAG: emoji URL list is empty, skipping emoji injection")
                     return@before
                 }
 
@@ -172,7 +170,7 @@ object CommentEmojiHooker : YukiBaseHooker() {
                 injectEmojiUrls(comment, emojiUrls)
 
                 if (verbose) {
-                    YLog.debug("$TAG: injected ${emojiUrls.size} emoji url(s) into comment, emoji url(s): $emojiUrls")
+                    YLog.debug("$TAG: injected ${emojiUrls.size} emoji URL(s) into comment")
                 }
             }
             // undo temporary edits — restore comment.imageList and actionItem.imageIndex
@@ -195,15 +193,10 @@ object CommentEmojiHooker : YukiBaseHooker() {
             }
         }?.result {
             onConductFailure { _, throwable ->
-                YLog.error("$TAG: download callback hook runtime error", throwable)
+                YLog.error("$TAG: failed to inject emoji URL(s) into save image download pipeline", throwable)
             }
             onHookingFailure { throwable ->
-                YLog.error("$TAG: failed to hook download callback", throwable)
-            }
-            onHooked {
-                YLog.info(
-                    "$TAG: download callback hook installed successfully. Emoji URLs will be injected when saving"
-                )
+                YLog.error("$TAG: failed to hook save image download pipeline for emoji", throwable)
             }
         }
     }
@@ -218,13 +211,13 @@ object CommentEmojiHooker : YukiBaseHooker() {
                 val dlUrl = downloadInfo.getField<String>(
                     packageInstance.downloadInfo.url()
                 ) ?: run {
-                    YLog.error("$TAG: failed to get download url from download info, skip emoji handling")
+                    YLog.error("$TAG: failed to get download url from download info, skipping emoji handling")
                     return@before
                 }
                 // Emoji animateUrl file extension is always .heif
                 if (!dlUrl.contains(".heif")) {
                     if (verbose) {
-                        YLog.debug("$TAG: download url does not contain \".heif\", skip. url: $dlUrl")
+                        YLog.debug("$TAG: download url does not contain \".heif\", skipping")
                     }
                     return@before
                 }
@@ -256,7 +249,7 @@ object CommentEmojiHooker : YukiBaseHooker() {
                     !sourceMimeType.startsWith("video/")
                 ) {
                     YLog.error(
-                        "$TAG: source MIME type restricted, not allowed: $sourceMimeType"
+                        "$TAG: source MIME type restricted: $sourceMimeType"
                     )
                     return@before
                 }
@@ -279,7 +272,7 @@ object CommentEmojiHooker : YukiBaseHooker() {
                         saveFileExt = "gif"
                         hasTempFile = true
                     } else {
-                        YLog.error("$TAG: convert video to GIF failed, fallback to direct copy")
+                        YLog.error("$TAG: convert video to GIF failed, falling back to direct copy")
                     }
                 }
 
@@ -333,13 +326,10 @@ object CommentEmojiHooker : YukiBaseHooker() {
             }
         }?.result {
             onConductFailure { _, throwable ->
-                YLog.error("$TAG: emoji download completion callback runtime error", throwable)
+                YLog.error("$TAG: failed to run emoji download completion callback", throwable)
             }
             onHookingFailure { throwable ->
                 YLog.error("$TAG: failed to hook emoji download completion callback", throwable)
-            }
-            onHooked {
-                YLog.info("$TAG: emoji download completion callback hooked")
             }
         }
     }
@@ -370,7 +360,7 @@ object CommentEmojiHooker : YukiBaseHooker() {
                     !(fileMimeType.startsWith("image/") || fileMimeType.startsWith("video/"))
                 ) {
                     YLog.error(
-                        "$TAG: createUri is not allowed for restricted MIME type. mimeType: $fileMimeType"
+                        "$TAG: MIME type restricted when invoking createUri: $fileMimeType"
                     )
                     return@after
                 }
@@ -385,7 +375,7 @@ object CommentEmojiHooker : YukiBaseHooker() {
                 val context = packageInstance.ugFileUtils.selfClass?.getStaticField<Context>(
                     packageInstance.ugFileUtils.context()
                 ) ?: run {
-                    YLog.error("$TAG: unable to get Context from ugFileUtils, createUri supplement skipped")
+                    YLog.error("$TAG: unable to get Context from ugFileUtils")
                     return@after
                 }
                 val tokenCert = args[3]
@@ -410,20 +400,14 @@ object CommentEmojiHooker : YukiBaseHooker() {
             }
         }?.result {
             onConductFailure { _, throwable ->
-                YLog.error("$TAG: createUri hook runtime error", throwable)
+                YLog.error("$TAG: failed to build URI for image or video", throwable)
             }
             onHookingFailure { throwable ->
-                YLog.error("$TAG: failed to hook createUri", throwable)
-            }
-            onHooked {
-                YLog.info(
-                    "$TAG: createUri hooked. URI creation will be intercepted for emoji GIF conversion."
-                )
+                YLog.error("$TAG: failed to hook create URI for image or video", throwable)
             }
         }
     }
 
-    // Writes emoji URLs into comment.imageList[0].downloadUrl.urlList, optionally prepended to existing URLs
     private fun injectEmojiUrls(comment: Any, emojiUrls: List<String>) {
         var imageList = comment.getField<List<*>>(
             packageInstance.comment.imageList()
@@ -496,7 +480,7 @@ object CommentEmojiHooker : YukiBaseHooker() {
                 val mime = format.getString(MediaFormat.KEY_MIME) ?: ""
                 if (mime.startsWith("video/") || mime.startsWith("image/")) {
                     if (verbose) {
-                        YLog.debug("$TAG: found visual track[$i], mime=$mime")
+                        YLog.debug("$TAG: found visual track[$i], MIME: $mime")
                     }
                     trackIndex = i
                     break
@@ -589,7 +573,7 @@ object CommentEmojiHooker : YukiBaseHooker() {
 
             return true
         } catch (e: Exception) {
-            YLog.error("$TAG: convertMedia2Gif failed", e)
+            YLog.error("$TAG: convert media to gif failed", e)
             return false
         } finally {
             // Enforce rigorous cleanup

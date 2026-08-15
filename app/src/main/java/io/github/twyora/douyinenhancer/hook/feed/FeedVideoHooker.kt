@@ -23,7 +23,7 @@ object FeedVideoHooker : YukiBaseHooker() {
     override fun onHook() {
         if (!FastKVConfigManager.settings.getBoolean(SaveKey.FEED_VIDEO_REMOVE_WATERMARK, false)) {
             if (verbose) {
-                YLog.debug("$TAG: remove watermark disabled, skip feed video hook")
+                YLog.debug("$TAG: remove watermark is disabled, skipping hook")
             }
             return
         }
@@ -45,6 +45,13 @@ object FeedVideoHooker : YukiBaseHooker() {
                     }
                     result = playAddr
                 }
+            }
+        }?.result {
+            onConductFailure { _, throwable ->
+                YLog.error("$TAG: failed to override download addr with play addr", throwable)
+            }
+            onHookingFailure { throwable ->
+                YLog.error("$TAG: failed to hook for video using play addr to download", throwable)
             }
         }
     }

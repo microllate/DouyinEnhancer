@@ -22,7 +22,7 @@ object FeedDoubleTapDiggHooker : YukiBaseHooker() {
     override fun onHook() {
         if (!FastKVConfigManager.settings.getBoolean(FeedKey.FEED_DOUBLE_TAP_DIGG, false)) {
             if (verbose) {
-                YLog.debug("$TAG: double-tap digg disabling disabled, skip hook")
+                YLog.debug("$TAG: double-tap digg interception is disabled, skipping hook")
             }
             return
         }
@@ -32,16 +32,16 @@ object FeedDoubleTapDiggHooker : YukiBaseHooker() {
         )?.hook {
             before {
                 if (verbose) {
-                    YLog.debug("$TAG: disabling double-tap digg")
+                    YLog.debug("$TAG: intercepting double-tap digg")
                 }
                 resultNull()
             }
         }?.result {
             onConductFailure { _, throwable ->
-                YLog.error("$TAG: error while disabling double-tap digg", throwable)
+                YLog.error("$TAG: failed to intercept double-tap digg", throwable)
             }
-            onHookingFailure {
-                YLog.error("$TAG: hook failed, double-tap action cannot be intercepted, double-tap digg may stay enabled")
+            onHookingFailure { throwable ->
+                YLog.error("$TAG: failed to hook for intercepting double-tap digg", throwable)
             }
         }
     }

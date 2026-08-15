@@ -34,7 +34,7 @@ object CommentAudioHooker : YukiBaseHooker() {
     override fun onHook() {
         if (!FastKVConfigManager.settings.getBoolean(SaveKey.DOWNLOAD_COMMENT_AUDIO, false)) {
             if (verbose) {
-                YLog.debug("$TAG: download comment audio disabled, skip hook")
+                YLog.debug("$TAG: download comment audio is disabled, skipping hook")
             }
             return
         }
@@ -83,7 +83,10 @@ object CommentAudioHooker : YukiBaseHooker() {
             }
         }?.result {
             onConductFailure { _, throwable ->
-                YLog.error("$TAG: making save button visible for audio comments", throwable)
+                YLog.error("$TAG: failed to make save image button visible for audio", throwable)
+            }
+            onHookingFailure { throwable ->
+                YLog.error("$TAG: failed to hook save image button for audio", throwable)
             }
         }
     }
@@ -95,7 +98,7 @@ object CommentAudioHooker : YukiBaseHooker() {
             after {
                 @Suppress("UNCHECKED_CAST")
                 val whiteList = result as? MutableSet<String> ?: run {
-                    YLog.warn("$TAG: white list result is not a MutableSet, cannot add save action")
+                    YLog.error("$TAG: white list result is not a MutableSet, cannot add save action")
                     return@after
                 }
                 if (whiteList.contains("save_image")) {
@@ -117,6 +120,9 @@ object CommentAudioHooker : YukiBaseHooker() {
         }?.result {
             onConductFailure { _, throwable ->
                 YLog.error("$TAG: failed to add \"save_image\" to white list", throwable)
+            }
+            onHookingFailure { throwable ->
+                YLog.error("$TAG: failed to hook white list provider for audio", throwable)
             }
         }
     }
@@ -180,7 +186,7 @@ object CommentAudioHooker : YukiBaseHooker() {
                 }
 
                 if (verbose) {
-                    YLog.debug("$TAG: injected audio url(s) into comment, audio url(s): $audioUrlsToInject")
+                    YLog.debug("$TAG: injected ${audioUrlsToInject.size} audio URL(s) into comment")
                 }
             }
             after {
@@ -209,7 +215,10 @@ object CommentAudioHooker : YukiBaseHooker() {
             }
         }?.result {
             onConductFailure { _, throwable ->
-                YLog.error("$TAG: failed to inject audio URL on save button click", throwable)
+                YLog.error("$TAG: failed to inject audio URLs into save image download pipeline", throwable)
+            }
+            onHookingFailure { throwable ->
+                YLog.error("$TAG: failed to hook save image download pipeline for audio", throwable)
             }
         }
     }
@@ -231,12 +240,12 @@ object CommentAudioHooker : YukiBaseHooker() {
 
                 if (!dlUrl.contains("mime_type=audio")) {
                     if (verbose) {
-                        YLog.debug("$TAG: download url is not an audio url, skip saving audio, url: $dlUrl")
+                        YLog.debug("$TAG: download url is not an audio url, skipping saving audio")
                     }
                     return@before
                 } else if (!ftypeInfo.mimeType.startsWith("audio/")) {
                     if (verbose) {
-                        YLog.debug("$TAG: downloaded file is not an audio file, skip saving audio, mimeType: ${ftypeInfo.mimeType}")
+                        YLog.debug("$TAG: downloaded file MIME type is ${ftypeInfo.mimeType}, not an audio file, skipping saving audio")
                     }
                     return@before
                 }
@@ -300,8 +309,13 @@ object CommentAudioHooker : YukiBaseHooker() {
 
                 resultNull()
             }
-        }?.onConductFailure { _, throwable ->
-            YLog.error("$TAG: failed to save downloaded audio to media store", throwable)
+        }?.result {
+            onConductFailure { _, throwable ->
+                YLog.error("$TAG: failed to save downloaded audio to media store", throwable)
+            }
+            onHookingFailure { throwable ->
+                YLog.error("$TAG: failed to hook audio download completion callback", throwable)
+            }
         }
     }
 

@@ -431,11 +431,6 @@ class SettingsDialog(context: Context) : AlertDialog.Builder(ContextThemeWrapper
                         return@after
                     }
                     if (preference is PreferenceCategory) {
-                        if (verbose) {
-                            YLog.debug(
-                                "$TAG: ${preference::class.simpleName} is PreferenceCategory, preference.key: ${preference.key}, skip recolor"
-                            )
-                        }
                         return@after
                     }
 
@@ -482,7 +477,7 @@ class SettingsDialog(context: Context) : AlertDialog.Builder(ContextThemeWrapper
                 (context as? Activity)?.injectModuleAppResources()
                 SettingsDialog(context).show()
             }.onFailure {
-                YLog.error("$TAG: settingDialog show failed", it)
+                YLog.error("$TAG: failed to show settings dialog", it)
             }
         }
 

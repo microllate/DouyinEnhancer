@@ -138,7 +138,7 @@ object DanmakuViewHooker : YukiBaseHooker() {
                 YLog.error("$TAG: failed to block danmaku view hiding", throwable)
             }
             onHookingFailure { throwable ->
-                YLog.error("$TAG: failed to hook danmaku view hiding block", throwable)
+                YLog.error("$TAG: failed to hook for blocking danmaku view hiding", throwable)
             }
         }
     }

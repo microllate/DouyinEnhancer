@@ -45,6 +45,13 @@ object MainActivityHooker : YukiBaseHooker() {
                     }
                 }
             }
+        }?.result {
+            onConductFailure { _, throwable ->
+                YLog.error("$TAG: failed to show settings dialog on resume", throwable)
+            }
+            onHookingFailure { throwable ->
+                YLog.error("$TAG: failed to hook for showing settings dialog on resume", throwable)
+            }
         }
 
         packageInstance.mainActivity.selfClass?.resolveMethod(
@@ -65,6 +72,13 @@ object MainActivityHooker : YukiBaseHooker() {
                     intent.removeExtra("douyinenhancer_start_settings")
                     SettingsDialog.show(activity)
                 }
+            }
+        }?.result {
+            onConductFailure { _, throwable ->
+                YLog.error("$TAG: failed to show settings dialog on new intent", throwable)
+            }
+            onHookingFailure { throwable ->
+                YLog.error("$TAG: failed to hook for showing settings dialog on new intent", throwable)
             }
         }
     }

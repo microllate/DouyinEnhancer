@@ -23,7 +23,7 @@ object CommentImageHooker : YukiBaseHooker() {
     override fun onHook() {
         if (!FastKVConfigManager.settings.getBoolean(SaveKey.PURIFY_COMMENT_IMAGE, false)) {
             if (verbose) {
-                YLog.debug("$TAG: purify comment image disabled, skip hook")
+                YLog.debug("$TAG: purify comment image disabled, skipping hook")
             }
             return
         }
@@ -37,15 +37,18 @@ object CommentImageHooker : YukiBaseHooker() {
                 )
                 if (originUrl != null) {
                     if (verbose) {
-                        YLog.debug("$TAG: origin url present, override download url with origin url: $originUrl")
+                        YLog.debug("$TAG: origin url present, override download url with origin url")
                     }
                     result = originUrl
                 }
             }
-        } ?: run {
-            YLog.warn(
-                "$TAG: target method not found, watermark-free comment image download is not active"
-            )
+        }?.result {
+            onConductFailure { _, throwable ->
+                YLog.error("$TAG: failed to override download url with origin url", throwable)
+            }
+            onHookingFailure { throwable ->
+                YLog.error("$TAG: failed to hook for overriding download url with origin url", throwable)
+            }
         }
     }
 }
