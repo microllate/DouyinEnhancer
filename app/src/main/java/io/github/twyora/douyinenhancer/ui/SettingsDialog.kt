@@ -411,7 +411,6 @@ class SettingsDialog(context: Context) : AlertDialog.Builder(ContextThemeWrapper
 
     init {
         val activity = context as Activity
-        activity.injectModuleAppResources()
 
         val prefsFragment = PrefsFragment()
         activity.fragmentManager.beginTransaction().add(prefsFragment, "Settings").commit()
@@ -480,6 +479,7 @@ class SettingsDialog(context: Context) : AlertDialog.Builder(ContextThemeWrapper
 
         fun show(context: Context) {
             runCatching {
+                (context as? Activity)?.injectModuleAppResources()
                 SettingsDialog(context).show()
             }.onFailure {
                 YLog.error("$TAG: settingDialog show failed", it)
