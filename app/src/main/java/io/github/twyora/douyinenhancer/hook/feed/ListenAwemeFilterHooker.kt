@@ -24,7 +24,7 @@ object ListenAwemeFilterHooker : YukiBaseHooker() {
     override fun onHook() {
         if (!FastKVConfigManager.settings.getBoolean(FeedKey.BYPASS_LISTEN_AWEME_RESTRICTION, false)) {
             if (verbose) {
-                YLog.debug("$TAG: bypass listen aweme restriction disabled, skip listen aweme hooks")
+                YLog.debug("$TAG: bypass listen aweme restriction is disabled, skipping hook")
             }
             return
         }
@@ -51,10 +51,10 @@ object ListenAwemeFilterHooker : YukiBaseHooker() {
             }
         }?.result {
             onConductFailure { _, throwable ->
-                YLog.error("$TAG: failed to bypass listen aweme filter, some aweme may be filtered out", throwable)
+                YLog.error("$TAG: failed to bypass aweme in filter", throwable)
             }
-            onHookingFailure {
-                YLog.error("$TAG: hook failed, listen aweme filter cannot be bypassed, some aweme may be filtered out")
+            onHookingFailure { throwable ->
+                YLog.error("$TAG: failed to hook for bypassing listen aweme filter", throwable)
             }
         }
 }

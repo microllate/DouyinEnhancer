@@ -25,7 +25,7 @@ object FeedDoubleTapOpenCommentHooker : YukiBaseHooker() {
     override fun onHook() {
         if (!FastKVConfigManager.settings.getBoolean(FeedKey.FEED_DOUBLE_TAP_OPEN_COMMENT, false)) {
             if (verbose) {
-                YLog.debug("$TAG: double-tap open-comment disabled, skip hook")
+                YLog.debug("$TAG: double-tap to open comment panel is disabled, skipping hook")
             }
             return
         }
@@ -63,10 +63,10 @@ object FeedDoubleTapOpenCommentHooker : YukiBaseHooker() {
             }
         }?.result {
             onConductFailure { _, throwable ->
-                YLog.error("$TAG: error while dispatching open-comment-panel event for current aweme", throwable)
+                YLog.error("$TAG: failed to dispatch open-comment-panel event for current aweme", throwable)
             }
-            onHookingFailure {
-                YLog.error("$TAG: hook failed, open-comment-panel event will not be forwarded")
+            onHookingFailure { throwable ->
+                YLog.error("$TAG: failed to hook double-tap handle for opening comment panel", throwable)
             }
         }
     }

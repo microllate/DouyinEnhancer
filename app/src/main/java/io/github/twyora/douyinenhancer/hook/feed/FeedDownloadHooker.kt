@@ -29,7 +29,7 @@ object FeedDownloadHooker : YukiBaseHooker() {
     override fun onHook() {
         if (!FastKVConfigManager.settings.getBoolean(SaveKey.FEED_DOWNLOAD_BYPASS, false)) {
             if (verbose) {
-                YLog.debug("$TAG: feed download bypass disabled, skip feed download hooks")
+                YLog.debug("$TAG: bypass feed download is disabled, skipping hook")
             }
             return
         }
@@ -55,14 +55,14 @@ object FeedDownloadHooker : YukiBaseHooker() {
             after {
                 val actionCheckResult = result ?: run {
                     YLog.warn(
-                        "$TAG: action permission check result is null, cannot force action status to allowed, download may be blocked"
+                        "$TAG: action permission check result is null"
                     )
                     return@after
                 }
                 val actionStatus = actionCheckResult.getField<Any>(
                     packageInstance.actionCheckResult.actionStatus()
                 ) ?: run {
-                    YLog.warn("$TAG: action status is null, cannot decide whether to force it to allowed")
+                    YLog.warn("$TAG: action status is null")
                     return@after
                 }
 
@@ -72,7 +72,9 @@ object FeedDownloadHooker : YukiBaseHooker() {
                 )
 
                 if (actionStatus != normalStatus) {
-                    YLog.info("$TAG: forcing action status from $actionStatus to $normalStatus to allow download")
+                    if (verbose) {
+                        YLog.debug("$TAG: forcing action status from $actionStatus to $normalStatus to allow download")
+                    }
                     actionCheckResult.setField(
                         packageInstance.actionCheckResult.actionStatus(),
                         normalStatus
@@ -81,10 +83,10 @@ object FeedDownloadHooker : YukiBaseHooker() {
             }
         }?.result {
             onConductFailure { _, throwable ->
-                YLog.error("$TAG: failed to hook action permission check, download action may stay blocked", throwable)
+                YLog.error("$TAG: failed to force feed download status to normal", throwable)
             }
-            onHookingFailure {
-                YLog.error("$TAG: hook failed, action status cannot be forced to allowed, download may be blocked")
+            onHookingFailure { throwable ->
+                YLog.error("$TAG: failed to hook action status check for forcing download allowed", throwable)
             }
         }
     }
@@ -104,7 +106,9 @@ object FeedDownloadHooker : YukiBaseHooker() {
                 }
 
                 if (downloadStatus != 0) {
-                    YLog.info("$TAG: resetting aweme download status from $downloadStatus to 0 to allow download")
+                    if (verbose) {
+                        YLog.debug("$TAG: resetting aweme download status from $downloadStatus to 0 to allow download")
+                    }
                     aweme.getField<Any>(
                         packageInstance.aweme.status()
                     )?.setField(
@@ -115,10 +119,10 @@ object FeedDownloadHooker : YukiBaseHooker() {
             }
         }?.result {
             onConductFailure { _, throwable ->
-                YLog.error("$TAG: failed to hook gallery share download, aweme download status may stay restricted", throwable)
+                YLog.error("$TAG: failed to reset aweme download status", throwable)
             }
-            onHookingFailure {
-                YLog.error("$TAG: hook failed, aweme download status cannot be reset, download may be blocked")
+            onHookingFailure { throwable ->
+                YLog.error("$TAG: failed to hook download action for resetting aweme status", throwable)
             }
         }
     }
@@ -134,7 +138,7 @@ object FeedDownloadHooker : YukiBaseHooker() {
                 }
 
                 val response = packageInstance.sharePrivacyVideoApi.privacyVideoResponse.selfClass?.createInstance() ?: run {
-                    YLog.error("$TAG: failed to build the allowed-download response, privacy video download may stay blocked")
+                    YLog.error("$TAG: failed to build the allowed-download response")
                     return@before
                 }
                 response.setField(
@@ -150,17 +154,17 @@ object FeedDownloadHooker : YukiBaseHooker() {
                     packageInstance.rxObservable.just(),
                     response
                 ) ?: run {
-                    YLog.error("$TAG: failed to return the allowed-download response, privacy video download may stay blocked")
+                    YLog.error("$TAG: failed to warp the allowed-download response")
                     return@before
                 }
                 result = observable
             }
         }?.result {
             onConductFailure { _, throwable ->
-                YLog.error("$TAG: failed to hook privacy video download status, host will not treat it as downloadable", throwable)
+                YLog.error("$TAG: failed to bypass privacy video download status check", throwable)
             }
-            onHookingFailure {
-                YLog.error("$TAG: hook failed, privacy video download status cannot be faked, download stays blocked")
+            onHookingFailure { throwable ->
+                YLog.error("$TAG: failed to hook privacy video download status query", throwable)
             }
         }
     }

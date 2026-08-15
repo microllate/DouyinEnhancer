@@ -209,14 +209,11 @@ object RecommendedFeedHooker : YukiBaseHooker() {
                 }
             }
         }?.result {
-            onConductFailure { param, throwable ->
-                YLog.error("$TAG: feed hook runtime error", throwable)
+            onConductFailure { _, throwable ->
+                YLog.error("$TAG: failed to filter recommended feed aweme", throwable)
             }
             onHookingFailure { throwable ->
-                YLog.error("$TAG: failed to hook feed method", throwable)
-            }
-            onHooked {
-                YLog.info("$TAG: feed hook installed")
+                YLog.error("$TAG: failed to hook for filtering recommended feed aweme", throwable)
             }
         }
     }

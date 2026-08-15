@@ -78,7 +78,7 @@ object DanmakuViewHooker : YukiBaseHooker() {
             before {
                 @Suppress("UNCHECKED_CAST")
                 val whiteList = args[4] as? MutableList<Int> ?: run {
-                    YLog.error("$TAG: ${args[4]?.javaClass?.name} is not a mutable list of int\n")
+                    YLog.error("$TAG: ${args[4]?.javaClass?.name} is not a mutable list of int")
                     return@before
                 }
 
@@ -138,7 +138,7 @@ object DanmakuViewHooker : YukiBaseHooker() {
                 YLog.error("$TAG: failed to block danmaku view hiding", throwable)
             }
             onHookingFailure { throwable ->
-                YLog.error("$TAG: failed to hook danmaku view hiding block", throwable)
+                YLog.error("$TAG: failed to hook for blocking danmaku view hiding", throwable)
             }
         }
     }

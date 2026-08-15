@@ -34,7 +34,7 @@ object FeedMultiImageHooker : YukiBaseHooker() {
     override fun onHook() {
         if (!FastKVConfigManager.settings.getBoolean(SaveKey.FEED_MULTI_IMAGE_REMOVE_WATERMARK, false)) {
             if (verbose) {
-                YLog.debug("$TAG: remove watermark disabled, skip feed multi-image hook")
+                YLog.debug("$TAG: remove watermark is disabled, skipping hook")
             }
             return
         }
@@ -101,9 +101,6 @@ object FeedMultiImageHooker : YukiBaseHooker() {
                             packageInstance.imageUrlStruct.downloadUrlList(),
                             it
                         )
-                        if (verbose) {
-                            YLog.debug("$TAG: image.urlList[0]: ${it.first()}")
-                        }
                     } ?: run {
                         YLog.warn("$TAG: image has no play URL, skipping watermark-free injection")
                     }
@@ -139,8 +136,8 @@ object FeedMultiImageHooker : YukiBaseHooker() {
             onConductFailure { _, throwable ->
                 YLog.error("$TAG: failed to inject play URL into image download", throwable)
             }
-            onHookingFailure {
-                YLog.error("$TAG: hook failed, multi-image watermark-free download unavailable")
+            onHookingFailure { throwable ->
+                YLog.error("$TAG: failed to hook image download for injecting play URL", throwable)
             }
         }
     }
@@ -157,10 +154,10 @@ object FeedMultiImageHooker : YukiBaseHooker() {
             }
         }?.result {
             onConductFailure { _, throwable ->
-                YLog.error("$TAG: failed to hook ABTestServiceImpl.enableSaveImageToVideoLocalWaterMask", throwable)
+                YLog.error("$TAG: failed to disable save-image-to-video local watermark", throwable)
             }
-            onHookingFailure {
-                YLog.error("$TAG: hook failed, unable to remove watermark from save-image-to-video")
+            onHookingFailure { throwable ->
+                YLog.error("$TAG: failed to hook for disable save-image-to-video local watermark", throwable)
             }
         }
 
@@ -191,8 +188,8 @@ object FeedMultiImageHooker : YukiBaseHooker() {
             onConductFailure { _, throwable ->
                 YLog.error("$TAG: failed to convert vvic cover image to png", throwable)
             }
-            onHookingFailure {
-                YLog.error("$TAG: hook failed, vvic cover image to png conversion unavailable")
+            onHookingFailure { throwable ->
+                YLog.error("$TAG: failed to hook for converting vvic cover to png", throwable)
             }
         }
     }
@@ -209,10 +206,10 @@ object FeedMultiImageHooker : YukiBaseHooker() {
             }
         }?.result {
             onConductFailure { _, throwable ->
-                YLog.error("$TAG: failed to hook ABTestServiceImpl.enableVEAddLiveVideoWaterMark", throwable)
+                YLog.error("$TAG: failed to disable ve-add-live-video-water-mark", throwable)
             }
             onHookingFailure {
-                YLog.error("$TAG: hook failed, unable to remove watermark from live video")
+                YLog.error("$TAG: failed to hook for disabling ve-add-live-video-water-mark")
             }
         }
 
@@ -243,7 +240,7 @@ object FeedMultiImageHooker : YukiBaseHooker() {
                 YLog.error("$TAG: failed to convert vvic image to png", throwable)
             }
             onHookingFailure {
-                YLog.error("$TAG: hook failed, vvic image to png conversion unavailable")
+                YLog.error("$TAG: failed to hook download executor for converting vvic image to png")
             }
         }
     }
@@ -277,8 +274,8 @@ object FeedMultiImageHooker : YukiBaseHooker() {
             onConductFailure { _, throwable ->
                 YLog.error("$TAG: failed to convert single vvic image to png in mp4 composer", throwable)
             }
-            onHookingFailure {
-                YLog.error("$TAG: hook failed, single vvic image to png conversion in mp4 composer unavailable")
+            onHookingFailure { throwable ->
+                YLog.error("$TAG: failed to hook single image to mp4 composer", throwable)
             }
         }
 
@@ -305,10 +302,10 @@ object FeedMultiImageHooker : YukiBaseHooker() {
             }
         }?.result {
             onConductFailure { _, throwable ->
-                YLog.error("$TAG: failed to convert multi vvic images to png in mutil mp4 composer", throwable)
+                YLog.error("$TAG: failed to convert multi vvic images to png in mp4 composer", throwable)
             }
-            onHookingFailure {
-                YLog.error("$TAG: hook failed, multi vvic images to png conversion in mp4 composer unavailable")
+            onHookingFailure { throwable ->
+                YLog.error("$TAG: failed to hook multi image to mp4 composer", throwable)
             }
         }
 

@@ -33,14 +33,11 @@ object HookEntry : IYukiHookXposedInit {
                         // load cached HookInfo and run hooks when app context is available
                         DouyinPackage.init(this.classLoader, this)
 
-                        YLog.info(
-                            "verbose logging disabled is ${
-                                FastKVConfigManager.module.getBoolean(
-                                    ModuleKey.DISABLE_VERBOSE_LOGS,
-                                    false
-                                )
-                            }"
+                        val verboseDisabled = FastKVConfigManager.module.getBoolean(
+                            ModuleKey.DISABLE_VERBOSE_LOGS,
+                            false
                         )
+                        YLog.info("$TAG: verbose log disabling is $verboseDisabled")
 
                         HookerRegistry.mainProcessHookers.forEach {
                             loadHooker(it)

@@ -108,6 +108,13 @@ object SettingsHooker : YukiBaseHooker() {
                     0
                 )
             }
+        }?.result {
+            onConductFailure { _, throwable ->
+                YLog.error("$TAG: failed to inject module settings entry", throwable)
+            }
+            onHookingFailure { throwable ->
+                YLog.error("$TAG: failed to hook for injecting module settings entry", throwable)
+            }
         }
     }
 
@@ -140,6 +147,13 @@ object SettingsHooker : YukiBaseHooker() {
                     SettingsDialog.show(activity)
                     true
                 }
+            }
+        }?.result {
+            onConductFailure { _, throwable ->
+                YLog.error("$TAG: failed to attach long click to open settings", throwable)
+            }
+            onHookingFailure { throwable ->
+                YLog.error("$TAG: failed to hook for attaching long click to open settings", throwable)
             }
         }
     }
