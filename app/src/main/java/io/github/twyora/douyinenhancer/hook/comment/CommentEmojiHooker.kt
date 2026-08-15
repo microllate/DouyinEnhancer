@@ -226,8 +226,8 @@ object CommentEmojiHooker : YukiBaseHooker() {
                 val sourcePath = downloadInfo.invokeMethod<String?>(
                     packageInstance.downloadInfo.getTargetFilePath()
                 ) ?: return@before
-                val sourceMimeType = FileTypeDetector.detect(sourcePath).mimeType
-                YLog.info("$TAG: source MIME type: $sourceMimeType")
+                val sourceFileInfo = FileTypeDetector.detect(sourcePath)
+                YLog.info("$TAG: source MIME type: ${sourceFileInfo.mimeType}")
 
                 val saveFilePrefix = "comment_${
                     packageInstance.digestUtils.selfClass?.invokeStaticMethod<String>(
@@ -238,24 +238,20 @@ object CommentEmojiHooker : YukiBaseHooker() {
 
                 // Prepare file to save
                 var fileToSave = sourcePath
-                var saveFileExt =
-                    MimeTypeMap
-                        .getSingleton()
-                        .getExtensionFromMimeType(sourceMimeType)
-                        ?: sourcePath.substringAfterLast('.', "")
+                var saveFileExt = sourceFileInfo.extensions.first()
                 var hasTempFile = false
 
-                if (!sourceMimeType.startsWith("image/") &&
-                    !sourceMimeType.startsWith("video/")
+                if (!sourceFileInfo.mimeType.startsWith("image/") &&
+                    !sourceFileInfo.mimeType.startsWith("video/")
                 ) {
                     YLog.error(
-                        "$TAG: source MIME type restricted: $sourceMimeType"
+                        "$TAG: source MIME type restricted: ${sourceFileInfo.mimeType}"
                     )
                     return@before
                 }
 
                 // Convert video source to GIF animation
-                if (sourceMimeType.startsWith("video/")) {
+                if (sourceFileInfo.mimeType.startsWith("video/")) {
                     YLog.info("$TAG: source MIME type is video, converting to GIF")
 
                     val gifTempPath = "${
