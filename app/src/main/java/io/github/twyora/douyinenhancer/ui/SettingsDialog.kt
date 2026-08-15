@@ -29,6 +29,8 @@ import io.github.twyora.douyinenhancer.config.key.MiscKey
 import io.github.twyora.douyinenhancer.config.key.ModuleKey
 import io.github.twyora.douyinenhancer.hook.comment.CommentAudioHooker.hook
 import io.github.twyora.douyinenhancer.utils.Field
+import io.github.twyora.douyinenhancer.utils.Method
+import io.github.twyora.douyinenhancer.utils.resolveMethod
 import io.github.twyora.douyinenhancer.utils.setField
 import java.io.File
 import java.net.URL
@@ -422,9 +424,9 @@ class SettingsDialog(context: Context) : AlertDialog.Builder(ContextThemeWrapper
             if (verbose) {
                 YLog.debug("$TAG: night mode on, recoloring settings text white")
             }
-            Preference::class.resolve().optional().firstMethodOrNull {
-                name = "onBindView"
-            }?.hook {
+            Preference::class.resolveMethod(
+                Method(name = "onBindView", parameters = null)
+            )?.hook {
                 after {
                     val preference = instance as? Preference ?: run {
                         YLog.error("$TAG: bound target ${instance::class.qualifiedName} not a Preference, skip recolor")
