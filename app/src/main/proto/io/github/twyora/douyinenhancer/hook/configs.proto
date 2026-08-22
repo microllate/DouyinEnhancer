@@ -302,6 +302,14 @@ message BaseListFragmentPanel {
   optional Method handle_double_click = 2;
   optional Method handle_video_event = 3;
   optional Method get_current_aweme = 4;
+  optional Method pause_current_player_with_listener = 5;
+  optional Method show_iv_when_pause = 6;
+  optional Method on_video_player_event = 7;
+}
+
+message VideoPlayerEvent {
+  optional Class class = 1;
+  optional Field code = 2;
 }
 
 message VideoEvent {
@@ -371,6 +379,7 @@ message HookInfo {
   optional VideoEvent video_event = 52;
   optional CleanModePresenter clean_mode_presenter = 53;
   optional DanmakuView danmaku_view = 54;
+  optional VideoPlayerEvent video_player_event = 55;
 
   reserved 13, 18, 32;
 }
