@@ -64,6 +64,18 @@
             android:key="bypass_listen_aweme_restriction"
             android:summary="@string/pref_feed_bypass_listen_aweme_restriction_summary"
             android:title="@string/pref_feed_bypass_listen_aweme_restriction_title" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="block_feed_auto_replay"
+            android:summary="@string/pref_feed_block_auto_replay_summary"
+            android:title="@string/pref_feed_block_auto_replay_title" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="block_feed_resume_playback"
+            android:summary="@string/pref_feed_block_resume_playback_summary"
+            android:title="@string/pref_feed_block_resume_playback_title" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/pref_category_ui">

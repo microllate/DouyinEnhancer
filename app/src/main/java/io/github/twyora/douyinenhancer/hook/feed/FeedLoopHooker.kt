@@ -3,6 +3,7 @@ package io.github.twyora.douyinenhancer.hook.feed
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.log.YLog
 import io.github.twyora.douyinenhancer.config.FastKVConfigManager
+import io.github.twyora.douyinenhancer.config.key.FeedKey
 import io.github.twyora.douyinenhancer.config.key.ModuleKey
 import io.github.twyora.douyinenhancer.hook.DouyinPackage
 import io.github.twyora.douyinenhancer.hook.HookOnMainProcess
@@ -24,6 +25,13 @@ object FeedLoopHooker : YukiBaseHooker() {
     private const val PLAY_COMPLETED_EVENT = 7
 
     override fun onHook() {
+        if (!FastKVConfigManager.settings.getBoolean(FeedKey.FEED_BLOCK_AUTO_REPLAY, false)) {
+            if (verbose) {
+                YLog.debug("$TAG: block auto replay is disabled, skipping hook")
+            }
+            return
+        }
+
         // BaseListFragmentPanel has no member function onPlayCompleted,
         // but onVideoPlayerEvent will be called when video playback completes with a specific video event code.
         // I have no other good idea, pause the video manually with a magic number checking

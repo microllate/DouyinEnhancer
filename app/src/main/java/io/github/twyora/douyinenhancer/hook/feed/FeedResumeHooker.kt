@@ -3,6 +3,7 @@ package io.github.twyora.douyinenhancer.hook.feed
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.log.YLog
 import io.github.twyora.douyinenhancer.config.FastKVConfigManager
+import io.github.twyora.douyinenhancer.config.key.FeedKey
 import io.github.twyora.douyinenhancer.config.key.ModuleKey
 import io.github.twyora.douyinenhancer.hook.DouyinPackage
 import io.github.twyora.douyinenhancer.hook.HookOnMainProcess
@@ -22,6 +23,13 @@ object FeedResumeHooker : YukiBaseHooker() {
     private const val EVENT_SURFACE_AVAILABLE = 0
 
     override fun onHook() {
+        if (!FastKVConfigManager.settings.getBoolean(FeedKey.FEED_BLOCK_RESUME_PLAYBACK, false)) {
+            if (verbose) {
+                YLog.debug("$TAG: block resume playback is disabled, skipping hook")
+            }
+            return
+        }
+
         // I have another choice: intercept FeedPanelProxy.handleTextureAvailable,
         // (the name "FeedPanelProxy" is given by me; it is obfuscated by the host and owned by BaseListFragmentPanel.basePanelProxy)
         // instead of checking videoType using a magic number inside BaseListFragmentPanel.handleVideoEvent.
@@ -45,6 +53,13 @@ object FeedResumeHooker : YukiBaseHooker() {
                     YLog.debug("$TAG: intercepting resume of video playback on surface created")
                 }
                 resultNull()
+            }
+        }?.result {
+            onConductFailure { _, throwable ->
+                YLog.error("$TAG: failed to intercept resume of video playback on surface created", throwable)
+            }
+            onHookingFailure { throwable ->
+                YLog.error("$TAG: failed to hook for intercepting resume of video playback on surface created", throwable)
             }
         }
     }
