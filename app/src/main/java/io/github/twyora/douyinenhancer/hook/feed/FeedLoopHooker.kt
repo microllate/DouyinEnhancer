@@ -22,7 +22,7 @@ object FeedLoopHooker : YukiBaseHooker() {
         get() = !FastKVConfigManager.module.getBoolean(ModuleKey.DISABLE_VERBOSE_LOGS, false)
 
     // what a magic number, hope it can remain stable on other versions
-    private const val PLAY_COMPLETED_EVENT = 7
+    private const val EVENT_PLAY_COMPLETED = 7
 
     override fun onHook() {
         if (!FastKVConfigManager.settings.getBoolean(FeedKey.FEED_BLOCK_AUTO_REPLAY, false)) {
@@ -50,7 +50,7 @@ object FeedLoopHooker : YukiBaseHooker() {
                     return@after
                 }
 
-                if (code != PLAY_COMPLETED_EVENT) {
+                if (code != EVENT_PLAY_COMPLETED) {
                     return@after
                 } else if (verbose) {
                     YLog.debug("$TAG: pause when feed playback completes")
