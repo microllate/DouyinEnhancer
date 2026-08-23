@@ -12,7 +12,7 @@ import io.github.twyora.douyinenhancer.utils.invokeMethod
 import io.github.twyora.douyinenhancer.utils.resolveMethod
 
 @HookOnMainProcess
-object FeedLoopHooker : YukiBaseHooker() {
+object FeedReplayHooker : YukiBaseHooker() {
     private val TAG = this::class.simpleName
 
     private val packageInstance
