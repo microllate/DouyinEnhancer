@@ -314,6 +314,7 @@ message VideoPlayerEvent {
 
 message VideoEvent {
   optional Class class = 1;
+  optional Field video_type = 2;
 }
 
 message CleanModePresenter {

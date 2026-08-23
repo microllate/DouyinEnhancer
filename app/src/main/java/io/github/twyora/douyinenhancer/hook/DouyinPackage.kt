@@ -566,6 +566,8 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
         val selfClass by weak {
             hookInfo.videoEvent.class_.nameOrNull?.toClass(classLoader)
         }
+
+        fun videoType() = Field(hookInfo.videoEvent.videoType.nameOrNull)
     }
 
     inner class AwemeStatisticsModule {
@@ -2685,14 +2687,32 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                                 }
                             }
                         }.singleOrNull()
+                        val videTypeFieldData = videoEventClassData?.let {
+                            bridge.findField {
+                                searchInClass(listOf(it))
+                                matcher {
+                                    modifiers = Modifier.PUBLIC or Modifier.FINAL
+                                    type = "int"
+                                    writeMethods {
+                                        add {
+                                            name = "<init>"
+                                            paramTypes("int")
+                                        }
+                                    }
+                                }
+                            }.singleOrNull()
+                        }
 
-                        if (videoEventClassData == null) {
+                        if (videoEventClassData == null || videTypeFieldData == null) {
                             YLog.error(symbolNotFoundMsg.format(TAG, this::class.java.enclosingClass?.simpleName))
                             return@videoEvent
                         }
 
                         class_ = class_ {
                             name = videoEventClassData.name
+                        }
+                        videoType = field {
+                            name = videTypeFieldData.name
                         }
                     }.onFailure {
                         YLog.error(populateFailedMsg.format(TAG), it)
