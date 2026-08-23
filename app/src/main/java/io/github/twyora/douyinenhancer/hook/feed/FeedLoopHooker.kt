@@ -20,9 +20,13 @@ object FeedLoopHooker : YukiBaseHooker() {
     private val verbose
         get() = !FastKVConfigManager.module.getBoolean(ModuleKey.DISABLE_VERBOSE_LOGS, false)
 
+    // what a magic number, hope it can remain stable on other versions
     private const val PLAY_COMPLETED_EVENT = 7
 
     override fun onHook() {
+        // BaseListFragmentPanel has no member function onPlayCompleted,
+        // but onVideoPlayerEvent will be called when video playback completes with a specific video event code.
+        // I have no other good idea, pause the video manually with a magic number checking
         packageInstance.baseListFragmentPanel.selfClass?.resolveMethod(
             packageInstance.baseListFragmentPanel.onVideoPlayerEvent()
         )?.hook {
