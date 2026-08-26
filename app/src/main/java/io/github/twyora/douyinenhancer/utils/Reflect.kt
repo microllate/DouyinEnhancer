@@ -15,14 +15,23 @@ fun String.toClass(loader: ClassLoader? = null, initialize: Boolean = false): Cl
     // KavaRef's toClass doesn't support primitive types and JVM descriptors, manually handle them here
     return when (this) {
         "I", "int" -> Int::class.javaPrimitiveType!!
+
         "Z", "boolean" -> Boolean::class.javaPrimitiveType!!
+
         "B", "byte" -> Byte::class.javaPrimitiveType!!
+
         "C", "char" -> Char::class.javaPrimitiveType!!
+
         "S", "short" -> Short::class.javaPrimitiveType!!
+
         "J", "long" -> Long::class.javaPrimitiveType!!
+
         "F", "float" -> Float::class.javaPrimitiveType!!
+
         "D", "double" -> Double::class.javaPrimitiveType!!
+
         "V", "void" -> Void.TYPE
+
         else -> {
             if (this.startsWith("L") && this.endsWith(";")) {
                 this.substring(1, this.length - 1).replace("/", ".").KavaRefExt_toClass(loader, initialize)
@@ -38,11 +47,9 @@ fun String.toClassOrNull(loader: ClassLoader? = null, initialize: Boolean = fals
     this.toClass(loader, initialize)
 }.getOrNull()
 
-fun Iterable<String>.toClasses(): Array<Class<*>> {
-    return this.map {
-        it.toClass()
-    }.toTypedArray()
-}
+fun Iterable<String>.toClasses(): Array<Class<*>> = this.map {
+    it.toClass()
+}.toTypedArray()
 
 fun Array<String>.toClasses(): Array<Class<*>> = Array(size) {
     get(it).toClass()
