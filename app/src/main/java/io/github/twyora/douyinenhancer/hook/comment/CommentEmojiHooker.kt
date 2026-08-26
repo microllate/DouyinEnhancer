@@ -23,6 +23,7 @@ import io.github.twyora.douyinenhancer.utils.HookTransaction
 import io.github.twyora.douyinenhancer.utils.getField
 import io.github.twyora.douyinenhancer.utils.getStaticField
 import io.github.twyora.douyinenhancer.utils.invokeMethod
+import io.github.twyora.douyinenhancer.utils.invokeMethodOnly
 import io.github.twyora.douyinenhancer.utils.invokeStaticMethod
 import io.github.twyora.douyinenhancer.utils.resolveMethod
 import io.github.twyora.douyinenhancer.utils.setField
@@ -307,7 +308,7 @@ object CommentEmojiHooker : YukiBaseHooker() {
                     return@before
                 }
 
-                instance.invokeMethod<Any?>(
+                instance.invokeMethodOnly(
                     packageInstance.commentImageSaveDownloadListener.notifyResult(),
                     context,
                     cpRet

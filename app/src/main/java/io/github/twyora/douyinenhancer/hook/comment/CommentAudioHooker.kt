@@ -15,6 +15,7 @@ import io.github.twyora.douyinenhancer.utils.FileTypeDetector
 import io.github.twyora.douyinenhancer.utils.HookTransaction
 import io.github.twyora.douyinenhancer.utils.getField
 import io.github.twyora.douyinenhancer.utils.invokeMethod
+import io.github.twyora.douyinenhancer.utils.invokeMethodOnly
 import io.github.twyora.douyinenhancer.utils.invokeStaticMethod
 import io.github.twyora.douyinenhancer.utils.resolveMethod
 import io.github.twyora.douyinenhancer.utils.setField
@@ -301,7 +302,7 @@ object CommentAudioHooker : YukiBaseHooker() {
                     YLog.error("$TAG: failed to copy audio file to media store", it)
                 }.getOrDefault(false)
 
-                instance.invokeMethod<Any?>(
+                instance.invokeMethodOnly(
                     packageInstance.commentImageSaveDownloadListener.notifyResult(),
                     context,
                     copyState

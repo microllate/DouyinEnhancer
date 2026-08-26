@@ -10,6 +10,7 @@ import io.github.twyora.douyinenhancer.hook.DouyinPackage
 import io.github.twyora.douyinenhancer.hook.HookOnMainProcess
 import io.github.twyora.douyinenhancer.utils.getField
 import io.github.twyora.douyinenhancer.utils.invokeMethod
+import io.github.twyora.douyinenhancer.utils.invokeMethodOnly
 import io.github.twyora.douyinenhancer.utils.resolveMethod
 
 @HookOnMainProcess
@@ -56,7 +57,7 @@ object FeedDoubleTapOpenCommentHooker : YukiBaseHooker() {
                     YLog.debug("$TAG: dispatching open-comment-panel event for current aweme, aid: $awemeId")
                 }
 
-                instance.invokeMethod<Any>(
+                instance.invokeMethodOnly(
                     packageInstance.baseListFragmentPanel.handleVideoEvent(),
                     openCommentPanelEvent
                 )
