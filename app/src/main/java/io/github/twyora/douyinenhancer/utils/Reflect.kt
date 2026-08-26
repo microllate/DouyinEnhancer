@@ -57,7 +57,11 @@ fun <T : Any> Class<T>.resolveMethod(method: Method): MethodResolver<T>? {
         this.resolve().firstMethodOrNull {
             name = method.name
             method.parameters?.let {
-                parameters(*it.toClasses())
+                if (it.isEmpty()) {
+                    emptyParameters()
+                } else {
+                    parameters(*it.toClasses())
+                }
             }
             superclass()
         }
