@@ -18,7 +18,6 @@ import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.edit
-import com.highcapable.kavaref.KavaRef.Companion.resolve
 import com.highcapable.yukihookapi.hook.factory.injectModuleAppResources
 import com.highcapable.yukihookapi.hook.log.YLog
 import io.fastkv.FastKV
