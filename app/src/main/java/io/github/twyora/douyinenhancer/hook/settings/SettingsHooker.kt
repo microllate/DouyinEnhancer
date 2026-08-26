@@ -17,6 +17,7 @@ import io.github.twyora.douyinenhancer.hook.HookOnMainProcess
 import io.github.twyora.douyinenhancer.ui.SettingsDialog
 import io.github.twyora.douyinenhancer.utils.getField
 import io.github.twyora.douyinenhancer.utils.invokeMethod
+import io.github.twyora.douyinenhancer.utils.invokeMethodOnly
 import io.github.twyora.douyinenhancer.utils.resolveMethod
 
 @HookOnMainProcess
@@ -69,11 +70,11 @@ object SettingsHooker : YukiBaseHooker() {
                 }
                 // ensure the host app can find the module settings icon
                 activity.injectModuleAppResources()
-                moduleSettingsCommonItemView.invokeMethod<Any>(
+                moduleSettingsCommonItemView.invokeMethodOnly(
                     packageInstance.commonItemView.setLeftText(),
                     moduleAppResources.getString(R.string.app_name)
                 )
-                moduleSettingsCommonItemView.invokeMethod<Any>(
+                moduleSettingsCommonItemView.invokeMethodOnly(
                     packageInstance.commonItemView.setLeftIcon(),
                     R.drawable.ic_module_settings
                 )
