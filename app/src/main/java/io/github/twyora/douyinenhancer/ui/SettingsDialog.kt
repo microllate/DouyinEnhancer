@@ -71,8 +71,8 @@ class SettingsDialog(context: Context) : AlertDialog.Builder(ContextThemeWrapper
 
             val prefs = FastKVConfigManager.settings
 
-            preferenceManager.setField<Any?>(Field("mSharedPreferences"), prefs)
-            preferenceManager.setField<Any?>(Field("mEditor"), null)
+            preferenceManager.setField(Field("mSharedPreferences"), prefs)
+            preferenceManager.setField(Field("mEditor"), null)
             addPreferencesFromResource(R.xml.prefs_setting)
 
             if (!prefs.getBoolean(MiscKey.ENABLE_HIDDEN_FEATURES, false)) {

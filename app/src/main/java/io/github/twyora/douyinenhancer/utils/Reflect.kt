@@ -1,7 +1,7 @@
 package io.github.twyora.douyinenhancer.utils
 
-import com.highcapable.kavaref.KavaRef.Companion.asResolver
 import com.highcapable.kavaref.KavaRef.Companion.resolve
+import com.highcapable.kavaref.extension.toClass as KavaRefExt_toClass
 import com.highcapable.kavaref.resolver.FieldResolver
 import com.highcapable.kavaref.resolver.MethodResolver
 import com.highcapable.yukihookapi.hook.log.YLog
@@ -10,118 +10,69 @@ data class Field(val name: String?)
 
 data class Method(val name: String?, val parameters: List<String>?)
 
-/**
- * Resolves a type name string into a format directly recognizable by reflection systems like KavaRef.
- *
- * @return Class for primitive type names, or the original String otherwise.
- */
-fun String.toClassIfPrimitiveElseString(): Any = when (this) {
-    // KavaRef's parameters() accepts Class or String. When given a String,
-    // it calls Class.forName() internally, which cannot resolve bare primitive
-    // type names like "int" or "boolean" and throws ClassNotFoundException.
-    // To work around this, we convert primitive type names to their corresponding
-    // java.lang.Class instances (e.g. "int" -> Integer.TYPE) so KavaRef hits
-    // the Class branch directly. Ordinary class names like "java.lang.String"
-    // are left as raw String, letting KavaRef resolve them via Class.forName()
-    // as intended.
-    "boolean" -> Boolean::class.java
-
-    "byte" -> Byte::class.java
-
-    "char" -> Char::class.java
-
-    "short" -> Short::class.java
-
-    "int" -> Int::class.java
-
-    "long" -> Long::class.java
-
-    "float" -> Float::class.java
-
-    "double" -> Double::class.java
-
-    "void" -> Void::class.java
-
-    else -> this
-}
-
-fun Array<String>.toClassIfPrimitiveElseString(): Array<Any> = Array(size) {
-    this[it].toClassIfPrimitiveElseString()
-}
-
-fun List<String>.toClassIfPrimitiveElseString(): Array<Any> = Array(size) {
-    this[it].toClassIfPrimitiveElseString()
-}
-
-fun Any.resolveMethod(method: Method): MethodResolver<*>? {
-    if (method.name.isNullOrBlank()) {
-        YLog.error("cannot determine which method to resolve on ${this::class.simpleName}, name is null or blank")
-        return null
+@JvmOverloads
+fun String.toClass(loader: ClassLoader? = null, initialize: Boolean = false): Class<*> {
+    // KavaRef's toClass doesn't support primitive types and JVM descriptors, manually handle them here
+    return when (this) {
+        "I", "int" -> Int::class.javaPrimitiveType!!
+        "Z", "boolean" -> Boolean::class.javaPrimitiveType!!
+        "B", "byte" -> Byte::class.javaPrimitiveType!!
+        "C", "char" -> Char::class.javaPrimitiveType!!
+        "S", "short" -> Short::class.javaPrimitiveType!!
+        "J", "long" -> Long::class.javaPrimitiveType!!
+        "F", "float" -> Float::class.javaPrimitiveType!!
+        "D", "double" -> Double::class.javaPrimitiveType!!
+        "V", "void" -> Void.TYPE
+        else -> {
+            if (this.startsWith("L") && this.endsWith(";")) {
+                this.substring(1, this.length - 1).replace("/", ".").KavaRefExt_toClass(loader, initialize)
+            } else {
+                this.KavaRefExt_toClass(loader, initialize)
+            }
+        }
     }
-    return runCatching {
-        this.asResolver().firstMethodOrNull {
-            name = method.name
-            method.parameters?.let {
-                parameters(*it.toClassIfPrimitiveElseString())
-            }
-            superclass()
-        }
-    }.onFailure {
-        YLog.error("resolve failed: ${this::class.simpleName}.${method.name}(${method.parameters})")
-    }.getOrNull()
-        .also {
-            if (it == null) {
-                YLog.error("method not found: ${this::class.simpleName}.${method.name}(${method.parameters})")
-            }
-        }
 }
 
-fun Any.resolveField(field: Field): FieldResolver<*>? {
-    if (field.name.isNullOrBlank()) {
-        YLog.error("cannot determine which field to resolve on ${this::class.simpleName}, name is null or blank")
-        return null
-    }
-    return runCatching {
-        this.asResolver().firstFieldOrNull {
-            name = field.name
-            superclass()
-        }
-    }.onFailure {
-        YLog.error("resolve failed: ${this::class.simpleName}.${field.name}")
-    }.getOrNull()
-        .also {
-            if (it == null) {
-                YLog.error("field not found: ${this::class.simpleName}.${field.name}")
-            }
-        }
+@JvmOverloads
+fun String.toClassOrNull(loader: ClassLoader? = null, initialize: Boolean = false) = runCatching {
+    this.toClass(loader, initialize)
+}.getOrNull()
+
+fun Iterable<String>.toClasses(): Array<Class<*>> {
+    return this.map {
+        it.toClass()
+    }.toTypedArray()
 }
 
-fun Class<*>.resolveMethod(method: Method): MethodResolver<*>? {
+fun Array<String>.toClasses(): Array<Class<*>> = Array(size) {
+    get(it).toClass()
+}
+
+fun <T : Any> Class<T>.resolveMethod(method: Method): MethodResolver<T>? {
     if (method.name.isNullOrBlank()) {
-        YLog.error("cannot determine which method to resolve on ${this.simpleName}, name is null or blank")
+        YLog.error("cannot determine which method to resolve on ${this.name}, name is null or blank")
         return null
     }
     return runCatching {
         this.resolve().firstMethodOrNull {
             name = method.name
             method.parameters?.let {
-                parameters(*it.toClassIfPrimitiveElseString())
+                parameters(*it.toClasses())
             }
             superclass()
         }
-    }.onFailure {
-        YLog.error("resolve failed: ${this.simpleName}.${method.name}(${method.parameters})")
-    }.getOrNull()
-        .also {
-            if (it == null) {
-                YLog.error("method not found: ${this.simpleName}.${method.name}(${method.parameters})")
-            }
+    }.onFailure { throwable ->
+        YLog.error("resolve failed: ${this.name}.${method.name}(${method.parameters})", throwable)
+    }.getOrNull().also {
+        if (it == null) {
+            YLog.error("method not found: ${this.name}.${method.name}(${method.parameters})")
         }
+    }
 }
 
-fun Class<*>.resolveField(field: Field): FieldResolver<*>? {
+fun <T : Any> Class<T>.resolveField(field: Field): FieldResolver<T>? {
     if (field.name.isNullOrBlank()) {
-        YLog.error("cannot determine which field to resolve on ${this.simpleName}, name is null or blank")
+        YLog.error("cannot determine which field to resolve on ${this.name}, name is null or blank")
         return null
     }
     return runCatching {
@@ -129,28 +80,39 @@ fun Class<*>.resolveField(field: Field): FieldResolver<*>? {
             name = field.name
             superclass()
         }
-    }.onFailure {
-        YLog.error("resolve failed: ${this.simpleName}.${field.name}")
-    }.getOrNull()
-        .also {
-            if (it == null) {
-                YLog.error("field not found: ${this.simpleName}.${field.name}")
-            }
+    }.onFailure { throwable ->
+        YLog.error("resolve failed: ${this.name}.${field.name}", throwable)
+    }.getOrNull().also {
+        if (it == null) {
+            YLog.error("field not found: ${this.name}.${field.name}")
         }
+    }
 }
 
-inline fun <reified T> Any.invokeMethod(method: Method, vararg args: Any?): T? = this.resolveMethod(method)?.invoke(*args) as? T
+fun <T : Any> T.resolveMethod(method: Method): MethodResolver<T>? {
+    @Suppress("UNCHECKED_CAST")
+    val thisClass = this::class.java as Class<T>
+    return thisClass.resolveMethod(method)?.of(this)
+}
+
+fun <T : Any> T.resolveField(field: Field): FieldResolver<T>? {
+    @Suppress("UNCHECKED_CAST")
+    val thisClass = this::class.java as Class<T>
+    return thisClass.resolveField(field)?.of(this)
+}
 
 inline fun <reified T> Class<*>.invokeStaticMethod(method: Method, vararg args: Any?): T? = this.resolveMethod(method)?.invoke(*args) as? T
 
-inline fun <reified T> Any.getField(field: Field): T? = this.resolveField(field)?.get() as? T
+inline fun <reified T> Any.invokeMethod(method: Method, vararg args: Any?): T? = this.resolveMethod(method)?.invoke(*args) as? T
 
-fun <T> Any.setField(field: Field, value: T?) {
-    this.resolveField(field)?.set(value)
+fun Any.invokeMethodOnly(method: Method, vararg args: Any?) {
+    this.invokeMethod<Any>(method, *args)
 }
 
 inline fun <reified T> Class<*>.getStaticField(field: Field): T? = this.resolveField(field)?.get() as? T
 
-fun <T> Class<*>.setStaticField(field: Field, value: T?) {
-    this.resolveField(field)?.set(value)
-}
+inline fun <reified T> Any.getField(field: Field): T? = this.resolveField(field)?.get() as? T
+
+fun Class<*>.setStaticField(field: Field, value: Any?) = this.resolveField(field)?.set(value)
+
+fun Any.setField(field: Field, value: Any?) = this.resolveField(field)?.set(value)
