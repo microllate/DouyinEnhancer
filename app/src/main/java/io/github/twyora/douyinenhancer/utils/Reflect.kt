@@ -47,12 +47,14 @@ fun String.toClassOrNull(loader: ClassLoader? = null, initialize: Boolean = fals
     this.toClass(loader, initialize)
 }.getOrNull()
 
-fun Iterable<String>.toClasses(): Array<Class<*>> = this.map {
-    it.toClass()
+@JvmOverloads
+fun Iterable<String>.toClasses(loader: ClassLoader? = null, initialize: Boolean = false): Array<Class<*>> = this.map {
+    it.toClass(loader, initialize)
 }.toTypedArray()
 
-fun Array<String>.toClasses(): Array<Class<*>> = Array(size) {
-    get(it).toClass()
+@JvmOverloads
+fun Array<String>.toClasses(loader: ClassLoader? = null, initialize: Boolean = false): Array<Class<*>> = Array(size) {
+    get(it).toClass(loader, initialize)
 }
 
 fun <T : Any> Class<T>.resolveMethod(method: Method): MethodResolver<T>? {
@@ -67,7 +69,7 @@ fun <T : Any> Class<T>.resolveMethod(method: Method): MethodResolver<T>? {
                 if (it.isEmpty()) {
                     emptyParameters()
                 } else {
-                    parameters(*it.toClasses())
+                    parameters(*it.toClasses(this@resolveMethod.classLoader))
                 }
             }
             superclass()
