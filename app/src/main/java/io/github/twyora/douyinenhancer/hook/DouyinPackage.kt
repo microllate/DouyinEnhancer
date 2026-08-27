@@ -76,783 +76,886 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
 
     fun hostVersionCode() = hookInfo.hostVersionCode
 
-    val commentImageStruct = CommentImageStructModule()
-    val urlModel = UrlModelModule()
-    val comment = CommentModule()
-    val commentAudioStruct = CommentAudioStructModule()
-    val emoji = EmojiModule()
-    val commentActionParams = CommentActionParamsModule()
-    val commentLongPressItemModel = CommentLongPressItemModelModule()
-    val saveImageActionItem = SaveImageActionItemModule()
-    val listenerProviderParam = ListenerProviderParamModule()
-    val commentImageSaveDownloadListener = CommentImageSaveDownloadListenerModule()
-    val downloadInfo = DownloadInfoModule()
-    val digestUtils = DigestUtilsModule()
-    val ugFileUtils = UGFileUtilsKtModule()
-    val commonItemView = CommonItemViewModule()
-    val douYinSettingNewVersionActivity = DouYinSettingNewVersionActivityModule()
-    val user = UserModule()
-    val aweme = AwemeModule()
-    val video = VideoModule()
-    val imageUrlStruct = ImageUrlStructModule()
-    val feedResponseHandler = FeedResponseHandlerModule()
-    val commentLongPressWhiteListProvider = CommentLongPressWhiteListProviderModule()
-    val miscDownloadAddrUtil = MiscDownloadAddrUtilModule()
-    val downloadAction = DownloadActionModule()
-    val abTestServiceImpl = ABTestServiceImplModule()
-    val awemeStatistics = AwemeStatisticsModule()
-    val heifDecoder = HeifDecoderModule()
-    val heifBitmapFactoryImpl = HeifBitmapFactoryImplModule()
-    val downLoadExecutor = DownLoadExecutorModule()
-    val downLoadTask = DownLoadTaskModule()
-    val downloadLivePhotoExecutor = DownloadLivePhotoExecutorModule()
-    val singleImageToMp4Composer = SingleImageToMp4ComposerModule()
-    val multiImageToMp4Composer = MultiImageToMp4ComposerModule()
-    val mainActivity = MainActivityModule()
-    val absPermissionChecker = AbsPermissionCheckerModule()
-    val actionCheckResult = ActionCheckResultModule()
-    val actionStatus = ActionStatusModule()
-    val galleryShareHelper = GalleryShareHelperModule()
-    val awemeStatus = AwemeStatusModule()
-    val sharePrivacyVideoApi = SharePrivacyVideoApiModule()
-    val rxObservable = RxObservableModule()
-    val listenAwemeFilter = ListenAwemeFilterModule()
-    val baseListFragmentPanel = BaseListFragmentPanelModule()
-    val videoPlayerEvent = VideoPlayerEventModule()
-    val videoEvent = VideoEventModule()
-    val cleanModePresenter = CleanModePresenterModule()
-    val danmakuView = DanmakuViewModule()
+    val commentImageStruct = CommentImageStructModule(hookInfo.commentImageStruct, classLoader)
+    val urlModel = UrlModelModule(hookInfo.urlModel, classLoader)
+    val comment = CommentModule(hookInfo.comment, classLoader)
+    val commentAudioStruct = CommentAudioStructModule(hookInfo.commentAudioStruct, classLoader)
+    val emoji = EmojiModule(hookInfo.emoji, classLoader)
+    val commentActionParams = CommentActionParamsModule(hookInfo.commentActionParams, classLoader)
+    val commentLongPressItemModel = CommentLongPressItemModelModule(hookInfo.commentLongPressItemModel, classLoader)
+    val saveImageActionItem = SaveImageActionItemModule(hookInfo.saveImageActionItem, classLoader)
+    val listenerProviderParam = ListenerProviderParamModule(hookInfo.listenerProviderParam, classLoader)
+    val commentImageSaveDownloadListener = CommentImageSaveDownloadListenerModule(hookInfo.commentImageSaveDownloadListener, classLoader)
+    val downloadInfo = DownloadInfoModule(hookInfo.downloadInfo, classLoader)
+    val digestUtils = DigestUtilsModule(hookInfo.digestUtils, classLoader)
+    val ugFileUtils = UGFileUtilsKtModule(hookInfo.ugFileUtils, classLoader)
+    val commonItemView = CommonItemViewModule(hookInfo.commonItemView, classLoader)
+    val douYinSettingNewVersionActivity = DouYinSettingNewVersionActivityModule(hookInfo.douYinSettingNewVersionActivity, classLoader)
+    val user = UserModule(hookInfo.user, classLoader)
+    val aweme = AwemeModule(hookInfo.aweme, classLoader)
+    val video = VideoModule(hookInfo.video, classLoader)
+    val imageUrlStruct = ImageUrlStructModule(hookInfo.imageUrlStruct, classLoader)
+    val feedResponseHandler = FeedResponseHandlerModule(hookInfo.feedResponseHandler, classLoader)
+    val commentLongPressWhiteListProvider = CommentLongPressWhiteListProviderModule(hookInfo.commentLongPressWhiteListProvider, classLoader)
+    val miscDownloadAddrUtil = MiscDownloadAddrUtilModule(hookInfo.miscDownloadAddrUtil, classLoader)
+    val downloadAction = DownloadActionModule(hookInfo.downloadAction, classLoader)
+    val abTestServiceImpl = ABTestServiceImplModule(hookInfo.abTestServiceImpl, classLoader)
+    val awemeStatistics = AwemeStatisticsModule(hookInfo.awemeStatistics, classLoader)
+    val heifDecoder = HeifDecoderModule(hookInfo.heifDecoder, classLoader)
+    val heifBitmapFactoryImpl = HeifBitmapFactoryImplModule(hookInfo.heifBitmapFactoryImpl, classLoader)
+    val downLoadExecutor = DownLoadExecutorModule(hookInfo.downLoadExecutor, classLoader)
+    val downLoadTask = DownLoadTaskModule(hookInfo.downLoadTask, classLoader)
+    val downloadLivePhotoExecutor = DownloadLivePhotoExecutorModule(hookInfo.downloadLivePhotoExecutor, classLoader)
+    val singleImageToMp4Composer = SingleImageToMp4ComposerModule(hookInfo.singleImageToMp4Composer, classLoader)
+    val multiImageToMp4Composer = MultiImageToMp4ComposerModule(hookInfo.multiImageToMp4Composer, classLoader)
+    val mainActivity = MainActivityModule(hookInfo.mainActivity, classLoader)
+    val absPermissionChecker = AbsPermissionCheckerModule(hookInfo.absPermissionChecker, classLoader)
+    val actionCheckResult = ActionCheckResultModule(hookInfo.actionCheckResult, classLoader)
+    val actionStatus = ActionStatusModule(hookInfo.actionStatus, classLoader)
+    val galleryShareHelper = GalleryShareHelperModule(hookInfo.galleryShareHelper, classLoader)
+    val awemeStatus = AwemeStatusModule(hookInfo.awemeStatus, classLoader)
+    val sharePrivacyVideoApi = SharePrivacyVideoApiModule(hookInfo.sharePrivacyVideoApi, classLoader)
+    val rxObservable = RxObservableModule(hookInfo.rxObservable, classLoader)
+    val listenAwemeFilter = ListenAwemeFilterModule(hookInfo.listenAwemeFilter, classLoader)
+    val baseListFragmentPanel = BaseListFragmentPanelModule(hookInfo.baseListFragmentPanel, classLoader)
+    val videoPlayerEvent = VideoPlayerEventModule(hookInfo.videoPlayerEvent, classLoader)
+    val videoEvent = VideoEventModule(hookInfo.videoEvent, classLoader)
+    val cleanModePresenter = CleanModePresenterModule(hookInfo.cleanModePresenter, classLoader)
+    val danmakuView = DanmakuViewModule(hookInfo.danmakuView, classLoader)
 
-    inner class CommentImageStructModule {
+    class CommentImageStructModule internal constructor(
+        private val configs: Configs.CommentImageStruct,
+        private val classLoader: ClassLoader
+    ) {
         val selfClass by weak {
-            hookInfo.commentImageStruct.class_.nameOrNull
-                ?.toClass(classLoader)
+            configs.class_.nameOrNull?.toClass(classLoader)
         }
 
-        fun originUrl() = Field(hookInfo.commentImageStruct.originUrl.nameOrNull)
+        fun originUrl() = Field(configs.originUrl.nameOrNull)
 
-        fun downloadUrl() = Field(hookInfo.commentImageStruct.downloadUrl.nameOrNull)
+        fun downloadUrl() = Field(configs.downloadUrl.nameOrNull)
 
         fun getDownloadUrl() = Method(
-            hookInfo.commentImageStruct.getDownloadUrl.nameOrNull,
-            hookInfo.commentImageStruct.getDownloadUrl.parameters.valuesListOrNull
+            configs.getDownloadUrl.nameOrNull,
+            configs.getDownloadUrl.parameters.valuesListOrNull
         )
     }
 
-    inner class UrlModelModule {
+    class UrlModelModule internal constructor(
+        private val configs: Configs.UrlModel,
+        private val classLoader: ClassLoader
+    ) {
         val selfClass by weak {
-            hookInfo.urlModel.class_.nameOrNull
-                ?.toClass(classLoader)
+            configs.class_.nameOrNull?.toClass(classLoader)
         }
 
-        fun urlList() = Field(hookInfo.urlModel.urlList.nameOrNull)
+        fun urlList() = Field(configs.urlList.nameOrNull)
     }
 
-    inner class CommentModule {
+    class CommentModule internal constructor(
+        private val configs: Configs.Comment,
+        private val classLoader: ClassLoader
+    ) {
         val selfClass by weak {
-            hookInfo.comment.class_.nameOrNull
-                ?.toClass(classLoader)
+            configs.class_.nameOrNull?.toClass(classLoader)
         }
 
-        fun emoji() = Field(hookInfo.comment.emoji.nameOrNull)
+        fun emoji() = Field(configs.emoji.nameOrNull)
 
-        fun imageList() = Field(hookInfo.comment.imageList.nameOrNull)
+        fun imageList() = Field(configs.imageList.nameOrNull)
 
-        fun commentAudio() = Field(hookInfo.comment.commentAudio.nameOrNull)
+        fun commentAudio() = Field(configs.commentAudio.nameOrNull)
     }
 
-    inner class CommentAudioStructModule {
+    class CommentAudioStructModule internal constructor(
+        private val configs: Configs.CommentAudioStruct,
+        private val classLoader: ClassLoader
+    ) {
         val selfClass by weak {
-            hookInfo.commentAudioStruct.class_.nameOrNull
-                ?.toClass(classLoader)
+            configs.class_.nameOrNull?.toClass(classLoader)
         }
 
-        fun content() = Field(hookInfo.commentAudioStruct.content.nameOrNull)
+        fun content() = Field(configs.content.nameOrNull)
     }
 
-    inner class EmojiModule {
+    class EmojiModule internal constructor(
+        private val configs: Configs.Emoji,
+        private val classLoader: ClassLoader
+    ) {
         val selfClass by weak {
-            hookInfo.emoji.class_.nameOrNull
-                ?.toClass(classLoader)
+            configs.class_.nameOrNull?.toClass(classLoader)
         }
 
-        fun animateUrl() = Field(hookInfo.emoji.animateUrl.nameOrNull)
+        fun animateUrl() = Field(configs.animateUrl.nameOrNull)
     }
 
-    inner class CommentActionParamsModule {
+    class CommentActionParamsModule internal constructor(
+        private val configs: Configs.CommentActionParams,
+        private val classLoader: ClassLoader
+    ) {
         val selfClass by weak {
-            hookInfo.commentActionParams.class_.nameOrNull
-                ?.toClass(classLoader)
+            configs.class_.nameOrNull?.toClass(classLoader)
         }
 
-        fun comment() = Field(hookInfo.commentActionParams.comment.nameOrNull)
+        fun comment() = Field(configs.comment.nameOrNull)
 
-        fun imageIndex() = Field(hookInfo.commentActionParams.imageIndex.nameOrNull)
+        fun imageIndex() = Field(configs.imageIndex.nameOrNull)
     }
 
-    inner class CommentLongPressItemModelModule {
+    class CommentLongPressItemModelModule internal constructor(
+        private val configs: Configs.CommentLongPressItemModel,
+        private val classLoader: ClassLoader
+    ) {
         val selfClass by weak {
-            hookInfo.commentLongPressItemModel.class_.nameOrNull
-                ?.toClass(classLoader)
+            configs.class_.nameOrNull?.toClass(classLoader)
         }
 
-        fun commentActionParams() = Field(hookInfo.commentLongPressItemModel.commentActionParams.nameOrNull)
+        fun commentActionParams() = Field(configs.commentActionParams.nameOrNull)
     }
 
-    inner class SaveImageActionItemModule {
+    class SaveImageActionItemModule internal constructor(
+        private val configs: Configs.SaveImageActionItem,
+        private val classLoader: ClassLoader
+    ) {
         val selfClass by weak {
-            hookInfo.saveImageActionItem.class_.nameOrNull
-                ?.toClass(classLoader)
+            configs.class_.nameOrNull?.toClass(classLoader)
         }
 
-        fun commentActionParams() = Field(hookInfo.saveImageActionItem.cmtActionParams.nameOrNull)
+        fun commentActionParams() = Field(configs.cmtActionParams.nameOrNull)
 
-        fun saveImageActionParams() = Field(hookInfo.saveImageActionItem.saveImgActionParams.nameOrNull)
+        fun saveImageActionParams() = Field(configs.saveImgActionParams.nameOrNull)
 
-        inner class OnClickExecutorModule {
+        class OnClickExecutorModule internal constructor(
+            private val configs: Configs.SaveImageActionItemOnClickExecutor,
+            private val classLoader: ClassLoader
+        ) {
             val selfClass by weak {
-                hookInfo.saveImageActionItem.onClickExecutor.class_.nameOrNull?.toClass(classLoader)
+                configs.class_.nameOrNull?.toClass(classLoader)
             }
 
             fun onClick() = Method(
-                hookInfo.saveImageActionItem.onClickExecutor.onClick.nameOrNull,
-                hookInfo.saveImageActionItem.onClickExecutor.onClick.parameters.valuesListOrNull
+                configs.onClick.nameOrNull,
+                configs.onClick.parameters.valuesListOrNull
             )
 
-            fun hostItem() = Field(hookInfo.saveImageActionItem.onClickExecutor.hostItem.nameOrNull)
+            fun hostItem() = Field(configs.hostItem.nameOrNull)
         }
 
-        val onClickExecutor = OnClickExecutorModule()
+        val onClickExecutor = OnClickExecutorModule(configs.onClickExecutor, classLoader)
 
         fun isVisible() = Method(
-            hookInfo.saveImageActionItem.isVisible.nameOrNull,
-            hookInfo.saveImageActionItem.isVisible.parameters.valuesListOrNull
+            configs.isVisible.nameOrNull,
+            configs.isVisible.parameters.valuesListOrNull
         )
     }
 
-    inner class ListenerProviderParamModule {
+    class ListenerProviderParamModule internal constructor(
+        private val configs: Configs.ListenerProviderParam,
+        private val classLoader: ClassLoader
+    ) {
         val selfClass by weak {
-            hookInfo.listenerProviderParam.class_.nameOrNull
-                ?.toClass(classLoader)
+            configs.class_.nameOrNull?.toClass(classLoader)
         }
 
-        fun context() = Field(hookInfo.listenerProviderParam.context.nameOrNull)
+        fun context() = Field(configs.context.nameOrNull)
 
-        fun cert() = Field(hookInfo.listenerProviderParam.cert.nameOrNull)
+        fun cert() = Field(configs.cert.nameOrNull)
     }
 
-    inner class CommentImageSaveDownloadListenerModule {
+    class CommentImageSaveDownloadListenerModule internal constructor(
+        private val configs: Configs.CommentImageSaveDownloadListener,
+        private val classLoader: ClassLoader
+    ) {
         val selfClass by weak {
-            hookInfo.commentImageSaveDownloadListener.class_.nameOrNull
-                ?.toClass(classLoader)
+            configs.class_.nameOrNull?.toClass(classLoader)
         }
 
         fun onSuccessed() = Method(
-            hookInfo.commentImageSaveDownloadListener.onSuccessed.nameOrNull,
-            hookInfo.commentImageSaveDownloadListener.onSuccessed.parameters.valuesListOrNull
+            configs.onSuccessed.nameOrNull,
+            configs.onSuccessed.parameters.valuesListOrNull
         )
 
         fun notifyResult() = Method(
-            hookInfo.commentImageSaveDownloadListener.notifyResult.nameOrNull,
-            hookInfo.commentImageSaveDownloadListener.notifyResult.parameters.valuesListOrNull
+            configs.notifyResult.nameOrNull,
+            configs.notifyResult.parameters.valuesListOrNull
         )
 
-        fun listenerProviderParam() = Field(hookInfo.commentImageSaveDownloadListener.listenerProviderParam.nameOrNull)
+        fun listenerProviderParam() = Field(configs.listenerProviderParam.nameOrNull)
     }
 
-    inner class DownloadInfoModule {
+    class DownloadInfoModule internal constructor(
+        private val configs: Configs.DownloadInfo,
+        private val classLoader: ClassLoader
+    ) {
         val selfClass by weak {
-            hookInfo.downloadInfo.class_.nameOrNull
-                ?.toClass(classLoader)
+            configs.class_.nameOrNull?.toClass(classLoader)
         }
 
-        fun url() = Field(hookInfo.downloadInfo.url.nameOrNull)
+        fun url() = Field(configs.url.nameOrNull)
 
         fun getTargetFilePath() = Method(
-            hookInfo.downloadInfo.getTargetFilePath.nameOrNull,
-            hookInfo.downloadInfo.getTargetFilePath.parameters.valuesListOrNull
+            configs.getTargetFilePath.nameOrNull,
+            configs.getTargetFilePath.parameters.valuesListOrNull
         )
     }
 
-    inner class DigestUtilsModule {
+    class DigestUtilsModule internal constructor(
+        private val configs: Configs.DigestUtils,
+        private val classLoader: ClassLoader
+    ) {
         val selfClass by weak {
-            hookInfo.digestUtils.class_.nameOrNull
-                ?.toClass(classLoader)
+            configs.class_.nameOrNull?.toClass(classLoader)
         }
 
         fun md5Hex() = Method(
-            hookInfo.digestUtils.md5Hex.nameOrNull,
-            hookInfo.digestUtils.md5Hex.parameters.valuesListOrNull
+            configs.md5Hex.nameOrNull,
+            configs.md5Hex.parameters.valuesListOrNull
         )
     }
 
-    inner class UGFileUtilsKtModule {
+    class UGFileUtilsKtModule internal constructor(
+        private val configs: Configs.UGFileUtilsKt,
+        private val classLoader: ClassLoader
+    ) {
         val selfClass by weak {
-            hookInfo.ugFileUtils.class_.nameOrNull
-                ?.toClass(classLoader)
+            configs.class_.nameOrNull?.toClass(classLoader)
         }
 
-        fun context() = Field(hookInfo.ugFileUtils.context.nameOrNull)
+        fun context() = Field(configs.context.nameOrNull)
 
         fun copyFile() = Method(
-            hookInfo.ugFileUtils.copyFile.nameOrNull,
-            hookInfo.ugFileUtils.copyFile.parameters.valuesListOrNull
+            configs.copyFile.nameOrNull,
+            configs.copyFile.parameters.valuesListOrNull
         )
 
         fun getStorageDir() = Method(
-            hookInfo.ugFileUtils.getStorageDir.nameOrNull,
-            hookInfo.ugFileUtils.getStorageDir.parameters.valuesListOrNull
+            configs.getStorageDir.nameOrNull,
+            configs.getStorageDir.parameters.valuesListOrNull
         )
 
         fun getExternalStorageDir() = Method(
-            hookInfo.ugFileUtils.getExternalStorageDir.nameOrNull,
-            hookInfo.ugFileUtils.getExternalStorageDir.parameters.valuesListOrNull
+            configs.getExternalStorageDir.nameOrNull,
+            configs.getExternalStorageDir.parameters.valuesListOrNull
         )
 
         fun getImageUri() = Method(
-            hookInfo.ugFileUtils.getImageUri.nameOrNull,
-            hookInfo.ugFileUtils.getImageUri.parameters.valuesListOrNull
+            configs.getImageUri.nameOrNull,
+            configs.getImageUri.parameters.valuesListOrNull
         )
 
         fun createUri() = Method(
-            hookInfo.ugFileUtils.createUri.nameOrNull,
-            hookInfo.ugFileUtils.createUri.parameters.valuesListOrNull
+            configs.createUri.nameOrNull,
+            configs.createUri.parameters.valuesListOrNull
         )
 
         fun getAudioUri() = Method(
-            hookInfo.ugFileUtils.getAudioUri.nameOrNull,
-            hookInfo.ugFileUtils.getAudioUri.parameters.valuesListOrNull
+            configs.getAudioUri.nameOrNull,
+            configs.getAudioUri.parameters.valuesListOrNull
         )
     }
 
-    inner class CommonItemViewModule {
+    class CommonItemViewModule internal constructor(
+        private val configs: Configs.CommonItemView,
+        private val classLoader: ClassLoader
+    ) {
         val selfClass by weak {
-            hookInfo.commonItemView.class_.nameOrNull
-                ?.toClass(classLoader)
+            configs.class_.nameOrNull?.toClass(classLoader)
         }
 
         fun setLeftText() = Method(
-            hookInfo.commonItemView.setLeftText.nameOrNull,
-            hookInfo.commonItemView.setLeftText.parameters.valuesListOrNull
+            configs.setLeftText.nameOrNull,
+            configs.setLeftText.parameters.valuesListOrNull
         )
 
         fun setRightUIMode() = Method(
-            hookInfo.commonItemView.setRightUiMode.nameOrNull,
-            hookInfo.commonItemView.setRightUiMode.parameters.valuesListOrNull
+            configs.setRightUiMode.nameOrNull,
+            configs.setRightUiMode.parameters.valuesListOrNull
         )
 
         fun setLeftIcon() = Method(
-            hookInfo.commonItemView.setLeftIcon.nameOrNull,
-            hookInfo.commonItemView.setLeftIcon.parameters.valuesListOrNull
+            configs.setLeftIcon.nameOrNull,
+            configs.setLeftIcon.parameters.valuesListOrNull
         )
 
         fun setRightText() = Method(
-            hookInfo.commonItemView.setRightText.nameOrNull,
-            hookInfo.commonItemView.setRightText.parameters.valuesListOrNull
+            configs.setRightText.nameOrNull,
+            configs.setRightText.parameters.valuesListOrNull
         )
     }
 
-    inner class DouYinSettingNewVersionActivityModule {
+    class DouYinSettingNewVersionActivityModule internal constructor(
+        private val configs: Configs.DouYinSettingNewVersionActivity,
+        private val classLoader: ClassLoader
+    ) {
         val selfClass by weak {
-            hookInfo.douYinSettingNewVersionActivity.class_.nameOrNull
-                ?.toClass(classLoader)
+            configs.class_.nameOrNull?.toClass(classLoader)
         }
 
         fun settingsScrollView() = Field(
-            hookInfo.douYinSettingNewVersionActivity.settingsScrollView.nameOrNull
+            configs.settingsScrollView.nameOrNull
         )
 
         fun onResume() = Method(
-            hookInfo.douYinSettingNewVersionActivity.onResume.nameOrNull,
-            hookInfo.douYinSettingNewVersionActivity.onResume.parameters.valuesListOrNull
+            configs.onResume.nameOrNull,
+            configs.onResume.parameters.valuesListOrNull
         )
     }
 
-    inner class MainActivityModule {
+    class MainActivityModule internal constructor(
+        private val configs: Configs.MainActivity,
+        private val classLoader: ClassLoader
+    ) {
         val selfClass by weak {
-            hookInfo.mainActivity.class_.nameOrNull
-                ?.toClass(classLoader)
+            configs.class_.nameOrNull?.toClass(classLoader)
         }
 
         fun onResume() = Method(
-            hookInfo.mainActivity.onResume.nameOrNull,
-            hookInfo.mainActivity.onResume.parameters.valuesListOrNull
+            configs.onResume.nameOrNull,
+            configs.onResume.parameters.valuesListOrNull
         )
 
         fun onNewIntent() = Method(
-            hookInfo.mainActivity.onNewIntent.nameOrNull,
-            hookInfo.mainActivity.onNewIntent.parameters.valuesListOrNull
+            configs.onNewIntent.nameOrNull,
+            configs.onNewIntent.parameters.valuesListOrNull
         )
     }
 
-    inner class UserModule {
+    class UserModule internal constructor(
+        private val configs: Configs.User,
+        private val classLoader: ClassLoader
+    ) {
         val selfClass by weak {
-            hookInfo.user.class_.nameOrNull
-                ?.toClass(classLoader)
+            configs.class_.nameOrNull?.toClass(classLoader)
         }
 
-        fun nickname() = Field(hookInfo.user.nickname.nameOrNull)
+        fun nickname() = Field(configs.nickname.nameOrNull)
 
-        fun uid() = Field(hookInfo.user.uid.nameOrNull)
+        fun uid() = Field(configs.uid.nameOrNull)
     }
 
-    inner class AwemeModule {
+    class AwemeModule internal constructor(
+        private val configs: Configs.Aweme,
+        private val classLoader: ClassLoader
+    ) {
         val selfClass by weak {
-            hookInfo.aweme.class_.nameOrNull
-                ?.toClass(classLoader)
+            configs.class_.nameOrNull?.toClass(classLoader)
         }
 
-        fun desc() = Field(hookInfo.aweme.desc.nameOrNull)
+        fun desc() = Field(configs.desc.nameOrNull)
 
-        fun author() = Field(hookInfo.aweme.author.nameOrNull)
+        fun author() = Field(configs.author.nameOrNull)
 
         fun getAd() = Method(
-            hookInfo.aweme.getAd.nameOrNull,
-            hookInfo.aweme.getAd.parameters.valuesListOrNull
+            configs.getAd.nameOrNull,
+            configs.getAd.parameters.valuesListOrNull
         )
 
-        fun itemTitle() = Field(hookInfo.aweme.itemTitle.nameOrNull)
+        fun itemTitle() = Field(configs.itemTitle.nameOrNull)
 
-        fun duration() = Field(hookInfo.aweme.duration.nameOrNull)
+        fun duration() = Field(configs.duration.nameOrNull)
 
         fun isNormalVideo() = Method(
-            hookInfo.aweme.isNormalVideo.nameOrNull,
-            hookInfo.aweme.isNormalVideo.parameters.valuesListOrNull
+            configs.isNormalVideo.nameOrNull,
+            configs.isNormalVideo.parameters.valuesListOrNull
         )
 
         fun isEcomAweme() = Method(
-            hookInfo.aweme.isEcomAweme.nameOrNull,
-            hookInfo.aweme.isEcomAweme.parameters.valuesListOrNull
+            configs.isEcomAweme.nameOrNull,
+            configs.isEcomAweme.parameters.valuesListOrNull
         )
 
-        fun grouponLargeCard() = Field(hookInfo.aweme.grouponLargeCard.nameOrNull)
+        fun grouponLargeCard() = Field(configs.grouponLargeCard.nameOrNull)
 
         fun isLive() = Method(
-            hookInfo.aweme.isLive.nameOrNull,
-            hookInfo.aweme.isLive.parameters.valuesListOrNull
+            configs.isLive.nameOrNull,
+            configs.isLive.parameters.valuesListOrNull
         )
 
         fun isMultiImage() = Method(
-            hookInfo.aweme.isMultiImage.nameOrNull,
-            hookInfo.aweme.isMultiImage.parameters.valuesListOrNull
+            configs.isMultiImage.nameOrNull,
+            configs.isMultiImage.parameters.valuesListOrNull
         )
 
         fun getVideo() = Method(
-            hookInfo.aweme.getVideo.nameOrNull,
-            hookInfo.aweme.getVideo.parameters.valuesListOrNull
+            configs.getVideo.nameOrNull,
+            configs.getVideo.parameters.valuesListOrNull
         )
 
-        fun images() = Field(hookInfo.aweme.images.nameOrNull)
+        fun images() = Field(configs.images.nameOrNull)
 
-        fun statistics() = Field(hookInfo.aweme.statistics.nameOrNull)
+        fun statistics() = Field(configs.statistics.nameOrNull)
 
         fun getAid() = Method(
-            hookInfo.aweme.getAid.nameOrNull,
-            hookInfo.aweme.getAid.parameters.valuesListOrNull
+            configs.getAid.nameOrNull,
+            configs.getAid.parameters.valuesListOrNull
         )
 
         fun getDownloadStatus() = Method(
-            hookInfo.aweme.getDownloadStatus.nameOrNull,
-            hookInfo.aweme.getDownloadStatus.parameters.valuesListOrNull
+            configs.getDownloadStatus.nameOrNull,
+            configs.getDownloadStatus.parameters.valuesListOrNull
         )
 
-        fun aid() = Field(hookInfo.aweme.aid.nameOrNull)
+        fun aid() = Field(configs.aid.nameOrNull)
 
-        fun status() = Field(hookInfo.aweme.status.nameOrNull)
+        fun status() = Field(configs.status.nameOrNull)
     }
 
-    inner class AwemeStatusModule {
+    class AwemeStatusModule internal constructor(
+        private val configs: Configs.AwemeStatus,
+        private val classLoader: ClassLoader
+    ) {
         val selfClass by weak {
-            hookInfo.awemeStatus.class_.nameOrNull
-                ?.toClass(classLoader)
+            configs.class_.nameOrNull?.toClass(classLoader)
         }
 
-        fun downloadStatus() = Field(hookInfo.awemeStatus.downloadStatus.nameOrNull)
+        fun downloadStatus() = Field(configs.downloadStatus.nameOrNull)
     }
 
-    inner class SharePrivacyVideoApiModule {
+    class SharePrivacyVideoApiModule internal constructor(
+        private val configs: Configs.SharePrivacyVideoApi,
+        private val classLoader: ClassLoader
+    ) {
         val selfClass by weak {
-            hookInfo.sharePrivacyVideoApi.class_.nameOrNull
-                ?.toClass(classLoader)
+            configs.class_.nameOrNull?.toClass(classLoader)
         }
 
         fun getDownloadStatus() = Method(
-            hookInfo.sharePrivacyVideoApi.getDownloadStatus.nameOrNull,
-            hookInfo.sharePrivacyVideoApi.getDownloadStatus.parameters.valuesListOrNull
+            configs.getDownloadStatus.nameOrNull,
+            configs.getDownloadStatus.parameters.valuesListOrNull
         )
 
-        val privacyVideoResponse = SharePrivacyVideoResponseModule()
+        val privacyVideoResponse = SharePrivacyVideoResponseModule(configs.privacyVideoResponse, classLoader)
 
-        inner class SharePrivacyVideoResponseModule {
+        class SharePrivacyVideoResponseModule internal constructor(
+            private val configs: Configs.SharePrivacyVideoResponse,
+            private val classLoader: ClassLoader
+        ) {
             val selfClass by weak {
-                hookInfo.sharePrivacyVideoApi.privacyVideoResponse.class_.nameOrNull
-                    ?.toClass(classLoader)
+                configs.class_.nameOrNull?.toClass(classLoader)
             }
 
-            fun msg() = Field(hookInfo.sharePrivacyVideoApi.privacyVideoResponse.msg.nameOrNull)
+            fun msg() = Field(configs.msg.nameOrNull)
 
-            fun status() = Field(hookInfo.sharePrivacyVideoApi.privacyVideoResponse.status.nameOrNull)
+            fun status() = Field(configs.status.nameOrNull)
         }
     }
 
-    inner class RxObservableModule {
+    class RxObservableModule internal constructor(
+        private val configs: Configs.RxObservable,
+        private val classLoader: ClassLoader
+    ) {
         val selfClass by weak {
-            hookInfo.rxObservable.class_.nameOrNull
-                ?.toClass(classLoader)
+            configs.class_.nameOrNull?.toClass(classLoader)
         }
 
         fun just() = Method(
-            hookInfo.rxObservable.just.nameOrNull,
-            hookInfo.rxObservable.just.parameters.valuesListOrNull
+            configs.just.nameOrNull,
+            configs.just.parameters.valuesListOrNull
         )
     }
 
-    inner class ListenAwemeFilterModule {
+    class ListenAwemeFilterModule internal constructor(
+        private val configs: Configs.ListenAwemeFilter,
+        private val classLoader: ClassLoader
+    ) {
         val selfClass by weak {
-            hookInfo.listenAwemeFilter.class_.nameOrNull?.toClass(classLoader)
+            configs.class_.nameOrNull?.toClass(classLoader)
         }
 
         fun accept() = Method(
-            hookInfo.listenAwemeFilter.accept.nameOrNull,
-            hookInfo.listenAwemeFilter.accept.parameters.valuesListOrNull
+            configs.accept.nameOrNull,
+            configs.accept.parameters.valuesListOrNull
         )
     }
 
-    inner class BaseListFragmentPanelModule {
+    class BaseListFragmentPanelModule internal constructor(
+        private val configs: Configs.BaseListFragmentPanel,
+        private val classLoader: ClassLoader
+    ) {
         val selfClass by weak {
-            hookInfo.baseListFragmentPanel.class_.nameOrNull?.toClass(classLoader)
+            configs.class_.nameOrNull?.toClass(classLoader)
         }
 
         fun handleDoubleClick() = Method(
-            hookInfo.baseListFragmentPanel.handleDoubleClick.nameOrNull,
-            hookInfo.baseListFragmentPanel.handleDoubleClick.parameters.valuesListOrNull
+            configs.handleDoubleClick.nameOrNull,
+            configs.handleDoubleClick.parameters.valuesListOrNull
         )
 
         fun handleVideoEvent() = Method(
-            hookInfo.baseListFragmentPanel.handleVideoEvent.nameOrNull,
-            hookInfo.baseListFragmentPanel.handleVideoEvent.parameters.valuesListOrNull
+            configs.handleVideoEvent.nameOrNull,
+            configs.handleVideoEvent.parameters.valuesListOrNull
         )
 
         fun getCurrentAweme() = Method(
-            hookInfo.baseListFragmentPanel.getCurrentAweme.nameOrNull,
-            hookInfo.baseListFragmentPanel.getCurrentAweme.parameters.valuesListOrNull
+            configs.getCurrentAweme.nameOrNull,
+            configs.getCurrentAweme.parameters.valuesListOrNull
         )
 
         fun pauseCurrentPlayerWithListener() = Method(
-            hookInfo.baseListFragmentPanel.pauseCurrentPlayerWithListener.nameOrNull,
-            hookInfo.baseListFragmentPanel.pauseCurrentPlayerWithListener.parameters.valuesListOrNull
+            configs.pauseCurrentPlayerWithListener.nameOrNull,
+            configs.pauseCurrentPlayerWithListener.parameters.valuesListOrNull
         )
 
         fun showIvWhenPause() = Method(
-            hookInfo.baseListFragmentPanel.showIvWhenPause.nameOrNull,
-            hookInfo.baseListFragmentPanel.showIvWhenPause.parameters.valuesListOrNull
+            configs.showIvWhenPause.nameOrNull,
+            configs.showIvWhenPause.parameters.valuesListOrNull
         )
 
         fun onVideoPlayerEvent() = Method(
-            hookInfo.baseListFragmentPanel.onVideoPlayerEvent.nameOrNull,
-            hookInfo.baseListFragmentPanel.onVideoPlayerEvent.parameters.valuesListOrNull
+            configs.onVideoPlayerEvent.nameOrNull,
+            configs.onVideoPlayerEvent.parameters.valuesListOrNull
         )
     }
 
-    inner class VideoPlayerEventModule {
+    class VideoPlayerEventModule internal constructor(
+        private val configs: Configs.VideoPlayerEvent,
+        private val classLoader: ClassLoader
+    ) {
         val selfClass by weak {
-            hookInfo.videoPlayerEvent.class_.nameOrNull?.toClass(classLoader)
+            configs.class_.nameOrNull?.toClass(classLoader)
         }
 
-        fun code() = Field(hookInfo.videoPlayerEvent.code.nameOrNull)
+        fun code() = Field(configs.code.nameOrNull)
     }
 
-    inner class VideoEventModule {
+    class VideoEventModule internal constructor(
+        private val configs: Configs.VideoEvent,
+        private val classLoader: ClassLoader
+    ) {
         val selfClass by weak {
-            hookInfo.videoEvent.class_.nameOrNull?.toClass(classLoader)
+            configs.class_.nameOrNull?.toClass(classLoader)
         }
 
-        fun videoType() = Field(hookInfo.videoEvent.videoType.nameOrNull)
+        fun videoType() = Field(configs.videoType.nameOrNull)
     }
 
-    inner class AwemeStatisticsModule {
+    class AwemeStatisticsModule internal constructor(
+        private val configs: Configs.AwemeStatistics,
+        private val classLoader: ClassLoader
+    ) {
         val selfClass by weak {
-            hookInfo.awemeStatistics.class_.nameOrNull
-                ?.toClass(classLoader)
+            configs.class_.nameOrNull?.toClass(classLoader)
         }
 
-        fun collectCount() = Field(hookInfo.awemeStatistics.collectCount.nameOrNull)
+        fun collectCount() = Field(configs.collectCount.nameOrNull)
 
-        fun commentCount() = Field(hookInfo.awemeStatistics.commentCount.nameOrNull)
+        fun commentCount() = Field(configs.commentCount.nameOrNull)
 
-        fun diggCount() = Field(hookInfo.awemeStatistics.diggCount.nameOrNull)
+        fun diggCount() = Field(configs.diggCount.nameOrNull)
 
-        fun shareCount() = Field(hookInfo.awemeStatistics.shareCount.nameOrNull)
+        fun shareCount() = Field(configs.shareCount.nameOrNull)
     }
 
-    inner class HeifDecoderModule {
+    class HeifDecoderModule internal constructor(
+        private val configs: Configs.HeifDecoder,
+        private val classLoader: ClassLoader
+    ) {
         val selfClass by weak {
-            hookInfo.heifDecoder.class_.nameOrNull
-                ?.toClass(classLoader)
+            configs.class_.nameOrNull?.toClass(classLoader)
         }
 
-        fun sBitmapFactory() = Field(hookInfo.heifDecoder.sBitmapFactory.nameOrNull)
+        fun sBitmapFactory() = Field(configs.sBitmapFactory.nameOrNull)
     }
 
-    inner class HeifBitmapFactoryImplModule {
+    class HeifBitmapFactoryImplModule internal constructor(
+        private val configs: Configs.HeifBitmapFactoryImpl,
+        private val classLoader: ClassLoader
+    ) {
         val selfClass by weak {
-            hookInfo.heifBitmapFactoryImpl.class_.nameOrNull
-                ?.toClass(classLoader)
+            configs.class_.nameOrNull?.toClass(classLoader)
         }
 
         fun decodeByteArray() = Method(
-            hookInfo.heifBitmapFactoryImpl.decodeByteArray.nameOrNull,
-            hookInfo.heifBitmapFactoryImpl.decodeByteArray.parameters.valuesListOrNull
+            configs.decodeByteArray.nameOrNull,
+            configs.decodeByteArray.parameters.valuesListOrNull
         )
     }
 
-    inner class DownLoadExecutorModule {
+    class DownLoadExecutorModule internal constructor(
+        private val configs: Configs.DownLoadExecutor,
+        private val classLoader: ClassLoader
+    ) {
         val selfClass by weak {
-            hookInfo.downLoadExecutor.class_.nameOrNull
-                ?.toClass(classLoader)
+            configs.class_.nameOrNull?.toClass(classLoader)
         }
 
         fun execute() = Method(
-            hookInfo.downLoadExecutor.execute.nameOrNull,
-            hookInfo.downLoadExecutor.execute.parameters.valuesListOrNull
+            configs.execute.nameOrNull,
+            configs.execute.parameters.valuesListOrNull
         )
     }
 
-    inner class DownLoadTaskModule {
+    class DownLoadTaskModule internal constructor(
+        private val configs: Configs.DownLoadTask,
+        private val classLoader: ClassLoader
+    ) {
         val selfClass by weak {
-            hookInfo.downLoadTask.class_.nameOrNull
-                ?.toClass(classLoader)
+            configs.class_.nameOrNull?.toClass(classLoader)
         }
 
         fun getTargetFilePaths() = Method(
-            hookInfo.downLoadTask.getTargetFilePaths.nameOrNull,
-            hookInfo.downLoadTask.getTargetFilePaths.parameters.valuesListOrNull
+            configs.getTargetFilePaths.nameOrNull,
+            configs.getTargetFilePaths.parameters.valuesListOrNull
         )
     }
 
-    inner class DownloadLivePhotoExecutorModule {
+    class DownloadLivePhotoExecutorModule internal constructor(
+        private val configs: Configs.DownloadLivePhotoExecutor,
+        private val classLoader: ClassLoader
+    ) {
         val selfClass by weak {
-            hookInfo.downloadLivePhotoExecutor.class_.nameOrNull
-                ?.toClass(classLoader)
+            configs.class_.nameOrNull?.toClass(classLoader)
         }
 
         fun encodeLivePhoto() = Method(
-            hookInfo.downloadLivePhotoExecutor.encodeLivePhoto.nameOrNull,
-            hookInfo.downloadLivePhotoExecutor.encodeLivePhoto.parameters.valuesListOrNull
+            configs.encodeLivePhoto.nameOrNull,
+            configs.encodeLivePhoto.parameters.valuesListOrNull
         )
     }
 
-    inner class SingleImageToMp4ComposerModule {
+    class SingleImageToMp4ComposerModule internal constructor(
+        private val configs: Configs.SingleImageToMp4Composer,
+        private val classLoader: ClassLoader
+    ) {
         val selfClass by weak {
-            hookInfo.singleImageToMp4Composer.class_.nameOrNull
-                ?.toClass(classLoader)
+            configs.class_.nameOrNull?.toClass(classLoader)
         }
 
         fun onLoad() = Method(
-            hookInfo.singleImageToMp4Composer.onLoad.nameOrNull,
-            hookInfo.singleImageToMp4Composer.onLoad.parameters.valuesListOrNull
+            configs.onLoad.nameOrNull,
+            configs.onLoad.parameters.valuesListOrNull
         )
     }
 
-    inner class MultiImageToMp4ComposerModule {
+    class MultiImageToMp4ComposerModule internal constructor(
+        private val configs: Configs.MultiImageToMp4Composer,
+        private val classLoader: ClassLoader
+    ) {
         val selfClass by weak {
-            hookInfo.multiImageToMp4Composer.class_.nameOrNull
-                ?.toClass(classLoader)
+            configs.class_.nameOrNull?.toClass(classLoader)
         }
 
         fun onLoad() = Method(
-            hookInfo.multiImageToMp4Composer.onLoad.nameOrNull,
-            hookInfo.multiImageToMp4Composer.onLoad.parameters.valuesListOrNull
+            configs.onLoad.nameOrNull,
+            configs.onLoad.parameters.valuesListOrNull
         )
 
         fun imagePathList() = Field(
-            hookInfo.multiImageToMp4Composer.imagePathList.nameOrNull
+            configs.imagePathList.nameOrNull
         )
     }
 
-    inner class VideoModule {
+    class VideoModule internal constructor(
+        private val configs: Configs.Video,
+        private val classLoader: ClassLoader
+    ) {
         val selfClass by weak {
-            hookInfo.video.class_.nameOrNull
-                ?.toClass(classLoader)
+            configs.class_.nameOrNull?.toClass(classLoader)
         }
 
         fun getPlayAddr() = Method(
-            hookInfo.video.getPlayAddr.nameOrNull,
-            hookInfo.video.getPlayAddr.parameters.valuesListOrNull
+            configs.getPlayAddr.nameOrNull,
+            configs.getPlayAddr.parameters.valuesListOrNull
         )
 
-        fun hasSuffixWaterMark() = Field(hookInfo.video.hasSuffixWaterMark.nameOrNull)
+        fun hasSuffixWaterMark() = Field(configs.hasSuffixWaterMark.nameOrNull)
 
-        fun hasWaterMark() = Field(hookInfo.video.hasWaterMark.nameOrNull)
+        fun hasWaterMark() = Field(configs.hasWaterMark.nameOrNull)
 
-        fun downloadAddr() = Field(hookInfo.video.downloadAddr.nameOrNull)
+        fun downloadAddr() = Field(configs.downloadAddr.nameOrNull)
     }
 
-    inner class ImageUrlStructModule {
+    class ImageUrlStructModule internal constructor(
+        private val configs: Configs.ImageUrlStruct,
+        private val classLoader: ClassLoader
+    ) {
         val selfClass by weak {
-            hookInfo.imageUrlStruct.class_.nameOrNull
-                ?.toClass(classLoader)
+            configs.class_.nameOrNull?.toClass(classLoader)
         }
 
         fun watermarkFreeDownloadUrlList() = Field(
-            hookInfo.imageUrlStruct.watermarkFreeDownloadUrlList.nameOrNull
+            configs.watermarkFreeDownloadUrlList.nameOrNull
         )
 
         fun urlList() = Field(
-            hookInfo.imageUrlStruct.urlList.nameOrNull
+            configs.urlList.nameOrNull
         )
 
         fun downloadUrlList() = Field(
-            hookInfo.imageUrlStruct.downloadUrlList.nameOrNull
+            configs.downloadUrlList.nameOrNull
         )
 
         fun video() = Field(
-            hookInfo.imageUrlStruct.video.nameOrNull
+            configs.video.nameOrNull
         )
     }
 
-    inner class FeedResponseHandlerModule {
+    class FeedResponseHandlerModule internal constructor(
+        private val configs: Configs.FeedResponseHandler,
+        private val classLoader: ClassLoader
+    ) {
         val selfClass by weak {
-            hookInfo.feedResponseHandler.class_.nameOrNull
-                ?.toClass(classLoader)
+            configs.class_.nameOrNull?.toClass(classLoader)
         }
 
         fun processAwemeList() = Method(
-            hookInfo.feedResponseHandler.processAwemeList.nameOrNull,
-            hookInfo.feedResponseHandler.processAwemeList.parameters.valuesListOrNull
+            configs.processAwemeList.nameOrNull,
+            configs.processAwemeList.parameters.valuesListOrNull
         )
     }
 
-    inner class CommentLongPressWhiteListProviderModule {
+    class CommentLongPressWhiteListProviderModule internal constructor(
+        private val configs: Configs.CommentLongPressWhiteListProvider,
+        private val classLoader: ClassLoader
+    ) {
         val selfClass by weak {
-            hookInfo.commentLongPressWhiteListProvider.class_.nameOrNull
-                ?.toClass(classLoader)
+            configs.class_.nameOrNull?.toClass(classLoader)
         }
 
         fun buildWhiteList() = Method(
-            hookInfo.commentLongPressWhiteListProvider.buildWhiteList.nameOrNull,
-            hookInfo.commentLongPressWhiteListProvider.buildWhiteList.parameters.valuesListOrNull
+            configs.buildWhiteList.nameOrNull,
+            configs.buildWhiteList.parameters.valuesListOrNull
         )
     }
 
-    inner class MiscDownloadAddrUtilModule {
+    class MiscDownloadAddrUtilModule internal constructor(
+        private val configs: Configs.MiscDownloadAddrUtil,
+        private val classLoader: ClassLoader
+    ) {
         val selfClass by weak {
-            hookInfo.miscDownloadAddrUtil.class_.nameOrNull
-                ?.toClass(classLoader)
+            configs.class_.nameOrNull?.toClass(classLoader)
         }
 
         fun getSuffixSceneDownloadAddr() = Method(
-            hookInfo.miscDownloadAddrUtil.getSuffixSceneDownloadAddr.nameOrNull,
-            hookInfo.miscDownloadAddrUtil.getSuffixSceneDownloadAddr.parameters.valuesListOrNull
+            configs.getSuffixSceneDownloadAddr.nameOrNull,
+            configs.getSuffixSceneDownloadAddr.parameters.valuesListOrNull
         )
     }
 
-    inner class DownloadActionModule {
+    class DownloadActionModule internal constructor(
+        private val configs: Configs.DownloadAction,
+        private val classLoader: ClassLoader
+    ) {
         val selfClass by weak {
-            hookInfo.downloadAction.class_.nameOrNull
-                ?.toClass(classLoader)
+            configs.class_.nameOrNull?.toClass(classLoader)
         }
 
         fun startDownload() = Method(
-            hookInfo.downloadAction.startDownload.nameOrNull,
-            hookInfo.downloadAction.startDownload.parameters.valuesListOrNull
+            configs.startDownload.nameOrNull,
+            configs.startDownload.parameters.valuesListOrNull
         )
 
-        fun aweme() = Field(hookInfo.downloadAction.aweme.nameOrNull)
+        fun aweme() = Field(configs.aweme.nameOrNull)
     }
 
-    inner class ABTestServiceImplModule {
+    class ABTestServiceImplModule internal constructor(
+        private val configs: Configs.ABTestServiceImpl,
+        private val classLoader: ClassLoader
+    ) {
         val selfClass by weak {
-            hookInfo.abTestServiceImpl.class_.nameOrNull
-                ?.toClass(classLoader)
+            configs.class_.nameOrNull?.toClass(classLoader)
         }
 
         fun enableSaveImageToVideoLocalWaterMask() = Method(
-            hookInfo.abTestServiceImpl.enableSaveImageToVideoLocalWaterMask.nameOrNull,
-            hookInfo.abTestServiceImpl.enableSaveImageToVideoLocalWaterMask.parameters.valuesListOrNull
+            configs.enableSaveImageToVideoLocalWaterMask.nameOrNull,
+            configs.enableSaveImageToVideoLocalWaterMask.parameters.valuesListOrNull
         )
 
         fun enableVEAddLiveVideoWaterMark() = Method(
-            hookInfo.abTestServiceImpl.enableVeAddLiveVideoWaterMark.nameOrNull,
-            hookInfo.abTestServiceImpl.enableVeAddLiveVideoWaterMark.parameters.valuesListOrNull
+            configs.enableVeAddLiveVideoWaterMark.nameOrNull,
+            configs.enableVeAddLiveVideoWaterMark.parameters.valuesListOrNull
         )
     }
 
-    inner class AbsPermissionCheckerModule {
+    class AbsPermissionCheckerModule internal constructor(
+        private val configs: Configs.AbsPermissionChecker,
+        private val classLoader: ClassLoader
+    ) {
         val selfClass by weak {
-            hookInfo.absPermissionChecker.class_.nameOrNull
-                ?.toClass(classLoader)
+            configs.class_.nameOrNull?.toClass(classLoader)
         }
 
         fun getActionCheckResult() = Method(
-            hookInfo.absPermissionChecker.getActionCheckResult.nameOrNull,
-            hookInfo.absPermissionChecker.getActionCheckResult.parameters.valuesListOrNull
+            configs.getActionCheckResult.nameOrNull,
+            configs.getActionCheckResult.parameters.valuesListOrNull
         )
     }
 
-    inner class ActionCheckResultModule {
+    class ActionCheckResultModule internal constructor(
+        private val configs: Configs.ActionCheckResult,
+        private val classLoader: ClassLoader
+    ) {
         val selfClass by weak {
-            hookInfo.actionCheckResult.class_.nameOrNull
-                ?.toClass(classLoader)
+            configs.class_.nameOrNull?.toClass(classLoader)
         }
 
-        fun actionStatus() = Field(hookInfo.actionCheckResult.actionStatus.nameOrNull)
+        fun actionStatus() = Field(configs.actionStatus.nameOrNull)
     }
 
-    inner class ActionStatusModule {
+    class ActionStatusModule internal constructor(
+        private val configs: Configs.ActionStatus,
+        private val classLoader: ClassLoader
+    ) {
         val selfClass by weak {
-            hookInfo.actionStatus.class_.nameOrNull
-                ?.toClass(classLoader)
+            configs.class_.nameOrNull?.toClass(classLoader)
         }
 
         fun valueOf() = Method(
-            hookInfo.actionStatus.valueOf.nameOrNull,
-            hookInfo.actionStatus.valueOf.parameters.valuesListOrNull
+            configs.valueOf.nameOrNull,
+            configs.valueOf.parameters.valuesListOrNull
         )
 
-        fun grayed() = Field(hookInfo.actionStatus.grayed.nameOrNull)
+        fun grayed() = Field(configs.grayed.nameOrNull)
 
-        fun hidden() = Field(hookInfo.actionStatus.hidden.nameOrNull)
+        fun hidden() = Field(configs.hidden.nameOrNull)
 
-        fun normal() = Field(hookInfo.actionStatus.normal.nameOrNull)
+        fun normal() = Field(configs.normal.nameOrNull)
     }
 
-    inner class GalleryShareHelperModule {
+    class GalleryShareHelperModule internal constructor(
+        private val configs: Configs.GalleryShareHelper,
+        private val classLoader: ClassLoader
+    ) {
         val selfClass by weak {
-            hookInfo.galleryShareHelper.class_.nameOrNull
-                ?.toClass(classLoader)
+            configs.class_.nameOrNull?.toClass(classLoader)
         }
 
         fun startDownload() = Method(
-            hookInfo.galleryShareHelper.startDownload.nameOrNull,
-            hookInfo.galleryShareHelper.startDownload.parameters.valuesListOrNull
+            configs.startDownload.nameOrNull,
+            configs.startDownload.parameters.valuesListOrNull
         )
     }
 
-    inner class CleanModePresenterModule {
+    class CleanModePresenterModule internal constructor(
+        private val configs: Configs.CleanModePresenter,
+        private val classLoader: ClassLoader
+    ) {
         val selfClass by weak {
-            hookInfo.cleanModePresenter.class_.nameOrNull?.toClass(classLoader)
+            configs.class_.nameOrNull?.toClass(classLoader)
         }
 
         fun enterCleanMode() = Method(
-            hookInfo.cleanModePresenter.enterCleanMode.nameOrNull,
-            hookInfo.cleanModePresenter.enterCleanMode.parameters.valuesListOrNull
+            configs.enterCleanMode.nameOrNull,
+            configs.enterCleanMode.parameters.valuesListOrNull
         )
 
         fun setVisibility() = Method(
-            hookInfo.cleanModePresenter.setVisibility.nameOrNull,
-            hookInfo.cleanModePresenter.setVisibility.parameters.valuesListOrNull
+            configs.setVisibility.nameOrNull,
+            configs.setVisibility.parameters.valuesListOrNull
         )
     }
 
-    inner class DanmakuViewModule {
+    class DanmakuViewModule internal constructor(
+        private val configs: Configs.DanmakuView,
+        private val classLoader: ClassLoader
+    ) {
         val selfClass by weak {
-            hookInfo.danmakuView.class_.nameOrNull?.toClass(classLoader)
+            configs.class_.nameOrNull?.toClass(classLoader)
         }
 
         fun onAttachedToWindow() = Method(
-            hookInfo.danmakuView.onAttachedToWindow.nameOrNull,
-            hookInfo.danmakuView.onAttachedToWindow.parameters.valuesListOrNull
+            configs.onAttachedToWindow.nameOrNull,
+            configs.onAttachedToWindow.parameters.valuesListOrNull
         )
     }
 
