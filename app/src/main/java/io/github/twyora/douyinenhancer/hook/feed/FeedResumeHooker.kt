@@ -20,8 +20,6 @@ object FeedResumeHooker : YukiBaseHooker() {
     private val verbose
         get() = !FastKVConfigManager.module.getBoolean(ModuleKey.DISABLE_VERBOSE_LOGS, false)
 
-    private const val EVENT_SURFACE_AVAILABLE = 0
-
     override fun onHook() {
         if (!FastKVConfigManager.settings.getBoolean(FeedKey.FEED_BLOCK_RESUME_PLAYBACK, false)) {
             if (verbose) {
@@ -33,7 +31,7 @@ object FeedResumeHooker : YukiBaseHooker() {
         // I have another choice: intercept FeedPanelProxy.handleTextureAvailable,
         // (the name "FeedPanelProxy" is given by me; it is obfuscated by the host and owned by BaseListFragmentPanel.basePanelProxy)
         // instead of checking videoType using a magic number inside BaseListFragmentPanel.handleVideoEvent.
-        // The reason I ultimately chose the magic number checking strategy is that I cannot confirm whether FeedPanelProxy
+        // The reason I ultimately chose this strategy is that I cannot confirm whether FeedPanelProxy
         // will be removed or obfuscated into another name. If this functionality breaks,
         // maintaining extra hook points becomes an additional maintenance burden
         packageInstance.baseListFragmentPanel.selfClass?.resolveMethod(
@@ -47,7 +45,7 @@ object FeedResumeHooker : YukiBaseHooker() {
                     return@before
                 }
 
-                if (videoType != EVENT_SURFACE_AVAILABLE) {
+                if (videoType != DouyinPackage.VideoEventModule.EVENT_TEXTURE_AVAILABLE) {
                     return@before
                 } else if (verbose) {
                     YLog.debug("$TAG: intercepting resume of video playback on surface created")
