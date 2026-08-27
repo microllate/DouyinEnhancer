@@ -29,28 +29,25 @@ import org.luckypray.dexkit.query.enums.StringMatchType
 import org.luckypray.dexkit.query.matchers.base.OpCodesMatcher
 
 val Configs.Class.nameOrNull
-    get() =
-        if (hasName()) {
-            name
-        } else {
-            null
-        }
+    get() = if (hasName()) {
+        name
+    } else {
+        null
+    }
 
 val Configs.Field.nameOrNull
-    get() =
-        if (hasName()) {
-            name
-        } else {
-            null
-        }
+    get() = if (hasName()) {
+        name
+    } else {
+        null
+    }
 
 val Configs.Method.nameOrNull
-    get() =
-        if (hasName()) {
-            name
-        } else {
-            null
-        }
+    get() = if (hasName()) {
+        name
+    } else {
+        null
+    }
 
 val Configs.Method.Parameters.valuesListOrNull
     get() =
@@ -59,20 +56,18 @@ val Configs.Method.Parameters.valuesListOrNull
         }
 
 class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
-    private val hookInfo: Configs.HookInfo =
-        run {
-            val (result, time) =
-                measureTimedValue {
-                    readHookInfo(context)
-                }
-
-            if (verbose) {
-                YLog.debug("$TAG: load hookInfo time: $time")
-                YLog.debug("$TAG: hookInfo: $result")
-            }
-
-            result
+    private val hookInfo: Configs.HookInfo = run {
+        val (result, time) = measureTimedValue {
+            readHookInfo(context)
         }
+
+        if (verbose) {
+            YLog.debug("$TAG: load hookInfo time: $time")
+            YLog.debug("$TAG: hookInfo: $result")
+        }
+
+        result
+    }
 
     fun hostVersionCode() = hookInfo.hostVersionCode
 
@@ -141,10 +136,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
         )
     }
 
-    class UrlModelModule internal constructor(
-        private val configs: Configs.UrlModel,
-        private val classLoader: ClassLoader
-    ) {
+    class UrlModelModule internal constructor(private val configs: Configs.UrlModel, private val classLoader: ClassLoader) {
         val selfClass by weak {
             configs.class_.nameOrNull?.toClass(classLoader)
         }
@@ -152,10 +144,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
         fun urlList() = Field(configs.urlList.nameOrNull)
     }
 
-    class CommentModule internal constructor(
-        private val configs: Configs.Comment,
-        private val classLoader: ClassLoader
-    ) {
+    class CommentModule internal constructor(private val configs: Configs.Comment, private val classLoader: ClassLoader) {
         val selfClass by weak {
             configs.class_.nameOrNull?.toClass(classLoader)
         }
@@ -178,10 +167,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
         fun content() = Field(configs.content.nameOrNull)
     }
 
-    class EmojiModule internal constructor(
-        private val configs: Configs.Emoji,
-        private val classLoader: ClassLoader
-    ) {
+    class EmojiModule internal constructor(private val configs: Configs.Emoji, private val classLoader: ClassLoader) {
         val selfClass by weak {
             configs.class_.nameOrNull?.toClass(classLoader)
         }
@@ -283,10 +269,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
         fun listenerProviderParam() = Field(configs.listenerProviderParam.nameOrNull)
     }
 
-    class DownloadInfoModule internal constructor(
-        private val configs: Configs.DownloadInfo,
-        private val classLoader: ClassLoader
-    ) {
+    class DownloadInfoModule internal constructor(private val configs: Configs.DownloadInfo, private val classLoader: ClassLoader) {
         val selfClass by weak {
             configs.class_.nameOrNull?.toClass(classLoader)
         }
@@ -299,10 +282,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
         )
     }
 
-    class DigestUtilsModule internal constructor(
-        private val configs: Configs.DigestUtils,
-        private val classLoader: ClassLoader
-    ) {
+    class DigestUtilsModule internal constructor(private val configs: Configs.DigestUtils, private val classLoader: ClassLoader) {
         val selfClass by weak {
             configs.class_.nameOrNull?.toClass(classLoader)
         }
@@ -313,10 +293,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
         )
     }
 
-    class UGFileUtilsKtModule internal constructor(
-        private val configs: Configs.UGFileUtilsKt,
-        private val classLoader: ClassLoader
-    ) {
+    class UGFileUtilsKtModule internal constructor(private val configs: Configs.UGFileUtilsKt, private val classLoader: ClassLoader) {
         val selfClass by weak {
             configs.class_.nameOrNull?.toClass(classLoader)
         }
@@ -354,10 +331,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
         )
     }
 
-    class CommonItemViewModule internal constructor(
-        private val configs: Configs.CommonItemView,
-        private val classLoader: ClassLoader
-    ) {
+    class CommonItemViewModule internal constructor(private val configs: Configs.CommonItemView, private val classLoader: ClassLoader) {
         val selfClass by weak {
             configs.class_.nameOrNull?.toClass(classLoader)
         }
@@ -401,10 +375,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
         )
     }
 
-    class MainActivityModule internal constructor(
-        private val configs: Configs.MainActivity,
-        private val classLoader: ClassLoader
-    ) {
+    class MainActivityModule internal constructor(private val configs: Configs.MainActivity, private val classLoader: ClassLoader) {
         val selfClass by weak {
             configs.class_.nameOrNull?.toClass(classLoader)
         }
@@ -420,10 +391,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
         )
     }
 
-    class UserModule internal constructor(
-        private val configs: Configs.User,
-        private val classLoader: ClassLoader
-    ) {
+    class UserModule internal constructor(private val configs: Configs.User, private val classLoader: ClassLoader) {
         val selfClass by weak {
             configs.class_.nameOrNull?.toClass(classLoader)
         }
@@ -433,10 +401,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
         fun uid() = Field(configs.uid.nameOrNull)
     }
 
-    class AwemeModule internal constructor(
-        private val configs: Configs.Aweme,
-        private val classLoader: ClassLoader
-    ) {
+    class AwemeModule internal constructor(private val configs: Configs.Aweme, private val classLoader: ClassLoader) {
         val selfClass by weak {
             configs.class_.nameOrNull?.toClass(classLoader)
         }
@@ -500,10 +465,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
         fun status() = Field(configs.status.nameOrNull)
     }
 
-    class AwemeStatusModule internal constructor(
-        private val configs: Configs.AwemeStatus,
-        private val classLoader: ClassLoader
-    ) {
+    class AwemeStatusModule internal constructor(private val configs: Configs.AwemeStatus, private val classLoader: ClassLoader) {
         val selfClass by weak {
             configs.class_.nameOrNull?.toClass(classLoader)
         }
@@ -540,10 +502,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
         }
     }
 
-    class RxObservableModule internal constructor(
-        private val configs: Configs.RxObservable,
-        private val classLoader: ClassLoader
-    ) {
+    class RxObservableModule internal constructor(private val configs: Configs.RxObservable, private val classLoader: ClassLoader) {
         val selfClass by weak {
             configs.class_.nameOrNull?.toClass(classLoader)
         }
@@ -607,10 +566,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
         )
     }
 
-    class VideoPlayerEventModule internal constructor(
-        private val configs: Configs.VideoPlayerEvent,
-        private val classLoader: ClassLoader
-    ) {
+    class VideoPlayerEventModule internal constructor(private val configs: Configs.VideoPlayerEvent, private val classLoader: ClassLoader) {
         val selfClass by weak {
             configs.class_.nameOrNull?.toClass(classLoader)
         }
@@ -618,10 +574,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
         fun code() = Field(configs.code.nameOrNull)
     }
 
-    class VideoEventModule internal constructor(
-        private val configs: Configs.VideoEvent,
-        private val classLoader: ClassLoader
-    ) {
+    class VideoEventModule internal constructor(private val configs: Configs.VideoEvent, private val classLoader: ClassLoader) {
         val selfClass by weak {
             configs.class_.nameOrNull?.toClass(classLoader)
         }
@@ -629,10 +582,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
         fun videoType() = Field(configs.videoType.nameOrNull)
     }
 
-    class AwemeStatisticsModule internal constructor(
-        private val configs: Configs.AwemeStatistics,
-        private val classLoader: ClassLoader
-    ) {
+    class AwemeStatisticsModule internal constructor(private val configs: Configs.AwemeStatistics, private val classLoader: ClassLoader) {
         val selfClass by weak {
             configs.class_.nameOrNull?.toClass(classLoader)
         }
@@ -646,10 +596,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
         fun shareCount() = Field(configs.shareCount.nameOrNull)
     }
 
-    class HeifDecoderModule internal constructor(
-        private val configs: Configs.HeifDecoder,
-        private val classLoader: ClassLoader
-    ) {
+    class HeifDecoderModule internal constructor(private val configs: Configs.HeifDecoder, private val classLoader: ClassLoader) {
         val selfClass by weak {
             configs.class_.nameOrNull?.toClass(classLoader)
         }
@@ -671,10 +618,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
         )
     }
 
-    class DownLoadExecutorModule internal constructor(
-        private val configs: Configs.DownLoadExecutor,
-        private val classLoader: ClassLoader
-    ) {
+    class DownLoadExecutorModule internal constructor(private val configs: Configs.DownLoadExecutor, private val classLoader: ClassLoader) {
         val selfClass by weak {
             configs.class_.nameOrNull?.toClass(classLoader)
         }
@@ -685,10 +629,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
         )
     }
 
-    class DownLoadTaskModule internal constructor(
-        private val configs: Configs.DownLoadTask,
-        private val classLoader: ClassLoader
-    ) {
+    class DownLoadTaskModule internal constructor(private val configs: Configs.DownLoadTask, private val classLoader: ClassLoader) {
         val selfClass by weak {
             configs.class_.nameOrNull?.toClass(classLoader)
         }
@@ -745,10 +686,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
         )
     }
 
-    class VideoModule internal constructor(
-        private val configs: Configs.Video,
-        private val classLoader: ClassLoader
-    ) {
+    class VideoModule internal constructor(private val configs: Configs.Video, private val classLoader: ClassLoader) {
         val selfClass by weak {
             configs.class_.nameOrNull?.toClass(classLoader)
         }
@@ -765,10 +703,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
         fun downloadAddr() = Field(configs.downloadAddr.nameOrNull)
     }
 
-    class ImageUrlStructModule internal constructor(
-        private val configs: Configs.ImageUrlStruct,
-        private val classLoader: ClassLoader
-    ) {
+    class ImageUrlStructModule internal constructor(private val configs: Configs.ImageUrlStruct, private val classLoader: ClassLoader) {
         val selfClass by weak {
             configs.class_.nameOrNull?.toClass(classLoader)
         }
@@ -832,10 +767,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
         )
     }
 
-    class DownloadActionModule internal constructor(
-        private val configs: Configs.DownloadAction,
-        private val classLoader: ClassLoader
-    ) {
+    class DownloadActionModule internal constructor(private val configs: Configs.DownloadAction, private val classLoader: ClassLoader) {
         val selfClass by weak {
             configs.class_.nameOrNull?.toClass(classLoader)
         }
@@ -892,10 +824,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
         fun actionStatus() = Field(configs.actionStatus.nameOrNull)
     }
 
-    class ActionStatusModule internal constructor(
-        private val configs: Configs.ActionStatus,
-        private val classLoader: ClassLoader
-    ) {
+    class ActionStatusModule internal constructor(private val configs: Configs.ActionStatus, private val classLoader: ClassLoader) {
         val selfClass by weak {
             configs.class_.nameOrNull?.toClass(classLoader)
         }
@@ -945,10 +874,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
         )
     }
 
-    class DanmakuViewModule internal constructor(
-        private val configs: Configs.DanmakuView,
-        private val classLoader: ClassLoader
-    ) {
+    class DanmakuViewModule internal constructor(private val configs: Configs.DanmakuView, private val classLoader: ClassLoader) {
         val selfClass by weak {
             configs.class_.nameOrNull?.toClass(classLoader)
         }
@@ -982,29 +908,26 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                     return@runCatching null
                 }
 
-                val hostAppPackageInfo =
-                    context.packageManager.getPackageInfo(
-                        AndroidAppHelper.currentPackageName(),
-                        0
-                    )
+                val hostAppPackageInfo = context.packageManager.getPackageInfo(
+                    AndroidAppHelper.currentPackageName(),
+                    0
+                )
                 val hostAppLastUpdateTime = hostAppPackageInfo.lastUpdateTime
                 val hostAppVersionCode = hostAppPackageInfo.versionCode
 
-                val moduleLastUpdateTime =
-                    runCatching {
-                        context.packageManager
-                            .getPackageInfo(
-                                AppProperties.PROJECT_APPLICATION_ID,
-                                0
-                            ).lastUpdateTime
-                    }.getOrDefault(hostAppLastUpdateTime)
+                val moduleLastUpdateTime = runCatching {
+                    context.packageManager
+                        .getPackageInfo(
+                            AppProperties.PROJECT_APPLICATION_ID,
+                            0
+                        ).lastUpdateTime
+                }.getOrDefault(hostAppLastUpdateTime)
 
-                val hookInfo =
-                    FileInputStream(hookInfoFile).use {
-                        runCatching {
-                            Configs.HookInfo.parseFrom(it)
-                        }.getOrNull() ?: Configs.HookInfo.newBuilder().build()
-                    }
+                val hookInfo = FileInputStream(hookInfoFile).use {
+                    runCatching {
+                        Configs.HookInfo.parseFrom(it)
+                    }.getOrNull() ?: Configs.HookInfo.newBuilder().build()
+                }
 
                 if (hookInfo.lastUpdateTime >= moduleLastUpdateTime &&
                     hookInfo.lastUpdateTime >= hostAppLastUpdateTime &&
@@ -1036,23 +959,21 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
             val populateFailedMsg = "%s: unable to populate config"
 
             val hostAppClassLoader = context.classLoader
-            val hostAppPackageInfo =
-                context.packageManager.getPackageInfo(
-                    AndroidAppHelper.currentPackageName(),
-                    0
-                )
+            val hostAppPackageInfo = context.packageManager.getPackageInfo(
+                AndroidAppHelper.currentPackageName(),
+                0
+            )
 
-            lastUpdateTime =
-                maxOf(
-                    hostAppPackageInfo.lastUpdateTime,
-                    runCatching {
-                        context.packageManager
-                            .getPackageInfo(
-                                AppProperties.PROJECT_NAMESPACE,
-                                0
-                            ).lastUpdateTime
-                    }.getOrDefault(hostAppPackageInfo.lastUpdateTime)
-                )
+            lastUpdateTime = maxOf(
+                hostAppPackageInfo.lastUpdateTime,
+                runCatching {
+                    context.packageManager
+                        .getPackageInfo(
+                            AppProperties.PROJECT_NAMESPACE,
+                            0
+                        ).lastUpdateTime
+                }.getOrDefault(hostAppPackageInfo.lastUpdateTime)
+            )
             moduleVersionCode = BuildConfig.VERSION_CODE
             moduleVersionName = BuildConfig.VERSION_NAME
             hostVersionCode = hostAppPackageInfo.versionCode
@@ -1066,281 +987,239 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
             }
 
             DexKitBridge.create(context.applicationInfo.sourceDir).use { bridge ->
-                commentImageStruct =
-                    commentImageStruct {
-                        runCatching {
-                            val cmtImgClsName =
-                                "com.ss.android.ugc.aweme.comment.model.CommentImageStruct"
-                            val originUrlFieldName = "originUrl"
-                            val downloadUrlFieldName = "downloadUrl"
-                            val getDownloadUrlMethodData =
-                                bridge
-                                    .findMethod {
-                                        matcher {
-                                            declaredClass =
-                                                "com.ss.android.ugc.aweme.comment.model.CommentImageStruct"
-                                            returnType = "com.ss.android.ugc.aweme.base.model.UrlModel"
-                                            paramCount = 0
-                                            addUsingField {
-                                                name = "downloadUrl"
-                                            }
-                                        }
-                                    }.singleOrNull() ?: run {
-                                    YLog.error(symbolNotFoundMsg.format(TAG, this::class.java.enclosingClass?.simpleName))
-                                    return@commentImageStruct
+                commentImageStruct = commentImageStruct {
+                    runCatching {
+                        val cmtImgClsName = "com.ss.android.ugc.aweme.comment.model.CommentImageStruct"
+                        val originUrlFieldName = "originUrl"
+                        val downloadUrlFieldName = "downloadUrl"
+                        val getDownloadUrlMethodData = bridge.findMethod {
+                            matcher {
+                                declaredClass = "com.ss.android.ugc.aweme.comment.model.CommentImageStruct"
+                                returnType = "com.ss.android.ugc.aweme.base.model.UrlModel"
+                                paramCount = 0
+                                addUsingField {
+                                    name = "downloadUrl"
                                 }
-
-                            class_ =
-                                class_ {
-                                    name = cmtImgClsName
-                                }
-                            originUrl =
-                                field {
-                                    name = originUrlFieldName
-                                }
-                            downloadUrl =
-                                field {
-                                    name = downloadUrlFieldName
-                                }
-                            getDownloadUrl =
-                                method {
-                                    name = getDownloadUrlMethodData.methodName
-                                    parameters =
-                                        MethodKt.parameters {
-                                            values.clear()
-                                            values.addAll(getDownloadUrlMethodData.paramTypeNames)
-                                        }
-                                }
-                        }.onFailure {
-                            YLog.error(populateFailedMsg.format(TAG), it)
+                            }
+                        }.singleOrNull() ?: run {
+                            YLog.error(symbolNotFoundMsg.format(TAG, this::class.java.enclosingClass?.simpleName))
+                            return@commentImageStruct
                         }
-                    }
 
-                urlModel =
-                    urlModel {
-                        class_ =
-                            class_ {
-                                name = "com.ss.android.ugc.aweme.base.model.UrlModel"
-                            }
-                        urlList =
-                            field {
-                                name = "urlList"
-                            }
-                    }
-
-                comment =
-                    comment {
-                        class_ =
-                            class_ {
-                                name = "com.ss.android.ugc.aweme.comment.model.Comment"
-                            }
-                        emoji =
-                            field {
-                                name = "emoji"
-                            }
-                        imageList =
-                            field {
-                                name = "imageList"
-                            }
-                        commentAudio =
-                            field {
-                                name = "commentAudio"
-                            }
-                    }
-
-                commentAudioStruct =
-                    commentAudioStruct {
-                        class_ =
-                            class_ {
-                                name = "com.ss.android.ugc.aweme.comment.model.CommentAudioStruct"
-                            }
-                        content =
-                            field {
-                                name = "content"
-                            }
-                    }
-
-                emoji =
-                    emoji {
-                        class_ =
-                            class_ {
-                                name = "com.ss.android.ugc.aweme.emoji.model.Emoji"
-                            }
-                        animateUrl =
-                            method {
-                                name = "animateUrl"
-                            }
-                    }
-
-                commentActionParams =
-                    commentActionParams {
-                        runCatching {
-                            val cmtActionParamsClsName =
-                                "com.ss.android.ugc.aweme.comment.CommentActionParams"
-                            val commentFieldName =
-                                cmtActionParamsClsName
-                                    .toClass(hostAppClassLoader)
-                                    .resolve()
-                                    .firstFieldOrNull {
-                                        type = "com.ss.android.ugc.aweme.comment.model.Comment"
-                                    }?.self
-                                    ?.name
-                            val imageFieldName =
-                                cmtActionParamsClsName
-                                    .toClass(hostAppClassLoader)
-                                    .resolve()
-                                    .firstFieldOrNull {
-                                        type = Int::class
-                                    }?.self
-                                    ?.name
-                            if (commentFieldName == null || imageFieldName == null) {
-                                YLog.error(symbolNotFoundMsg.format(TAG, this::class.java.enclosingClass?.simpleName))
-                                return@commentActionParams
-                            }
-
-                            class_ =
-                                class_ {
-                                    name = cmtActionParamsClsName
-                                }
-                            comment =
-                                field {
-                                    name = commentFieldName
-                                }
-                            imageIndex =
-                                field {
-                                    name = imageFieldName
-                                }
-                        }.onFailure {
-                            YLog.error(populateFailedMsg.format(TAG), it)
+                        class_ = class_ {
+                            name = cmtImgClsName
                         }
-                    }
-
-                commentLongPressItemModel =
-                    commentLongPressItemModel {
-                        runCatching {
-                            val commentLongPressItemModelClsName =
-                                "com.ss.android.ugc.aweme.comment.ui.longpress.CommentLongPressItemModel"
-                            val commentActionParamsFieldName =
-                                commentLongPressItemModelClsName
-                                    .toClass(hostAppClassLoader)
-                                    .resolve()
-                                    .firstFieldOrNull {
-                                        type = "com.ss.android.ugc.aweme.comment.CommentActionParams"
-                                    }?.self
-                                    ?.name
-
-                            if (commentActionParamsFieldName == null) {
-                                YLog.error(symbolNotFoundMsg.format(TAG, this::class.java.enclosingClass?.simpleName))
-                                return@commentLongPressItemModel
-                            }
-
-                            class_ =
-                                class_ {
-                                    name = commentLongPressItemModelClsName
-                                }
-                            commentActionParams =
-                                field {
-                                    name = commentActionParamsFieldName
-                                }
-                        }.onFailure {
-                            YLog.error(populateFailedMsg.format(TAG), it)
+                        originUrl = field {
+                            name = originUrlFieldName
                         }
+                        downloadUrl = field {
+                            name = downloadUrlFieldName
+                        }
+                        getDownloadUrl = method {
+                            name = getDownloadUrlMethodData.methodName
+                            parameters = MethodKt.parameters {
+                                values.clear()
+                                values.addAll(getDownloadUrlMethodData.paramTypeNames)
+                            }
+                        }
+                    }.onFailure {
+                        YLog.error(populateFailedMsg.format(TAG), it)
                     }
+                }
 
-                saveImageActionItem =
-                    saveImageActionItem {
-                        runCatching {
-                            val saveImageActionItemClsName =
-                                "com.ss.android.ugc.aweme.comment.manager.longclickaction.actions.SaveImageActionItem"
-                            // SaveImageActionItem extends CommentLongPressItemModel, ensure commentLongPressItemModel is populated first!
-                            val cmtActionParamsFieldName =
-                                this@hookInfo.commentLongPressItemModel.commentActionParams?.name
-                            val saveImageActionParamsFieldName =
-                                saveImageActionItemClsName
-                                    .toClass(hostAppClassLoader)
-                                    .resolve()
-                                    .firstFieldOrNull {
-                                        type = "com.ss.android.ugc.aweme.comment.CommentActionParams"
-                                    }?.self
-                                    ?.name
-                            val onClickMethodData = bridge
-                                .findMethod {
-                                    matcher {
-                                        modifiers = Modifier.STATIC + Modifier.FINAL + Modifier.PUBLIC
-                                        returnType = "java.lang.Object"
-                                        params {
-                                            count = 1
-                                        }
-                                        addUsingString("bpea-comment_save_image_to_album")
+                urlModel = urlModel {
+                    class_ = class_ {
+                        name = "com.ss.android.ugc.aweme.base.model.UrlModel"
+                    }
+                    urlList = field {
+                        name = "urlList"
+                    }
+                }
+
+                comment = comment {
+                    class_ = class_ {
+                        name = "com.ss.android.ugc.aweme.comment.model.Comment"
+                    }
+                    emoji = field {
+                        name = "emoji"
+                    }
+                    imageList = field {
+                        name = "imageList"
+                    }
+                    commentAudio = field {
+                        name = "commentAudio"
+                    }
+                }
+
+                commentAudioStruct = commentAudioStruct {
+                    class_ = class_ {
+                        name = "com.ss.android.ugc.aweme.comment.model.CommentAudioStruct"
+                    }
+                    content = field {
+                        name = "content"
+                    }
+                }
+
+                emoji = emoji {
+                    class_ = class_ {
+                        name = "com.ss.android.ugc.aweme.emoji.model.Emoji"
+                    }
+                    animateUrl = method {
+                        name = "animateUrl"
+                    }
+                }
+
+                commentActionParams = commentActionParams {
+                    runCatching {
+                        val cmtActionParamsClsName = "com.ss.android.ugc.aweme.comment.CommentActionParams"
+                        val commentFieldName = cmtActionParamsClsName
+                            .toClass(hostAppClassLoader)
+                            .resolve()
+                            .firstFieldOrNull {
+                                type = "com.ss.android.ugc.aweme.comment.model.Comment"
+                            }?.self
+                            ?.name
+                        val imageFieldName = cmtActionParamsClsName
+                            .toClass(hostAppClassLoader)
+                            .resolve()
+                            .firstFieldOrNull {
+                                type = Int::class
+                            }?.self
+                            ?.name
+                        if (commentFieldName == null || imageFieldName == null) {
+                            YLog.error(symbolNotFoundMsg.format(TAG, this::class.java.enclosingClass?.simpleName))
+                            return@commentActionParams
+                        }
+
+                        class_ = class_ {
+                            name = cmtActionParamsClsName
+                        }
+                        comment = field {
+                            name = commentFieldName
+                        }
+                        imageIndex = field {
+                            name = imageFieldName
+                        }
+                    }.onFailure {
+                        YLog.error(populateFailedMsg.format(TAG), it)
+                    }
+                }
+
+                commentLongPressItemModel = commentLongPressItemModel {
+                    runCatching {
+                        val commentLongPressItemModelClsName = "com.ss.android.ugc.aweme.comment.ui.longpress.CommentLongPressItemModel"
+                        val commentActionParamsFieldName = commentLongPressItemModelClsName
+                            .toClass(hostAppClassLoader)
+                            .resolve()
+                            .firstFieldOrNull {
+                                type = "com.ss.android.ugc.aweme.comment.CommentActionParams"
+                            }?.self
+                            ?.name
+
+                        if (commentActionParamsFieldName == null) {
+                            YLog.error(symbolNotFoundMsg.format(TAG, this::class.java.enclosingClass?.simpleName))
+                            return@commentLongPressItemModel
+                        }
+
+                        class_ = class_ {
+                            name = commentLongPressItemModelClsName
+                        }
+                        commentActionParams = field {
+                            name = commentActionParamsFieldName
+                        }
+                    }.onFailure {
+                        YLog.error(populateFailedMsg.format(TAG), it)
+                    }
+                }
+
+                saveImageActionItem = saveImageActionItem {
+                    runCatching {
+                        val saveImageActionItemClsName =
+                            "com.ss.android.ugc.aweme.comment.manager.longclickaction.actions.SaveImageActionItem"
+                        // SaveImageActionItem extends CommentLongPressItemModel, ensure commentLongPressItemModel is populated first!
+                        val cmtActionParamsFieldName = this@hookInfo.commentLongPressItemModel.commentActionParams?.name
+                        val saveImageActionParamsFieldName = saveImageActionItemClsName
+                            .toClass(hostAppClassLoader)
+                            .resolve()
+                            .firstFieldOrNull {
+                                type = "com.ss.android.ugc.aweme.comment.CommentActionParams"
+                            }?.self
+                            ?.name
+                        val onClickMethodData = bridge
+                            .findMethod {
+                                matcher {
+                                    modifiers = Modifier.STATIC + Modifier.FINAL + Modifier.PUBLIC
+                                    returnType = "java.lang.Object"
+                                    params {
+                                        count = 1
                                     }
-                                }.singleOrNull()
-                            val onClickHostItemFieldName =
-                                onClickMethodData?.declaredClassName?.toClass(hostAppClassLoader)?.resolve()?.firstFieldOrNull {
-                                    type = Object::class
-                                }?.self?.name
-                            val isVisibleMethodData = bridge
-                                .findMethod {
-                                    matcher {
-                                        modifiers = Modifier.PUBLIC or Modifier.FINAL
-                                        declaredClass = saveImageActionItemClsName
-                                        returnType = "boolean"
-                                        usingFields {
-                                            add {
-                                                field {
-                                                    cmtActionParamsFieldName?.let {
-                                                        name = it
-                                                    }
+                                    addUsingString("bpea-comment_save_image_to_album")
+                                }
+                            }.singleOrNull()
+                        val onClickHostItemFieldName =
+                            onClickMethodData?.declaredClassName?.toClass(hostAppClassLoader)?.resolve()?.firstFieldOrNull {
+                                type = Object::class
+                            }?.self?.name
+                        val isVisibleMethodData = bridge
+                            .findMethod {
+                                matcher {
+                                    modifiers = Modifier.PUBLIC or Modifier.FINAL
+                                    declaredClass = saveImageActionItemClsName
+                                    returnType = "boolean"
+                                    usingFields {
+                                        add {
+                                            field {
+                                                cmtActionParamsFieldName?.let {
+                                                    name = it
                                                 }
                                             }
                                         }
                                     }
-                                }.singleOrNull()
-                            if (cmtActionParamsFieldName == null || saveImageActionParamsFieldName == null || onClickMethodData == null ||
-                                onClickHostItemFieldName == null ||
-                                isVisibleMethodData == null
-                            ) {
-                                YLog.error(symbolNotFoundMsg.format(TAG, this::class.java.enclosingClass?.simpleName))
-                                return@saveImageActionItem
-                            }
+                                }
+                            }.singleOrNull()
+                        if (cmtActionParamsFieldName == null || saveImageActionParamsFieldName == null || onClickMethodData == null ||
+                            onClickHostItemFieldName == null ||
+                            isVisibleMethodData == null
+                        ) {
+                            YLog.error(symbolNotFoundMsg.format(TAG, this::class.java.enclosingClass?.simpleName))
+                            return@saveImageActionItem
+                        }
 
-                            class_ =
-                                class_ {
-                                    name = saveImageActionItemClsName
-                                }
-                            cmtActionParams =
-                                field {
-                                    name = cmtActionParamsFieldName
-                                }
-                            saveImgActionParams =
-                                field {
-                                    name = saveImageActionParamsFieldName
-                                }
-                            onClickExecutor = saveImageActionItemOnClickExecutor {
-                                class_ = class_ {
-                                    name = onClickMethodData.className
-                                }
-                                onClick = method {
-                                    name = onClickMethodData.methodName
-                                    parameters = MethodKt.parameters {
-                                        values.clear()
-                                        values.addAll(onClickMethodData.paramTypeNames)
-                                    }
-                                }
-                                hostItem = field {
-                                    name = onClickHostItemFieldName
-                                }
+                        class_ = class_ {
+                            name = saveImageActionItemClsName
+                        }
+                        cmtActionParams = field {
+                            name = cmtActionParamsFieldName
+                        }
+                        saveImgActionParams = field {
+                            name = saveImageActionParamsFieldName
+                        }
+                        onClickExecutor = saveImageActionItemOnClickExecutor {
+                            class_ = class_ {
+                                name = onClickMethodData.className
                             }
-                            isVisible = method {
-                                name = isVisibleMethodData.methodName
+                            onClick = method {
+                                name = onClickMethodData.methodName
                                 parameters = MethodKt.parameters {
                                     values.clear()
-                                    values.addAll(isVisibleMethodData.paramTypeNames)
+                                    values.addAll(onClickMethodData.paramTypeNames)
                                 }
                             }
-                        }.onFailure {
-                            YLog.error(populateFailedMsg.format(TAG), it)
+                            hostItem = field {
+                                name = onClickHostItemFieldName
+                            }
                         }
+                        isVisible = method {
+                            name = isVisibleMethodData.methodName
+                            parameters = MethodKt.parameters {
+                                values.clear()
+                                values.addAll(isVisibleMethodData.paramTypeNames)
+                            }
+                        }
+                    }.onFailure {
+                        YLog.error(populateFailedMsg.format(TAG), it)
                     }
+                }
 
                 listenerProviderParam = listenerProviderParam {
                     runCatching {
@@ -1403,300 +1282,252 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                     }
                 }
 
-                commentImageSaveDownloadListener =
-                    commentImageSaveDownloadListener {
-                        runCatching {
-                            val onSuccessedMethodData = bridge
-                                .findMethod {
-                                    matcher {
-                                        name = "onSuccessed"
-                                        modifiers = Modifier.FINAL + Modifier.PUBLIC
-                                        returnType = "void"
-                                        params {
-                                            add("com.ss.android.socialbase.downloader.model.DownloadInfo")
-                                        }
-                                        usingStrings {
-                                            add("/douyin/comment")
-                                            add("comment_")
-                                        }
-                                        invokeMethods {
-                                            add {
-                                                descriptor =
-                                                    "Lcom/bytedance/android/ug/UGFileUtilsKt;->copyFile(Ljava/lang/String;Ljava/lang/String;Lcom/bytedance/bpea/cert/token/TokenCert;)Z"
-                                            }
+                commentImageSaveDownloadListener = commentImageSaveDownloadListener {
+                    runCatching {
+                        val onSuccessedMethodData = bridge
+                            .findMethod {
+                                matcher {
+                                    name = "onSuccessed"
+                                    modifiers = Modifier.FINAL + Modifier.PUBLIC
+                                    returnType = "void"
+                                    params {
+                                        add("com.ss.android.socialbase.downloader.model.DownloadInfo")
+                                    }
+                                    usingStrings {
+                                        add("/douyin/comment")
+                                        add("comment_")
+                                    }
+                                    invokeMethods {
+                                        add {
+                                            descriptor =
+                                                "Lcom/bytedance/android/ug/UGFileUtilsKt;->copyFile(Ljava/lang/String;Ljava/lang/String;Lcom/bytedance/bpea/cert/token/TokenCert;)Z"
                                         }
                                     }
-                                }.singleOrNull()
-
-                            val clsName = onSuccessedMethodData?.declaredClassName
-
-                            val notifyResultMethod =
-                                clsName?.toClass(hostAppClassLoader)?.resolve()
-                                    ?.firstMethodOrNull {
-                                        modifiers(Modifiers.PUBLIC, Modifiers.FINAL)
-                                        parameters(Context::class, Boolean::class)
-                                        parameterCount = 2
-                                        superclass()
-                                    }?.self
-                            val listenerProviderParamFieldName = clsName?.toClass(hostAppClassLoader)?.resolve()?.firstFieldOrNull {
-                                type = this@hookInfo.listenerProviderParam.class_.nameOrNull
-                            }?.self?.name
-                            if (onSuccessedMethodData == null || notifyResultMethod == null || listenerProviderParamFieldName == null) {
-                                YLog.error(symbolNotFoundMsg.format(TAG, this::class.java.enclosingClass?.simpleName))
-                                return@commentImageSaveDownloadListener
-                            }
-
-                            class_ =
-                                class_ {
-                                    name = clsName
                                 }
-                            onSuccessed =
-                                method {
-                                    name = onSuccessedMethodData.name
-                                    parameters =
-                                        MethodKt.parameters {
-                                            values.clear()
-                                            values.addAll(onSuccessedMethodData.paramTypeNames)
-                                        }
-                                }
-                            notifyResult =
-                                method {
-                                    name = notifyResultMethod.name
-                                    parameters =
-                                        MethodKt.parameters {
-                                            values.clear()
-                                            notifyResultMethod.parameterTypes.forEach { paramType ->
-                                                values.add(paramType.name)
-                                            }
-                                        }
-                                }
-                            listenerProviderParam = field {
-                                name = listenerProviderParamFieldName
-                            }
+                            }.singleOrNull()
+
+                        val clsName = onSuccessedMethodData?.declaredClassName
+
+                        val notifyResultMethod = clsName?.toClass(hostAppClassLoader)?.resolve()
+                            ?.firstMethodOrNull {
+                                modifiers(Modifiers.PUBLIC, Modifiers.FINAL)
+                                parameters(Context::class, Boolean::class)
+                                parameterCount = 2
+                                superclass()
+                            }?.self
+                        val listenerProviderParamFieldName = clsName?.toClass(hostAppClassLoader)?.resolve()?.firstFieldOrNull {
+                            type = this@hookInfo.listenerProviderParam.class_.nameOrNull
+                        }?.self?.name
+                        if (onSuccessedMethodData == null || notifyResultMethod == null || listenerProviderParamFieldName == null) {
+                            YLog.error(symbolNotFoundMsg.format(TAG, this::class.java.enclosingClass?.simpleName))
                             return@commentImageSaveDownloadListener
-                        }.onFailure {
-                            YLog.error(populateFailedMsg.format(TAG), it)
                         }
-                    }
 
-                downloadInfo =
-                    downloadInfo {
-                        class_ =
-                            class_ {
-                                name = "com.ss.android.socialbase.downloader.model.DownloadInfo"
-                            }
-                        url =
-                            field {
-                                name = "url"
-                            }
-                        getTargetFilePath =
-                            method {
-                                name = "getTargetFilePath"
-                            }
-                    }
-
-                digestUtils =
-                    digestUtils {
-                        runCatching {
-                            val digestUtilsClsName = "com.bytedance.common.utility.DigestUtils"
-                            val md5HexFieldMethod =
-                                digestUtilsClsName
-                                    .toClass(hostAppClassLoader)
-                                    .resolve()
-                                    .firstMethodOrNull {
-                                        name = "md5Hex"
-                                        returnType = String::class
-                                        modifiers(Modifiers.PUBLIC, Modifiers.STATIC)
-                                        parameters(String::class)
-                                    }?.self
-                            if (md5HexFieldMethod == null) {
-                                YLog.error(symbolNotFoundMsg.format(TAG, this::class.java.enclosingClass?.simpleName))
-                                return@digestUtils
-                            }
-
-                            class_ =
-                                class_ {
-                                    name = digestUtilsClsName
-                                }
-                            md5Hex =
-                                method {
-                                    name = md5HexFieldMethod.name
-                                    parameters =
-                                        MethodKt.parameters {
-                                            values.clear()
-                                            md5HexFieldMethod.parameterTypes.forEach { paramType ->
-                                                values.add(paramType.name)
-                                            }
-                                        }
-                                }
-                        }.onFailure {
-                            YLog.error(populateFailedMsg.format(TAG), it)
+                        class_ = class_ {
+                            name = clsName
                         }
-                    }
-
-                ugFileUtils =
-                    uGFileUtilsKt {
-                        runCatching {
-                            val ugFileUtilsClsName = "com.bytedance.android.ug.UGFileUtilsKt"
-                            val copyFileMethod =
-                                ugFileUtilsClsName
-                                    .toClass(hostAppClassLoader)
-                                    .resolve()
-                                    .firstMethodOrNull {
-                                        name = "copyFile"
-                                        returnType = Boolean::class
-                                        modifiers(Modifiers.PUBLIC, Modifiers.STATIC, Modifiers.FINAL)
-                                        parameters(
-                                            String::class,
-                                            String::class,
-                                            "com.bytedance.bpea.cert.token.TokenCert"
-                                        )
-                                        parameterCount = 3
-                                    }?.self
-                            val getStorageDirMethod =
-                                ugFileUtilsClsName
-                                    .toClass(hostAppClassLoader)
-                                    .resolve()
-                                    .firstMethodOrNull {
-                                        name = "getStorageDir"
-                                        returnType = String::class
-                                        modifiers(Modifiers.PUBLIC, Modifiers.STATIC, Modifiers.FINAL)
-                                        parameters(String::class, Boolean::class)
-                                        parameterCount = 2
-                                    }?.self
-                            val getExternalStorageDirectoryMethod =
-                                ugFileUtilsClsName
-                                    .toClass(hostAppClassLoader)
-                                    .resolve()
-                                    .firstMethodOrNull {
-                                        name = "getExternalStorageDirectory"
-                                        returnType = String::class
-                                        modifiers(Modifiers.PUBLIC, Modifiers.STATIC, Modifiers.FINAL)
-                                        parameters(String::class, Boolean::class)
-                                        parameterCount = 2
-                                    }?.self
-                            val getImageUriMethod =
-                                ugFileUtilsClsName
-                                    .toClass(hostAppClassLoader)
-                                    .resolve()
-                                    .firstMethodOrNull {
-                                        name = "getImageUri"
-                                        returnType = android.net.Uri::class
-                                        modifiers(Modifiers.PUBLIC, Modifiers.STATIC, Modifiers.FINAL)
-                                        parameters(
-                                            Context::class,
-                                            String::class,
-                                            String::class,
-                                            String::class,
-                                            "com.bytedance.bpea.cert.token.TokenCert"
-                                        )
-                                        parameterCount = 5
-                                    }?.self
-                            val createUriMethod = ugFileUtilsClsName.toClass(hostAppClassLoader).resolve().firstMethodOrNull {
-                                name = "createUri"
-                                returnType = android.net.Uri::class
-                                modifiers(Modifiers.PUBLIC, Modifiers.STATIC, Modifiers.FINAL)
-                                parameters(
-                                    String::class,
-                                    Boolean::class,
-                                    Array<android.net.Uri>::class,
-                                    "com.bytedance.bpea.cert.token.TokenCert"
-                                )
-                                parameterCount = 4
-                            }?.self
-                            val getAudioUriMethod = ugFileUtilsClsName.toClass(hostAppClassLoader).resolve().firstMethodOrNull {
-                                name = "getAudioUri"
-                                parameters(
-                                    Context::class,
-                                    String::class,
-                                    String::class,
-                                    String::class,
-                                    "com.bytedance.bpea.cert.token.TokenCert"
-                                )
-                            }?.self
-                            if (copyFileMethod == null || getStorageDirMethod == null || getExternalStorageDirectoryMethod == null ||
-                                getImageUriMethod == null || createUriMethod == null || getAudioUriMethod == null
-                            ) {
-                                YLog.error(symbolNotFoundMsg.format(TAG, this::class.java.enclosingClass?.simpleName))
-                                return@uGFileUtilsKt
+                        onSuccessed = method {
+                            name = onSuccessedMethodData.name
+                            parameters = MethodKt.parameters {
+                                values.clear()
+                                values.addAll(onSuccessedMethodData.paramTypeNames)
                             }
-
-                            class_ =
-                                class_ {
-                                    name = ugFileUtilsClsName
-                                }
-                            this.context =
-                                field {
-                                    name = "context"
-                                }
-                            copyFile =
-                                method {
-                                    name = copyFileMethod.name
-                                    parameters =
-                                        MethodKt.parameters {
-                                            values.clear()
-                                            copyFileMethod.parameterTypes.forEach { paramType ->
-                                                values.add(paramType.name)
-                                            }
-                                        }
-                                }
-                            getStorageDir =
-                                method {
-                                    name = getStorageDirMethod.name
-                                    parameters =
-                                        MethodKt.parameters {
-                                            values.clear()
-                                            getStorageDirMethod.parameterTypes.forEach { paramType ->
-                                                values.add(paramType.name)
-                                            }
-                                        }
-                                }
-                            getExternalStorageDir =
-                                method {
-                                    name = getExternalStorageDirectoryMethod.name
-                                    parameters =
-                                        MethodKt.parameters {
-                                            values.clear()
-                                            getExternalStorageDirectoryMethod.parameterTypes.forEach { paramType ->
-                                                values.add(paramType.name)
-                                            }
-                                        }
-                                }
-                            getImageUri =
-                                method {
-                                    name = getImageUriMethod.name
-                                    parameters =
-                                        MethodKt.parameters {
-                                            values.clear()
-                                            getImageUriMethod.parameterTypes.forEach { paramType ->
-                                                values.add(paramType.name)
-                                            }
-                                        }
-                                }
-                            createUri = method {
-                                name = createUriMethod.name
-                                parameters =
-                                    MethodKt.parameters {
-                                        values.clear()
-                                        createUriMethod.parameterTypes.forEach { paramType ->
-                                            values.add(paramType.name)
-                                        }
-                                    }
-                            }
-                            getAudioUri = method {
-                                name = getAudioUriMethod.name
-                                parameters =
-                                    MethodKt.parameters {
-                                        values.clear()
-                                        getAudioUriMethod.parameterTypes.forEach { paramType ->
-                                            values.add(paramType.name)
-                                        }
-                                    }
-                            }
-                        }.onFailure {
-                            YLog.error(populateFailedMsg.format(TAG), it)
                         }
+                        notifyResult = method {
+                            name = notifyResultMethod.name
+                            parameters = MethodKt.parameters {
+                                values.clear()
+                                notifyResultMethod.parameterTypes.forEach { paramType ->
+                                    values.add(paramType.name)
+                                }
+                            }
+                        }
+                        listenerProviderParam = field {
+                            name = listenerProviderParamFieldName
+                        }
+                        return@commentImageSaveDownloadListener
+                    }.onFailure {
+                        YLog.error(populateFailedMsg.format(TAG), it)
                     }
+                }
+
+                downloadInfo = downloadInfo {
+                    class_ = class_ {
+                        name = "com.ss.android.socialbase.downloader.model.DownloadInfo"
+                    }
+                    url = field {
+                        name = "url"
+                    }
+                    getTargetFilePath = method {
+                        name = "getTargetFilePath"
+                    }
+                }
+
+                digestUtils = digestUtils {
+                    runCatching {
+                        val digestUtilsClsName = "com.bytedance.common.utility.DigestUtils"
+                        val md5HexFieldMethod = digestUtilsClsName.toClass(hostAppClassLoader).resolve().firstMethodOrNull {
+                            name = "md5Hex"
+                            returnType = String::class
+                            modifiers(Modifiers.PUBLIC, Modifiers.STATIC)
+                            parameters(String::class)
+                        }?.self
+                        if (md5HexFieldMethod == null) {
+                            YLog.error(symbolNotFoundMsg.format(TAG, this::class.java.enclosingClass?.simpleName))
+                            return@digestUtils
+                        }
+
+                        class_ = class_ {
+                            name = digestUtilsClsName
+                        }
+                        md5Hex = method {
+                            name = md5HexFieldMethod.name
+                            parameters = MethodKt.parameters {
+                                values.clear()
+                                md5HexFieldMethod.parameterTypes.forEach { paramType ->
+                                    values.add(paramType.name)
+                                }
+                            }
+                        }
+                    }.onFailure {
+                        YLog.error(populateFailedMsg.format(TAG), it)
+                    }
+                }
+
+                ugFileUtils = uGFileUtilsKt {
+                    runCatching {
+                        val ugFileUtilsClsName = "com.bytedance.android.ug.UGFileUtilsKt"
+                        val copyFileMethod = ugFileUtilsClsName.toClass(hostAppClassLoader).resolve().firstMethodOrNull {
+                            name = "copyFile"
+                            returnType = Boolean::class
+                            modifiers(Modifiers.PUBLIC, Modifiers.STATIC, Modifiers.FINAL)
+                            parameters(
+                                String::class,
+                                String::class,
+                                "com.bytedance.bpea.cert.token.TokenCert"
+                            )
+                            parameterCount = 3
+                        }?.self
+                        val getStorageDirMethod = ugFileUtilsClsName.toClass(hostAppClassLoader).resolve().firstMethodOrNull {
+                            name = "getStorageDir"
+                            returnType = String::class
+                            modifiers(Modifiers.PUBLIC, Modifiers.STATIC, Modifiers.FINAL)
+                            parameters(String::class, Boolean::class)
+                            parameterCount = 2
+                        }?.self
+                        val getExternalStorageDirectoryMethod = ugFileUtilsClsName.toClass(hostAppClassLoader).resolve().firstMethodOrNull {
+                            name = "getExternalStorageDirectory"
+                            returnType = String::class
+                            modifiers(Modifiers.PUBLIC, Modifiers.STATIC, Modifiers.FINAL)
+                            parameters(String::class, Boolean::class)
+                            parameterCount = 2
+                        }?.self
+                        val getImageUriMethod = ugFileUtilsClsName.toClass(hostAppClassLoader).resolve().firstMethodOrNull {
+                            name = "getImageUri"
+                            returnType = android.net.Uri::class
+                            modifiers(Modifiers.PUBLIC, Modifiers.STATIC, Modifiers.FINAL)
+                            parameters(
+                                Context::class,
+                                String::class,
+                                String::class,
+                                String::class,
+                                "com.bytedance.bpea.cert.token.TokenCert"
+                            )
+                            parameterCount = 5
+                        }?.self
+                        val createUriMethod = ugFileUtilsClsName.toClass(hostAppClassLoader).resolve().firstMethodOrNull {
+                            name = "createUri"
+                            returnType = android.net.Uri::class
+                            modifiers(Modifiers.PUBLIC, Modifiers.STATIC, Modifiers.FINAL)
+                            parameters(
+                                String::class,
+                                Boolean::class,
+                                Array<android.net.Uri>::class,
+                                "com.bytedance.bpea.cert.token.TokenCert"
+                            )
+                            parameterCount = 4
+                        }?.self
+                        val getAudioUriMethod = ugFileUtilsClsName.toClass(hostAppClassLoader).resolve().firstMethodOrNull {
+                            name = "getAudioUri"
+                            parameters(
+                                Context::class,
+                                String::class,
+                                String::class,
+                                String::class,
+                                "com.bytedance.bpea.cert.token.TokenCert"
+                            )
+                        }?.self
+                        if (copyFileMethod == null || getStorageDirMethod == null || getExternalStorageDirectoryMethod == null ||
+                            getImageUriMethod == null || createUriMethod == null || getAudioUriMethod == null
+                        ) {
+                            YLog.error(symbolNotFoundMsg.format(TAG, this::class.java.enclosingClass?.simpleName))
+                            return@uGFileUtilsKt
+                        }
+
+                        class_ = class_ {
+                            name = ugFileUtilsClsName
+                        }
+                        this.context = field {
+                            name = "context"
+                        }
+                        copyFile = method {
+                            name = copyFileMethod.name
+                            parameters = MethodKt.parameters {
+                                values.clear()
+                                copyFileMethod.parameterTypes.forEach { paramType ->
+                                    values.add(paramType.name)
+                                }
+                            }
+                        }
+                        getStorageDir = method {
+                            name = getStorageDirMethod.name
+                            parameters = MethodKt.parameters {
+                                values.clear()
+                                getStorageDirMethod.parameterTypes.forEach { paramType ->
+                                    values.add(paramType.name)
+                                }
+                            }
+                        }
+                        getExternalStorageDir = method {
+                            name = getExternalStorageDirectoryMethod.name
+                            parameters = MethodKt.parameters {
+                                values.clear()
+                                getExternalStorageDirectoryMethod.parameterTypes.forEach { paramType ->
+                                    values.add(paramType.name)
+                                }
+                            }
+                        }
+                        getImageUri = method {
+                            name = getImageUriMethod.name
+                            parameters = MethodKt.parameters {
+                                values.clear()
+                                getImageUriMethod.parameterTypes.forEach { paramType ->
+                                    values.add(paramType.name)
+                                }
+                            }
+                        }
+                        createUri = method {
+                            name = createUriMethod.name
+                            parameters = MethodKt.parameters {
+                                values.clear()
+                                createUriMethod.parameterTypes.forEach { paramType ->
+                                    values.add(paramType.name)
+                                }
+                            }
+                        }
+                        getAudioUri = method {
+                            name = getAudioUriMethod.name
+                            parameters = MethodKt.parameters {
+                                values.clear()
+                                getAudioUriMethod.parameterTypes.forEach { paramType ->
+                                    values.add(paramType.name)
+                                }
+                            }
+                        }
+                    }.onFailure {
+                        YLog.error(populateFailedMsg.format(TAG), it)
+                    }
+                }
 
                 commonItemView = commonItemView {
                     class_ = class_ {
@@ -2359,8 +2190,7 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
 
                 absPermissionChecker = absPermissionChecker {
                     runCatching {
-                        val clsName =
-                            "com.ss.android.ugc.aweme.permission.AbsPermissionChecker"
+                        val clsName = "com.ss.android.ugc.aweme.permission.AbsPermissionChecker"
                         val getActionCheckResultData = bridge.findMethod {
                             matcher {
                                 declaredClass = clsName
@@ -2412,126 +2242,114 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                     }
                 }
 
-                actionStatus =
-                    actionStatus {
-                        class_ = class_ {
-                            name = "com.ss.android.ugc.aweme.privacy.model.ActionStatus"
-                        }
-                        valueOf = method {
-                            name = "valueOf"
-                        }
-                        grayed = field {
-                            name = "GRAYED"
-                        }
-                        hidden = field {
-                            name = "HIDDEN"
-                        }
-                        normal = field {
-                            name = "NORMAL"
-                        }
+                actionStatus = actionStatus {
+                    class_ = class_ {
+                        name = "com.ss.android.ugc.aweme.privacy.model.ActionStatus"
                     }
+                    valueOf = method {
+                        name = "valueOf"
+                    }
+                    grayed = field {
+                        name = "GRAYED"
+                    }
+                    hidden = field {
+                        name = "HIDDEN"
+                    }
+                    normal = field {
+                        name = "NORMAL"
+                    }
+                }
 
-                galleryShareHelper =
-                    galleryShareHelper {
-                        runCatching {
-                            val startDownloadData = bridge.findMethod {
-                                matcher {
-                                    modifiers = Modifier.PUBLIC or Modifier.FINAL
-                                    returnType = "void"
-                                    params {
-                                        add("com.ss.android.ugc.aweme.feed.model.Aweme")
-                                        add("java.lang.String")
+                galleryShareHelper = galleryShareHelper {
+                    runCatching {
+                        val startDownloadData = bridge.findMethod {
+                            matcher {
+                                modifiers = Modifier.PUBLIC or Modifier.FINAL
+                                returnType = "void"
+                                params {
+                                    add("com.ss.android.ugc.aweme.feed.model.Aweme")
+                                    add("java.lang.String")
+                                }
+                                invokeMethods {
+                                    add {
+                                        descriptor =
+                                            "Lcom/ss/android/ugc/aweme/feed/model/Aweme;->getVideo()Lcom/ss/android/ugc/aweme/feed/model/Video;"
                                     }
-                                    invokeMethods {
-                                        add {
-                                            descriptor =
-                                                "Lcom/ss/android/ugc/aweme/feed/model/Aweme;->getVideo()Lcom/ss/android/ugc/aweme/feed/model/Video;"
-                                        }
-                                        add {
-                                            descriptor =
-                                                "Lcom/ss/android/common/util/NetworkUtils;->isNetworkAvailable(Landroid/content/Context;)Z"
-                                        }
-                                        add {
-                                            descriptor = "Lcom/ss/android/ugc/aweme/feed/model/Aweme;->getDownloadStatus()I"
-                                        }
-                                        add {
-                                            descriptor = "Lcom/ss/android/ugc/aweme/feed/model/Aweme;->getAid()Ljava/lang/String;"
-                                        }
+                                    add {
+                                        descriptor =
+                                            "Lcom/ss/android/common/util/NetworkUtils;->isNetworkAvailable(Landroid/content/Context;)Z"
+                                    }
+                                    add {
+                                        descriptor = "Lcom/ss/android/ugc/aweme/feed/model/Aweme;->getDownloadStatus()I"
+                                    }
+                                    add {
+                                        descriptor = "Lcom/ss/android/ugc/aweme/feed/model/Aweme;->getAid()Ljava/lang/String;"
                                     }
                                 }
-                            }.singleOrNull() ?: run {
-                                YLog.error(symbolNotFoundMsg.format(TAG, this::class.java.enclosingClass.simpleName))
-                                return@galleryShareHelper
                             }
+                        }.singleOrNull() ?: run {
+                            YLog.error(symbolNotFoundMsg.format(TAG, this::class.java.enclosingClass.simpleName))
+                            return@galleryShareHelper
+                        }
 
+                        class_ = class_ {
+                            name = startDownloadData.className
+                        }
+                        startDownload = method {
+                            name = startDownloadData.methodName
+                            parameters = MethodKt.parameters {
+                                values.clear()
+                                values.addAll(startDownloadData.paramTypeNames)
+                            }
+                        }
+                    }.onFailure {
+                        YLog.error(populateFailedMsg.format(TAG), it)
+                    }
+                }
+
+                awemeStatus = awemeStatus {
+                    class_ = class_ {
+                        name = "com.ss.android.ugc.aweme.feed.model.AwemeStatus"
+                    }
+                    downloadStatus = field {
+                        name = "downloadStatus"
+                    }
+                }
+
+                sharePrivacyVideoApi = sharePrivacyVideoApi {
+                    runCatching {
+                        val getDownloadStatusMethodName =
+                            "com.ss.android.ugc.aweme.feed.share.video.SharePrivacyVideoApi".toClass(hostAppClassLoader).resolve()
+                                .firstMethodOrNull {
+                                    modifiers(Modifiers.PUBLIC, Modifiers.STATIC, Modifiers.FINAL)
+                                    returnType = "io.reactivex.Observable"
+                                }?.self?.name
+                        if (getDownloadStatusMethodName == null) {
+                            YLog.error(symbolNotFoundMsg.format(TAG, this::class.java.enclosingClass?.simpleName))
+                            return@sharePrivacyVideoApi
+                        }
+
+                        class_ = class_ {
+                            name = "com.ss.android.ugc.aweme.feed.share.video.SharePrivacyVideoApi"
+                        }
+                        privacyVideoResponse = sharePrivacyVideoResponse {
                             class_ = class_ {
-                                name = startDownloadData.className
+                                name = $$"com.ss.android.ugc.aweme.feed.share.video.SharePrivacyVideoApi$PrivacyVideoResponse"
                             }
-                            startDownload = method {
-                                name = startDownloadData.methodName
-                                parameters = MethodKt.parameters {
-                                    values.clear()
-                                    values.addAll(startDownloadData.paramTypeNames)
-                                }
+                            msg = field {
+                                name = "msg"
                             }
-                        }.onFailure {
-                            YLog.error(populateFailedMsg.format(TAG), it)
-                        }
-                    }
-
-                awemeStatus =
-                    awemeStatus {
-                        class_ = class_ {
-                            name = "com.ss.android.ugc.aweme.feed.model.AwemeStatus"
-                        }
-                        downloadStatus = field {
-                            name = "downloadStatus"
-                        }
-                    }
-
-                sharePrivacyVideoApi =
-                    sharePrivacyVideoApi {
-                        runCatching {
-                            val getDownloadStatusMethodName =
-                                "com.ss.android.ugc.aweme.feed.share.video.SharePrivacyVideoApi"
-                                    .toClass(hostAppClassLoader)
-                                    .resolve()
-                                    .firstMethodOrNull {
-                                        modifiers(Modifiers.PUBLIC, Modifiers.STATIC, Modifiers.FINAL)
-                                        returnType = "io.reactivex.Observable"
-                                    }?.self?.name
-                            if (getDownloadStatusMethodName == null) {
-                                YLog.error(symbolNotFoundMsg.format(TAG, this::class.java.enclosingClass?.simpleName))
-                                return@sharePrivacyVideoApi
+                            status = field {
+                                name = "status"
                             }
-
-                            class_ =
-                                class_ {
-                                    name = "com.ss.android.ugc.aweme.feed.share.video.SharePrivacyVideoApi"
-                                }
-                            privacyVideoResponse =
-                                sharePrivacyVideoResponse {
-                                    class_ =
-                                        class_ {
-                                            name = $$"com.ss.android.ugc.aweme.feed.share.video.SharePrivacyVideoApi$PrivacyVideoResponse"
-                                        }
-                                    msg =
-                                        field {
-                                            name = "msg"
-                                        }
-                                    status =
-                                        field {
-                                            name = "status"
-                                        }
-                                }
-                            getDownloadStatus =
-                                method {
-                                    name = getDownloadStatusMethodName
-                                }
-                        }.onFailure {
-                            YLog.error(populateFailedMsg.format(TAG), it)
                         }
+                        getDownloadStatus = method {
+                            name = getDownloadStatusMethodName
+                        }
+                    }.onFailure {
+                        YLog.error(populateFailedMsg.format(TAG), it)
                     }
+                }
 
                 rxObservable = rxObservable {
                     class_ = class_ {
@@ -2585,26 +2403,21 @@ class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
                     }
                 }
 
-                mainActivity =
-                    mainActivity {
-                        class_ =
-                            class_ {
-                                name = "com.ss.android.ugc.aweme.main.MainActivity"
-                            }
-                        onResume =
-                            method {
-                                name = "onResume"
-                            }
-                        onNewIntent =
-                            method {
-                                name = "onNewIntent"
-                                parameters =
-                                    MethodKt.parameters {
-                                        values.clear()
-                                        values.add("android.content.Intent")
-                                    }
-                            }
+                mainActivity = mainActivity {
+                    class_ = class_ {
+                        name = "com.ss.android.ugc.aweme.main.MainActivity"
                     }
+                    onResume = method {
+                        name = "onResume"
+                    }
+                    onNewIntent = method {
+                        name = "onNewIntent"
+                        parameters = MethodKt.parameters {
+                            values.clear()
+                            values.add("android.content.Intent")
+                        }
+                    }
+                }
 
                 baseListFragmentPanel = baseListFragmentPanel {
                     runCatching {
