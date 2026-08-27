@@ -55,7 +55,7 @@ val Configs.Method.Parameters.valuesListOrNull
             null
         }
 
-class DouyinPackage(private val classLoader: ClassLoader, context: Context) {
+class DouyinPackage(classLoader: ClassLoader, context: Context) {
     private val hookInfo: Configs.HookInfo = run {
         val (result, time) = measureTimedValue {
             readHookInfo(context)
