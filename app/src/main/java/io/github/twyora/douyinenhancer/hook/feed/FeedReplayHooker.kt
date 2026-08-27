@@ -21,9 +21,6 @@ object FeedReplayHooker : YukiBaseHooker() {
     private val verbose
         get() = !FastKVConfigManager.module.getBoolean(ModuleKey.DISABLE_VERBOSE_LOGS, false)
 
-    // what a magic number, hope it can remain stable on other versions
-    private const val EVENT_PLAY_COMPLETED = 7
-
     override fun onHook() {
         if (!FastKVConfigManager.settings.getBoolean(FeedKey.FEED_BLOCK_AUTO_REPLAY, false)) {
             if (verbose) {
@@ -34,7 +31,7 @@ object FeedReplayHooker : YukiBaseHooker() {
 
         // BaseListFragmentPanel has no member function onPlayCompleted,
         // but onVideoPlayerEvent will be called when video playback completes with a specific video event code.
-        // I have no other good idea, pause the video manually with a magic number checking
+        // I have no other good idea; pause the video manually here
         packageInstance.baseListFragmentPanel.selfClass?.resolveMethod(
             packageInstance.baseListFragmentPanel.onVideoPlayerEvent()
         )?.hook {
@@ -50,7 +47,7 @@ object FeedReplayHooker : YukiBaseHooker() {
                     return@after
                 }
 
-                if (code != EVENT_PLAY_COMPLETED) {
+                if (code != DouyinPackage.VideoPlayerEventModule.EVENT_PLAY_COMPLETED) {
                     return@after
                 } else if (verbose) {
                     YLog.debug("$TAG: pause when feed playback completes")

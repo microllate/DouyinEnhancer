@@ -43,7 +43,7 @@ object FeedDoubleTapOpenCommentHooker : YukiBaseHooker() {
                 }
 
                 val openCommentPanelEvent = packageInstance.videoEvent.selfClass?.createInstance(
-                    7,
+                    DouyinPackage.VideoEventModule.EVENT_OPEN_COMMENT_PANEL,
                     aweme
                 ) ?: run {
                     YLog.error("$TAG: unable to build open-comment-panel event")

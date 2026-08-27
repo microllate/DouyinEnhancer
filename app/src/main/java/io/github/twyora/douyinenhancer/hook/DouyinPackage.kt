@@ -572,6 +572,10 @@ class DouyinPackage(classLoader: ClassLoader, context: Context) {
         }
 
         fun code() = Field(configs.code.nameOrNull)
+
+        companion object {
+            const val EVENT_PLAY_COMPLETED = 7
+        }
     }
 
     class VideoEventModule internal constructor(private val configs: Configs.VideoEvent, private val classLoader: ClassLoader) {
@@ -580,6 +584,11 @@ class DouyinPackage(classLoader: ClassLoader, context: Context) {
         }
 
         fun videoType() = Field(configs.videoType.nameOrNull)
+
+        companion object {
+            const val EVENT_TEXTURE_AVAILABLE = 0
+            const val EVENT_OPEN_COMMENT_PANEL = 7
+        }
     }
 
     class AwemeStatisticsModule internal constructor(private val configs: Configs.AwemeStatistics, private val classLoader: ClassLoader) {
