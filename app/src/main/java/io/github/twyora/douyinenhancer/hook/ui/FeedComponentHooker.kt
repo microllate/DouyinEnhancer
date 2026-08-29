@@ -1,5 +1,6 @@
 package io.github.twyora.douyinenhancer.hook.ui
 
+import com.highcapable.yukihookapi.hook.core.YukiMemberHookCreator
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.log.YLog
 import io.github.twyora.douyinenhancer.config.FastKVConfigManager
@@ -183,8 +184,11 @@ object FeedComponentHooker : YukiBaseHooker() {
             }
             return
         }
+        installPlaybackComponentBlockHook()
+    }
 
-        packageInstance.fluxComponentDataAction.selfClass?.resolveMethod(
+    private fun installPlaybackComponentBlockHook(): YukiMemberHookCreator.MemberHookCreator.Result? {
+        return packageInstance.fluxComponentDataAction.selfClass?.resolveMethod(
             packageInstance.fluxComponentDataAction.getSet()
         )?.hook {
             after {
@@ -197,6 +201,13 @@ object FeedComponentHooker : YukiBaseHooker() {
                         packageInstance.fluxComponentId.selfClass?.getStaticField(field)
                     }.toSet()
                 )
+            }
+        }?.result {
+            onConductFailure { _, throwable ->
+                YLog.error("$TAG: failed to block playback components", throwable)
+            }
+            onHookingFailure { throwable ->
+                YLog.error("$TAG: failed to hook for blocking playback components", throwable)
             }
         }
     }
