@@ -30,27 +30,30 @@ object FeedDoubleTapOpenCommentHooker : YukiBaseHooker() {
             return
         }
 
-        "com.ss.android.ugc.aweme.feed.ui.LongPressLayout".toClass().method {
-            name = "onTouchEvent"
-            param(MotionEventClass)
-        }.hook {
-            after {
-                val event = args[0] as? MotionEvent ?: return@after
-                val view = instance as? View ?: return@after
+        findClass("com.ss.android.ugc.aweme.feed.ui.LongPressLayout").hook {
+            injectMember {
+                method {
+                    name = "onTouchEvent"
+                    param(MotionEventClass)
+                }
+                after {
+                    val event = args[0] as? MotionEvent ?: return@after
+                    val view = instance as? View ?: return@after
 
-                if (event.action == MotionEvent.ACTION_UP) {
-                    val currentTime = SystemClock.uptimeMillis()
-                    if (currentTime - lastClickTime < 300) {
-                        if (verbose) {
-                            YLog.debug("$TAG: detected double tap gesture on LongPressLayout, searching comment view...")
-                        }
+                    if (event.action == MotionEvent.ACTION_UP) {
+                        val currentTime = SystemClock.uptimeMillis()
+                        if (currentTime - lastClickTime < 300) {
+                            if (verbose) {
+                                YLog.debug("$TAG: detected double tap gesture on LongPressLayout, searching comment view...")
+                            }
 
-                        val holderRootView = findHolderRootView(view) ?: view.rootView
-                        if (performOpenComment(holderRootView)) {
-                            lastClickTime = 0L
+                            val holderRootView = findHolderRootView(view) ?: view.rootView
+                            if (performOpenComment(holderRootView)) {
+                                lastClickTime = 0L
+                            }
+                        } else {
+                            lastClickTime = currentTime
                         }
-                    } else {
-                        lastClickTime = currentTime
                     }
                 }
             }
