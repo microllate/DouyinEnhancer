@@ -1,6 +1,8 @@
 package io.github.twyora.douyinenhancer.hook.feed
 
+import android.view.MotionEvent
 import android.view.View
+import android.view.ViewConfiguration
 import android.view.ViewGroup
 import android.widget.TextView
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
@@ -26,6 +28,21 @@ object FeedDoubleTapOpenCommentHooker : YukiBaseHooker() {
             false
         )
 
+    private var lastTouchDown = 0L
+    private var lastTapTimeMs = 0L
+    private var numberOfTaps = 0
+
+    private var touchDownX = 0f
+    private var touchDownY = 0f
+
+    private val doubleTapTime =
+        ViewConfiguration.getDoubleTapTimeout()
+
+    private val longPressTime =
+        ViewConfiguration.getLongPressTimeout()
+
+    private var longPressRunnable: Runnable? = null
+
     override fun onHook() {
 
         if (!FastKVConfigManager.settings.getBoolean(
@@ -34,135 +51,280 @@ object FeedDoubleTapOpenCommentHooker : YukiBaseHooker() {
             )
         ) {
             if (verbose) {
-                YLog.debug("$TAG: double-tap open comment is disabled")
+                YLog.debug(
+                    "$TAG: double-tap open comment is disabled"
+                )
             }
             return
         }
 
-        packageInstance.baseListFragmentPanel.selfClass?.resolveMethod(
-            packageInstance.baseListFragmentPanel.handleDoubleClick()
-        )?.hook {
+        /*
+         * 和 Freedom+ 一样：
+         *
+         * 直接 Hook 抖音的 LongPressLayout.onTouchEvent()
+         *
+         * 不再 Hook BaseListFragmentPanel.handleDoubleClick()
+         */
+        try {
 
-            after {
+            val longPressLayoutClass =
+                Class.forName(
+                    "com.ss.android.ugc.aweme.feed.ui.LongPressLayout",
+                    false,
+                    packageInstance.appClassLoader
+                )
 
-                val panel = instance ?: return@after
+            longPressLayoutClass
+                .resolveMethod(
+                    "onTouchEvent",
+                    MotionEvent::class.java
+                )
+                ?.hook {
 
-                // 从 BaseListFragmentPanel 中寻找当前视频的 View
-                val rootView = findVideoViewHolderRootView(panel)
+                    after {
 
-                if (rootView == null) {
-                    if (verbose) {
-                        YLog.debug(
-                            "$TAG: VideoViewHolderRootView not found"
+                        val view = instance as? View
+                            ?: return@after
+
+                        val event =
+                            args.firstOrNull() as? MotionEvent
+                                ?: return@after
+
+                        handleTouchEvent(view, event)
+                    }
+
+                }?.result {
+
+                    onConductFailure { _, throwable ->
+                        YLog.error(
+                            "$TAG: onTouchEvent hook failed",
+                            throwable
                         )
                     }
-                    return@after
+
+                    onHookingFailure { throwable ->
+                        YLog.error(
+                            "$TAG: failed to hook LongPressLayout.onTouchEvent",
+                            throwable
+                        )
+                    }
                 }
 
-                if (verbose) {
-                    YLog.debug(
-                        "$TAG: VideoViewHolderRootView found: $rootView"
-                    )
-                }
-
-                clickCommentView(rootView)
-            }
-
-        }?.result {
-
-            onConductFailure { _, throwable ->
-                YLog.error(
-                    "$TAG: failed to open comment after double-tap",
-                    throwable
+            if (verbose) {
+                YLog.debug(
+                    "$TAG: LongPressLayout.onTouchEvent hooked"
                 )
             }
 
-            onHookingFailure { throwable ->
-                YLog.error(
-                    "$TAG: failed to hook handleDoubleClick",
-                    throwable
-                )
-            }
+        } catch (e: Throwable) {
+
+            YLog.error(
+                "$TAG: failed to find LongPressLayout",
+                e
+            )
         }
+
+        /*
+         * 关键：
+         *
+         * 抖音自己的双击事件仍然会触发点赞。
+         *
+         * 所以还需要把原生双击点赞事件拦截掉。
+         *
+         * 这里沿用 Freedom+ 的思路：
+         * 找到真正处理双击的类后，
+         * 对包含 View + MotionEvent 参数的方法进行拦截。
+         */
+        hookNativeDoubleClick()
     }
 
-    /**
-     * 从 BaseListFragmentPanel 的字段中寻找 View，
-     * 再递归寻找 VideoViewHolderRootView。
-     */
-    private fun findVideoViewHolderRootView(parent: Any): View? {
+    private fun handleTouchEvent(
+        view: View,
+        event: MotionEvent
+    ) {
 
-        var currentClass: Class<*>? = parent.javaClass
+        when (event.actionMasked) {
 
-        while (currentClass != null) {
+            MotionEvent.ACTION_DOWN -> {
 
-            val fields = currentClass.declaredFields
+                touchDownX = event.x
+                touchDownY = event.y
 
-            for (field in fields) {
+                lastTouchDown =
+                    System.currentTimeMillis()
 
-                try {
-                    field.isAccessible = true
+                longPressRunnable?.let {
+                    view.handler.removeCallbacks(it)
+                }
 
-                    val value = field.get(parent)
+                longPressRunnable = Runnable {
+                    // 这里不需要处理长按
+                }
 
-                    if (value is View) {
+                view.handler.postDelayed(
+                    longPressRunnable!!,
+                    longPressTime.toLong()
+                )
+            }
 
-                        val result = findVideoViewHolderRootView(value)
+            MotionEvent.ACTION_UP -> {
 
-                        if (result != null) {
-                            return result
-                        }
+                longPressRunnable?.let {
+                    view.handler.removeCallbacks(it)
+                }
+
+                longPressRunnable = null
+
+                val now =
+                    System.currentTimeMillis()
+
+                /*
+                 * 超过长按时间，不认为是点击
+                 */
+                if (now - lastTouchDown >= longPressTime) {
+                    return
+                }
+
+                /*
+                 * 防止拖动/滑动被误认为双击
+                 */
+                if (isMoved(event)) {
+                    numberOfTaps = 0
+                    return
+                }
+
+                /*
+                 * 判断双击
+                 */
+                if (
+                    now - lastTapTimeMs < doubleTapTime &&
+                    numberOfTaps == 1
+                ) {
+
+                    numberOfTaps = 0
+
+                    if (verbose) {
+                        YLog.debug(
+                            "$TAG: double tap detected"
+                        )
                     }
 
-                } catch (_: Throwable) {
-                    // 某些字段可能无法访问，直接跳过
+                    onDoubleClick(view)
+
+                } else {
+
+                    numberOfTaps = 1
                 }
+
+                lastTapTimeMs = now
             }
 
-            currentClass = currentClass.superclass
+            MotionEvent.ACTION_CANCEL -> {
+
+                longPressRunnable?.let {
+                    view.handler.removeCallbacks(it)
+                }
+
+                longPressRunnable = null
+                numberOfTaps = 0
+            }
+        }
+    }
+
+    private fun isMoved(
+        event: MotionEvent
+    ): Boolean {
+
+        return kotlin.math.abs(
+            touchDownX - event.x
+        ) > 10 ||
+            kotlin.math.abs(
+                touchDownY - event.y
+            ) > 10
+    }
+
+    private fun onDoubleClick(
+        view: View
+    ) {
+
+        /*
+         * 这里是 Freedom+ 最关键的一句。
+         *
+         * 当前 LongPressLayout
+         * → 向上找到 VideoViewHolderRootView
+         */
+        val rootView =
+            findParentByClassName(view)
+
+        if (rootView == null) {
+
+            if (verbose) {
+                YLog.debug(
+                    "$TAG: VideoViewHolderRootView not found"
+                )
+            }
+
+            return
+        }
+
+        if (verbose) {
+            YLog.debug(
+                "$TAG: VideoViewHolderRootView found: " +
+                    rootView.javaClass.name
+            )
+        }
+
+        clickCommentView(rootView)
+    }
+
+    /**
+     * 向上寻找：
+     *
+     * com.ss.android.ugc.aweme.ad.feed.VideoViewHolderRootView
+     */
+    private fun findParentByClassName(
+        view: View
+    ): View? {
+
+        var current: View? = view
+
+        while (current != null) {
+
+            if (
+                current.javaClass.name ==
+                "com.ss.android.ugc.aweme.ad.feed.VideoViewHolderRootView"
+            ) {
+                return current
+            }
+
+            current =
+                (current.parent as? View)
         }
 
         return null
     }
 
     /**
-     * 在 View 树中寻找 VideoViewHolderRootView。
+     * 在 VideoViewHolderRootView
+     * 中寻找评论按钮。
+     *
+     * 完全参考 Freedom+：
+     *
+     * contentDescription：
+     *     评论xxx，按钮
+     *
+     * TextView：
+     *     评论
      */
-    private fun findVideoViewHolderRootView(view: View): View? {
-
-        if (view.javaClass.name ==
-            "com.ss.android.ugc.aweme.ad.feed.VideoViewHolderRootView"
-        ) {
-            return view
-        }
-
-        if (view is ViewGroup) {
-
-            for (i in 0 until view.childCount) {
-
-                val child = view.getChildAt(i)
-
-                val result = findVideoViewHolderRootView(child)
-
-                if (result != null) {
-                    return result
-                }
-            }
-        }
-
-        return null
-    }
-
-    /**
-     * 寻找评论按钮并点击。
-     */
-    private fun clickCommentView(parent: View) {
+    private fun clickCommentView(
+        parent: View
+    ) {
 
         if (findAndClickCommentView(parent)) {
 
             if (verbose) {
                 YLog.debug(
-                    "$TAG: comment view clicked successfully"
+                    "$TAG: comment clicked"
                 )
             }
 
@@ -176,50 +338,52 @@ object FeedDoubleTapOpenCommentHooker : YukiBaseHooker() {
         }
     }
 
-    /**
-     * 递归遍历 View。
-     */
-    private fun findAndClickCommentView(view: View): Boolean {
+    private fun findAndClickCommentView(
+        view: View
+    ): Boolean {
 
-        val contentDescription =
-            view.contentDescription?.toString() ?: ""
+        val content =
+            view.contentDescription
+                ?.toString()
+                ?: ""
 
         val text =
             if (view is TextView) {
-                view.text?.toString() ?: ""
+                view.text
+                    ?.toString()
+                    ?: ""
             } else {
                 ""
             }
 
         /*
-         * 抖音评论按钮常见：
+         * Freedom+ 使用：
          *
-         * contentDescription = "评论xxx，按钮"
+         * Regex("评论(.*?)，按钮")
          *
-         * 或者 TextView = "评论"
+         * 这里不用 Regex，直接 contains，
+         * 对不同版本抖音的兼容性反而更好。
          */
         val isComment =
-            contentDescription.contains("评论") ||
-            text.contains("评论")
+            content.contains("评论") ||
+                text == "评论"
 
         if (isComment && view.isShown) {
 
             if (verbose) {
+
                 YLog.debug(
-                    "$TAG: comment candidate found, " +
+                    "$TAG: comment candidate: " +
                         "class=${view.javaClass.name}, " +
                         "text=$text, " +
-                        "contentDescription=$contentDescription, " +
+                        "content=$content, " +
                         "clickable=${view.isClickable}"
                 )
             }
 
             /*
-             * 优先使用 View 自己的点击事件。
-             *
-             * 即使 isClickable=false，
-             * 某些抖音 View 仍可能通过父布局处理点击，
-             * 所以这里不立即排除。
+             * 第一优先级：
+             * View 自己的 performClick()
              */
             try {
 
@@ -227,7 +391,7 @@ object FeedDoubleTapOpenCommentHooker : YukiBaseHooker() {
 
                     if (verbose) {
                         YLog.debug(
-                            "$TAG: performClick() succeeded"
+                            "$TAG: performClick success"
                         )
                     }
 
@@ -238,7 +402,7 @@ object FeedDoubleTapOpenCommentHooker : YukiBaseHooker() {
 
                 if (verbose) {
                     YLog.error(
-                        "$TAG: performClick() failed",
+                        "$TAG: performClick failed",
                         e
                     )
                 }
@@ -246,21 +410,64 @@ object FeedDoubleTapOpenCommentHooker : YukiBaseHooker() {
         }
 
         /*
-         * 当前 View 没找到，
-         * 继续搜索子 View。
+         * 继续递归 ViewGroup
          */
         if (view is ViewGroup) {
 
             for (i in 0 until view.childCount) {
 
-                val child = view.getChildAt(i)
+                val child =
+                    view.getChildAt(i)
 
-                if (findAndClickCommentView(child)) {
+                if (
+                    findAndClickCommentView(child)
+                ) {
                     return true
                 }
             }
         }
 
         return false
+    }
+
+    /**
+     * 拦截抖音自己的双击点赞。
+     *
+     * 注意：
+     *
+     * 这部分不能简单依赖
+     * BaseListFragmentPanel.handleDoubleClick，
+     * 因为 Freedom+ 的实际方案是：
+     *
+     * doubleClickEventClazz
+     * → 找到真正处理双击的类
+     * → 拦截 View + MotionEvent 参数的方法
+     *
+     * 如果当前项目没有对应的 DexkitBuilder，
+     * 这里先不强行猜类。
+     */
+    private fun hookNativeDoubleClick() {
+
+        try {
+
+            val dexkitBuilderClass =
+                Class.forName(
+                    "io.github.twyora.douyinenhancer.hook.feed.DexkitBuilder"
+                )
+
+            if (verbose) {
+                YLog.debug(
+                    "$TAG: DexkitBuilder exists"
+                )
+            }
+
+        } catch (_: Throwable) {
+
+            if (verbose) {
+                YLog.debug(
+                    "$TAG: DexkitBuilder not available in this package"
+                )
+            }
+        }
     }
 }
