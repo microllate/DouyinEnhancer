@@ -87,6 +87,7 @@ class SettingsDialog(context: Context) : AlertDialog.Builder(ContextThemeWrapper
             }
 
             findPreference("recommend_feed_filter")?.onPreferenceClickListener = this
+            findPreference("playback_component_block")?.onPreferenceClickListener = this
             findPreference("export_config")?.onPreferenceClickListener = this
             findPreference("import_config")?.onPreferenceClickListener = this
             (findPreference("disable_verbose_logs") as? SwitchPreference)?.apply {
@@ -111,6 +112,11 @@ class SettingsDialog(context: Context) : AlertDialog.Builder(ContextThemeWrapper
         override fun onPreferenceClick(preference: Preference?) = when (preference?.key) {
             "recommend_feed_filter" -> {
                 RecommendedFeedFilterDialog(context).show()
+                true
+            }
+
+            "playback_component_block" -> {
+                PlaybackComponentBlockDialog(context).show()
                 true
             }
 
