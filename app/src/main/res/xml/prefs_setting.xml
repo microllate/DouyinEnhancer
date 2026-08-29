@@ -79,6 +79,10 @@
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/pref_category_ui">
+        <Preference
+            android:key="playback_component_block"
+            android:title="@string/playback_component_block_dialog_title" />
+
         <SwitchPreference
             android:defaultValue="false"
             android:key="keep_danmaku_visible"

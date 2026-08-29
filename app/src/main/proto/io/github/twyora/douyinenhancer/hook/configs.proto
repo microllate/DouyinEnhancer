@@ -312,6 +312,46 @@ message VideoPlayerEvent {
   optional Field code = 2;
 }
 
+message FluxComponentId {
+  optional Class class = 1;
+  optional Field music_cover_block = 2;
+  optional Field music_listen_cover = 3;
+  optional Field digg = 4;
+  optional Field title = 5;
+  optional Field music_cover = 6;
+  optional Field general_label = 7;
+  optional Field feed_label_container = 8;
+  optional Field music_title = 9;
+  optional Field story_25_diverse_digg = 10;
+  optional Field ecom_store = 11;
+  optional Field button_im_quick_share = 12;
+  optional Field button_feed_im_share_guide_v2 = 13;
+  optional Field button_force_feed_im_share_guide = 14;
+  optional Field share_complete_notice = 15;
+  optional Field social_new_comment_guide_bubble = 16;
+  optional Field comment_bottom_animation = 17;
+  optional Field nearby_identity_tag = 18;
+  optional Field live_photo_tag = 19;
+  optional Field photos_tag = 20;
+  optional Field story24_tag = 21;
+  optional Field social_new_style_story_tag = 22;
+  optional Field long_video_highlight_tag = 23;
+  optional Field danmaku_vertical = 24;
+  optional Field avatar = 25;
+  optional Field nickname = 26;
+  optional Field post_time = 27;
+  optional Field bellow_desc_time = 28;
+  optional Field comment = 29;
+  optional Field reply = 30;
+  optional Field share = 31;
+  optional Field collect = 32;
+}
+
+message FluxComponentDataAction {
+  optional Class class = 1;
+  optional Method get_set = 2;
+}
+
 message VideoEvent {
   optional Class class = 1;
   optional Field video_type = 2;
@@ -381,6 +421,8 @@ message HookInfo {
   optional CleanModePresenter clean_mode_presenter = 53;
   optional DanmakuView danmaku_view = 54;
   optional VideoPlayerEvent video_player_event = 55;
+  optional FluxComponentId flux_component_id = 56;
+  optional FluxComponentDataAction flux_component_data_action = 57;
 
   reserved 13, 18, 32;
 }

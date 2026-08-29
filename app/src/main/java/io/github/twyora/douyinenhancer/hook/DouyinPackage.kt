@@ -591,6 +591,88 @@ class DouyinPackage(classLoader: ClassLoader, context: Context) {
         }
     }
 
+    class FluxComponentIdModule internal constructor(private val configs: Configs.FluxComponentId, private val classLoader: ClassLoader) {
+        val selfClass by weak {
+            configs.class_.nameOrNull?.toClass(classLoader)
+        }
+
+        fun musicCoverBlock() = Field(configs.musicCoverBlock.nameOrNull)
+
+        fun musicListenCover() = Field(configs.musicListenCover.nameOrNull)
+
+        fun digg() = Field(configs.digg.nameOrNull)
+
+        fun title() = Field(configs.title.nameOrNull)
+
+        fun musicCover() = Field(configs.musicCover.nameOrNull)
+
+        fun generalLabel() = Field(configs.generalLabel.nameOrNull)
+
+        fun feedLabelContainer() = Field(configs.feedLabelContainer.nameOrNull)
+
+        fun musicTitle() = Field(configs.musicTitle.nameOrNull)
+
+        fun story25DiverseDigg() = Field(configs.story25DiverseDigg.nameOrNull)
+
+        fun ecomStore() = Field(configs.ecomStore.nameOrNull)
+
+        fun buttonImQuickShare() = Field(configs.buttonImQuickShare.nameOrNull)
+
+        fun buttonFeedImShareGuideV2() = Field(configs.buttonFeedImShareGuideV2.nameOrNull)
+
+        fun buttonForceFeedImShareGuide() = Field(configs.buttonForceFeedImShareGuide.nameOrNull)
+
+        fun shareCompleteNotice() = Field(configs.shareCompleteNotice.nameOrNull)
+
+        fun socialNewCommentGuideBubble() = Field(configs.socialNewCommentGuideBubble.nameOrNull)
+
+        fun commentBottomAnimation() = Field(configs.commentBottomAnimation.nameOrNull)
+
+        fun nearbyIdentityTag() = Field(configs.nearbyIdentityTag.nameOrNull)
+
+        fun livePhotoTag() = Field(configs.livePhotoTag.nameOrNull)
+
+        fun photosTag() = Field(configs.photosTag.nameOrNull)
+
+        fun story24Tag() = Field(configs.story24Tag.nameOrNull)
+
+        fun socialNewStyleStoryTag() = Field(configs.socialNewStyleStoryTag.nameOrNull)
+
+        fun longVideoHighlightTag() = Field(configs.longVideoHighlightTag.nameOrNull)
+
+        fun danmakuVertical() = Field(configs.danmakuVertical.nameOrNull)
+
+        fun avatar() = Field(configs.avatar.nameOrNull)
+
+        fun nickname() = Field(configs.nickname.nameOrNull)
+
+        fun postTime() = Field(configs.postTime.nameOrNull)
+
+        fun bellowDescTime() = Field(configs.bellowDescTime.nameOrNull)
+
+        fun comment() = Field(configs.comment.nameOrNull)
+
+        fun reply() = Field(configs.reply.nameOrNull)
+
+        fun share() = Field(configs.share.nameOrNull)
+
+        fun collect() = Field(configs.collect.nameOrNull)
+    }
+
+    class FluxComponentDataActionModule internal constructor(
+        private val configs: Configs.FluxComponentDataAction,
+        private val classLoader: ClassLoader
+    ) {
+        val selfClass by weak {
+            configs.class_.nameOrNull?.toClass(classLoader)
+        }
+
+        fun getSet() = Method(
+            configs.getSet.nameOrNull,
+            configs.getSet.parameters.valuesListOrNull
+        )
+    }
+
     class AwemeStatisticsModule internal constructor(private val configs: Configs.AwemeStatistics, private val classLoader: ClassLoader) {
         val selfClass by weak {
             configs.class_.nameOrNull?.toClass(classLoader)
@@ -2723,6 +2805,139 @@ class DouyinPackage(classLoader: ClassLoader, context: Context) {
                     }
                     onAttachedToWindow = method {
                         name = "onAttachedToWindow"
+                    }
+                }
+
+                fluxComponentId = fluxComponentId {
+                    class_ = class_ {
+                        name = "com.ss.android.ugc.aweme.flux.register.FluxComponentId"
+                    }
+                    musicCoverBlock = field {
+                        name = "MUSIC_COVER_BLOCK"
+                    }
+                    musicListenCover = field {
+                        name = "MUSIC_LISTEN_COVER"
+                    }
+                    digg = field {
+                        name = "DIGG"
+                    }
+                    title = field {
+                        name = "TITLE"
+                    }
+                    musicCover = field {
+                        name = "MUSIC_COVER"
+                    }
+                    generalLabel = field {
+                        name = "GENERAL_LABEL"
+                    }
+                    feedLabelContainer = field {
+                        name = "FEED_LABEL_CONTAINER"
+                    }
+                    musicTitle = field {
+                        name = "MUSIC_TITLE"
+                    }
+                    story25DiverseDigg = field {
+                        name = "STORY_25_DIVERSE_DIGG"
+                    }
+                    ecomStore = field {
+                        name = "ECOM_STORE"
+                    }
+                    buttonImQuickShare = field {
+                        name = "BUTTON_IM_QUICK_SHARE"
+                    }
+                    buttonFeedImShareGuideV2 = field {
+                        name = "BUTTON_FEED_IM_SHARE_GUIDE_V2"
+                    }
+                    buttonForceFeedImShareGuide = field {
+                        name = "BUTTON_FORCE_FEED_IM_SHARE_GUIDE"
+                    }
+                    shareCompleteNotice = field {
+                        name = "SHARE_COMPLETE_NOTICE"
+                    }
+                    socialNewCommentGuideBubble = field {
+                        name = "SOCIAL_NEW_COMMENT_GUIDE_BUBBLE"
+                    }
+                    commentBottomAnimation = field {
+                        name = "COMMENT_BOTTOM_ANIMATION"
+                    }
+                    nearbyIdentityTag = field {
+                        name = "NEARBY_IDENTITY_TAG"
+                    }
+                    livePhotoTag = field {
+                        name = "LIVE_PHOTO_TAG"
+                    }
+                    photosTag = field {
+                        name = "PHOTOS_TAG"
+                    }
+                    story24Tag = field {
+                        name = "STORY24_TAG"
+                    }
+                    socialNewStyleStoryTag = field {
+                        name = "SOCIAL_NEW_STYLE_STORY_TAG"
+                    }
+                    longVideoHighlightTag = field {
+                        name = "LONG_VIDEO_HIGHLIGHT_TAG"
+                    }
+                    danmakuVertical = field {
+                        name = "DANMAKU_VERTICAL"
+                    }
+                    avatar = field {
+                        name = "AVATAR"
+                    }
+                    nickname = field {
+                        name = "NICKNAME"
+                    }
+                    postTime = field {
+                        name = "POST_TIME"
+                    }
+                    bellowDescTime = field {
+                        name = "BELLOW_DESC_TIME"
+                    }
+                    this@fluxComponentId.comment = field {
+                        name = "COMMENT"
+                    }
+                    reply = field {
+                        name = "REPLY"
+                    }
+                    share = field {
+                        name = "SHARE"
+                    }
+                    collect = field {
+                        name = "COLLECT"
+                    }
+                }
+
+                fluxComponentDataAction = fluxComponentDataAction {
+                    runCatching {
+                        val fluxComponentDataActionClassData =
+                            bridge.getClassData("com.ss.android.ugc.aweme.flux.core.data.FluxComponentDataAction")
+                        val getSetMethodData = fluxComponentDataActionClassData?.let {
+                            bridge.findMethod {
+                                searchInClass(listOf(it))
+                                matcher {
+                                    modifiers = Modifier.PUBLIC or Modifier.FINAL
+                                    returnType = "java.util.Set"
+                                    paramCount = 0
+                                }
+                            }.singleOrNull()
+                        }
+                        if (fluxComponentDataActionClassData == null || getSetMethodData == null) {
+                            YLog.error(symbolNotFoundMsg.format(TAG, this::class.java.enclosingClass?.simpleName))
+                            return@fluxComponentDataAction
+                        }
+
+                        class_ = class_ {
+                            name = fluxComponentDataActionClassData.name
+                        }
+                        getSet = method {
+                            name = getSetMethodData.name
+                            parameters = MethodKt.parameters {
+                                values.clear()
+                                values.addAll(getSetMethodData.paramTypeNames)
+                            }
+                        }
+                    }.onFailure {
+                        YLog.error(populateFailedMsg.format(TAG), it)
                     }
                 }
             }
