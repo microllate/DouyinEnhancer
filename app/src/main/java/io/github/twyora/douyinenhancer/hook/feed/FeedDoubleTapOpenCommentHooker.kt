@@ -1,7 +1,7 @@
-
 package io.github.twyora.douyinenhancer.hook.feed
 
 import android.view.View
+import android.view.ViewGroup
 import android.widget.TextView
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.log.YLog
@@ -11,7 +11,6 @@ import io.github.twyora.douyinenhancer.config.key.ModuleKey
 import io.github.twyora.douyinenhancer.hook.DouyinPackage
 import io.github.twyora.douyinenhancer.hook.HookOnMainProcess
 import io.github.twyora.douyinenhancer.utils.resolveMethod
-import com.freegang.extension.forEachChild
 
 @HookOnMainProcess
 object FeedDoubleTapOpenCommentHooker : YukiBaseHooker() {
@@ -48,14 +47,22 @@ object FeedDoubleTapOpenCommentHooker : YukiBaseHooker() {
 
                 val panel = instance ?: return@after
 
-                // 找当前 BaseListFragmentPanel 下的 VideoViewHolderRootView
+                // 从 BaseListFragmentPanel 中寻找当前视频的 View
                 val rootView = findVideoViewHolderRootView(panel)
 
                 if (rootView == null) {
                     if (verbose) {
-                        YLog.debug("$TAG: VideoViewHolderRootView not found")
+                        YLog.debug(
+                            "$TAG: VideoViewHolderRootView not found"
+                        )
                     }
                     return@after
+                }
+
+                if (verbose) {
+                    YLog.debug(
+                        "$TAG: VideoViewHolderRootView found: $rootView"
+                    )
                 }
 
                 clickCommentView(rootView)
@@ -79,30 +86,48 @@ object FeedDoubleTapOpenCommentHooker : YukiBaseHooker() {
         }
     }
 
+    /**
+     * 从 BaseListFragmentPanel 的字段中寻找 View，
+     * 再递归寻找 VideoViewHolderRootView。
+     */
     private fun findVideoViewHolderRootView(parent: Any): View? {
 
-        // BaseListFragmentPanel 本身可能不是 View，
-        // 尝试从字段中寻找 View
-        val fields = parent.javaClass.declaredFields
+        var currentClass: Class<*>? = parent.javaClass
 
-        for (field in fields) {
-            try {
-                field.isAccessible = true
-                val value = field.get(parent)
+        while (currentClass != null) {
 
-                if (value is View) {
-                    val result = findVideoViewHolderRootView(value)
-                    if (result != null) {
-                        return result
+            val fields = currentClass.declaredFields
+
+            for (field in fields) {
+
+                try {
+                    field.isAccessible = true
+
+                    val value = field.get(parent)
+
+                    if (value is View) {
+
+                        val result = findVideoViewHolderRootView(value)
+
+                        if (result != null) {
+                            return result
+                        }
                     }
+
+                } catch (_: Throwable) {
+                    // 某些字段可能无法访问，直接跳过
                 }
-            } catch (_: Throwable) {
             }
+
+            currentClass = currentClass.superclass
         }
 
         return null
     }
 
+    /**
+     * 在 View 树中寻找 VideoViewHolderRootView。
+     */
     private fun findVideoViewHolderRootView(view: View): View? {
 
         if (view.javaClass.name ==
@@ -111,9 +136,14 @@ object FeedDoubleTapOpenCommentHooker : YukiBaseHooker() {
             return view
         }
 
-        if (view is android.view.ViewGroup) {
+        if (view is ViewGroup) {
+
             for (i in 0 until view.childCount) {
-                val result = findVideoViewHolderRootView(view.getChildAt(i))
+
+                val child = view.getChildAt(i)
+
+                val result = findVideoViewHolderRootView(child)
+
                 if (result != null) {
                     return result
                 }
@@ -123,35 +153,114 @@ object FeedDoubleTapOpenCommentHooker : YukiBaseHooker() {
         return null
     }
 
+    /**
+     * 寻找评论按钮并点击。
+     */
     private fun clickCommentView(parent: View) {
 
-        parent.forEachChild {
-
-            val content = "${it.contentDescription}"
-            val text = if (it is TextView) "${it.text}" else ""
-
-            val isComment =
-                content.contains("评论") ||
-                text.contains("评论")
-
-            if (!isComment) {
-                return@forEachChild
-            }
-
-            if (!it.isClickable) {
-                return@forEachChild
-            }
+        if (findAndClickCommentView(parent)) {
 
             if (verbose) {
                 YLog.debug(
-                    "$TAG: found comment view: $it"
+                    "$TAG: comment view clicked successfully"
                 )
             }
 
-            it.performClick()
+        } else {
 
-            return@forEachChild
+            if (verbose) {
+                YLog.debug(
+                    "$TAG: comment view not found"
+                )
+            }
         }
     }
-}
 
+    /**
+     * 递归遍历 View。
+     */
+    private fun findAndClickCommentView(view: View): Boolean {
+
+        val contentDescription =
+            view.contentDescription?.toString() ?: ""
+
+        val text =
+            if (view is TextView) {
+                view.text?.toString() ?: ""
+            } else {
+                ""
+            }
+
+        /*
+         * 抖音评论按钮常见：
+         *
+         * contentDescription = "评论xxx，按钮"
+         *
+         * 或者 TextView = "评论"
+         */
+        val isComment =
+            contentDescription.contains("评论") ||
+            text.contains("评论")
+
+        if (isComment && view.isShown) {
+
+            if (verbose) {
+                YLog.debug(
+                    "$TAG: comment candidate found, " +
+                        "class=${view.javaClass.name}, " +
+                        "text=$text, " +
+                        "contentDescription=$contentDescription, " +
+                        "clickable=${view.isClickable}"
+                )
+            }
+
+            /*
+             * 优先使用 View 自己的点击事件。
+             *
+             * 即使 isClickable=false，
+             * 某些抖音 View 仍可能通过父布局处理点击，
+             * 所以这里不立即排除。
+             */
+            try {
+
+                if (view.performClick()) {
+
+                    if (verbose) {
+                        YLog.debug(
+                            "$TAG: performClick() succeeded"
+                        )
+                    }
+
+                    return true
+                }
+
+            } catch (e: Throwable) {
+
+                if (verbose) {
+                    YLog.error(
+                        "$TAG: performClick() failed",
+                        e
+                    )
+                }
+            }
+        }
+
+        /*
+         * 当前 View 没找到，
+         * 继续搜索子 View。
+         */
+        if (view is ViewGroup) {
+
+            for (i in 0 until view.childCount) {
+
+                val child = view.getChildAt(i)
+
+                if (findAndClickCommentView(child)) {
+                    return true
+                }
+            }
+        }
+
+        return false
+    }
+}
