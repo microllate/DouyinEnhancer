@@ -4,9 +4,11 @@ import android.app.AlertDialog
 import android.content.Context
 import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
+import android.view.View
 import androidx.core.content.edit
 import io.github.twyora.douyinenhancer.R
 import io.github.twyora.douyinenhancer.config.FastKVConfigManager
+import io.github.twyora.douyinenhancer.config.key.MiscKey
 import io.github.twyora.douyinenhancer.config.key.PlaybackComponentBlockKey
 import io.github.twyora.douyinenhancer.databinding.PlaybackComponentBlockDialogBinding
 
@@ -16,6 +18,10 @@ class PlaybackComponentBlockDialog(context: Context) : AlertDialog.Builder(Conte
             LayoutInflater.from(ContextThemeWrapper(context, R.style.MainTheme))
         )
         val prefs = FastKVConfigManager.settings
+
+        if (prefs.getBoolean(MiscKey.ENABLE_HIDDEN_FEATURES, false)) {
+            playbackComponentBlockDialogBinding.groupHidden.visibility = View.VISIBLE
+        }
 
         // a StringSet of enum names would be cleaner, but it would bypass the mapping DouyinPackage provides
         playbackComponentBlockDialogBinding.switchMainSwitch.isChecked = prefs.getBoolean(PlaybackComponentBlockKey.MAIN_SWITCH, false)

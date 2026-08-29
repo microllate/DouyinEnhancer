@@ -4,6 +4,7 @@ import com.highcapable.yukihookapi.hook.core.YukiMemberHookCreator
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.log.YLog
 import io.github.twyora.douyinenhancer.config.FastKVConfigManager
+import io.github.twyora.douyinenhancer.config.key.MiscKey
 import io.github.twyora.douyinenhancer.config.key.ModuleKey
 import io.github.twyora.douyinenhancer.config.key.PlaybackComponentBlockKey
 import io.github.twyora.douyinenhancer.hook.DouyinPackage
@@ -21,6 +22,9 @@ object FeedComponentHooker : YukiBaseHooker() {
 
     private val verbose
         get() = !FastKVConfigManager.module.getBoolean(ModuleKey.DISABLE_VERBOSE_LOGS, false)
+
+    private val hiddenFeaturesEnabled
+        get() = FastKVConfigManager.settings.getBoolean(MiscKey.ENABLE_HIDDEN_FEATURES, false)
 
     private val blockComponentIds by lazy {
         val blockComponentIdsTemp = mutableListOf<Field>()
@@ -69,7 +73,7 @@ object FeedComponentHooker : YukiBaseHooker() {
                 packageInstance.fluxComponentId.story25DiverseDigg()
             )
         }
-        if (FastKVConfigManager.settings.getBoolean(PlaybackComponentBlockKey.ECOM_STORE, false)) {
+        if (hiddenFeaturesEnabled && FastKVConfigManager.settings.getBoolean(PlaybackComponentBlockKey.ECOM_STORE, false)) {
             blockComponentIdsTemp.add(
                 packageInstance.fluxComponentId.ecomStore()
             )
@@ -89,7 +93,9 @@ object FeedComponentHooker : YukiBaseHooker() {
                 packageInstance.fluxComponentId.buttonForceFeedImShareGuide()
             )
         }
-        if (FastKVConfigManager.settings.getBoolean(PlaybackComponentBlockKey.SOCIAL_NEW_COMMENT_GUIDE_BUBBLE, false)) {
+        if (hiddenFeaturesEnabled &&
+            FastKVConfigManager.settings.getBoolean(PlaybackComponentBlockKey.SOCIAL_NEW_COMMENT_GUIDE_BUBBLE, false)
+        ) {
             blockComponentIdsTemp.add(
                 packageInstance.fluxComponentId.socialNewCommentGuideBubble()
             )
@@ -204,12 +210,12 @@ object FeedComponentHooker : YukiBaseHooker() {
                 packageInstance.fluxComponentId.c2Feed()
             )
         }
-        if (FastKVConfigManager.settings.getBoolean(PlaybackComponentBlockKey.FLOW, false)) {
+        if (hiddenFeaturesEnabled && FastKVConfigManager.settings.getBoolean(PlaybackComponentBlockKey.FLOW, false)) {
             blockComponentIdsTemp.add(
                 packageInstance.fluxComponentId.flow()
             )
         }
-        if (FastKVConfigManager.settings.getBoolean(PlaybackComponentBlockKey.NEARBY_HOT_COMMENT, false)) {
+        if (hiddenFeaturesEnabled && FastKVConfigManager.settings.getBoolean(PlaybackComponentBlockKey.NEARBY_HOT_COMMENT, false)) {
             blockComponentIdsTemp.add(
                 packageInstance.fluxComponentId.nearbyHotComment()
             )
@@ -219,7 +225,9 @@ object FeedComponentHooker : YukiBaseHooker() {
                 packageInstance.fluxComponentId.buttonUnfollowFamiliar()
             )
         }
-        if (FastKVConfigManager.settings.getBoolean(PlaybackComponentBlockKey.BUTTON_UNFOLLOW_FAMILIAR_REC, false)) {
+        if (hiddenFeaturesEnabled &&
+            FastKVConfigManager.settings.getBoolean(PlaybackComponentBlockKey.BUTTON_UNFOLLOW_FAMILIAR_REC, false)
+        ) {
             blockComponentIdsTemp.add(
                 packageInstance.fluxComponentId.buttonUnfollowFamiliarRec()
             )
@@ -234,7 +242,7 @@ object FeedComponentHooker : YukiBaseHooker() {
                 packageInstance.fluxComponentId.chapterTag()
             )
         }
-        if (FastKVConfigManager.settings.getBoolean(PlaybackComponentBlockKey.ECOM_TAG_FRIEND, false)) {
+        if (hiddenFeaturesEnabled && FastKVConfigManager.settings.getBoolean(PlaybackComponentBlockKey.ECOM_TAG_FRIEND, false)) {
             blockComponentIdsTemp.add(
                 packageInstance.fluxComponentId.ecomTagFriend()
             )
@@ -269,7 +277,9 @@ object FeedComponentHooker : YukiBaseHooker() {
                 packageInstance.fluxComponentId.musicMuteCover()
             )
         }
-        if (FastKVConfigManager.settings.getBoolean(PlaybackComponentBlockKey.JX_LEFT_BOTTOM_LONG_VIDEO_PLUS_TITLE_TAG, false)) {
+        if (hiddenFeaturesEnabled &&
+            FastKVConfigManager.settings.getBoolean(PlaybackComponentBlockKey.JX_LEFT_BOTTOM_LONG_VIDEO_PLUS_TITLE_TAG, false)
+        ) {
             blockComponentIdsTemp.add(
                 packageInstance.fluxComponentId.jxLeftBottomLongVideoPlusTitleTag()
             )
@@ -289,7 +299,7 @@ object FeedComponentHooker : YukiBaseHooker() {
                 packageInstance.fluxComponentId.bottomBarCommonPrioritySearch()
             )
         }
-        if (FastKVConfigManager.settings.getBoolean(PlaybackComponentBlockKey.JX_PICK, false)) {
+        if (hiddenFeaturesEnabled && FastKVConfigManager.settings.getBoolean(PlaybackComponentBlockKey.JX_PICK, false)) {
             blockComponentIdsTemp.add(
                 packageInstance.fluxComponentId.jxPick()
             )
@@ -299,12 +309,12 @@ object FeedComponentHooker : YukiBaseHooker() {
                 packageInstance.fluxComponentId.bottomBarContainer()
             )
         }
-        if (FastKVConfigManager.settings.getBoolean(PlaybackComponentBlockKey.AI_CO_CREATORS_THREE, false)) {
+        if (hiddenFeaturesEnabled && FastKVConfigManager.settings.getBoolean(PlaybackComponentBlockKey.AI_CO_CREATORS_THREE, false)) {
             blockComponentIdsTemp.add(
                 packageInstance.fluxComponentId.aiCoCreatorsThree()
             )
         }
-        if (FastKVConfigManager.settings.getBoolean(PlaybackComponentBlockKey.AIGC_COCREATE_STATUS_TITLE, false)) {
+        if (hiddenFeaturesEnabled && FastKVConfigManager.settings.getBoolean(PlaybackComponentBlockKey.AIGC_COCREATE_STATUS_TITLE, false)) {
             blockComponentIdsTemp.add(
                 packageInstance.fluxComponentId.aigcCocreateStatusTitle()
             )
