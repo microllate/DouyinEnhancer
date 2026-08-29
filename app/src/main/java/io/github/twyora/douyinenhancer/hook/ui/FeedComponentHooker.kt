@@ -174,6 +174,141 @@ object FeedComponentHooker : YukiBaseHooker() {
                 packageInstance.fluxComponentId.collect()
             )
         }
+        if (FastKVConfigManager.settings.getBoolean(PlaybackComponentBlockKey.ANCHOR_FRAMEWORK, false)) {
+            blockComponentIdsTemp.add(
+                packageInstance.fluxComponentId.anchorFramework()
+            )
+        }
+        if (FastKVConfigManager.settings.getBoolean(PlaybackComponentBlockKey.BOTTOM_BAR_COMMON, false)) {
+            blockComponentIdsTemp.add(
+                packageInstance.fluxComponentId.bottomBarCommon()
+            )
+        }
+        if (FastKVConfigManager.settings.getBoolean(PlaybackComponentBlockKey.COMMON_BUTTON, false)) {
+            blockComponentIdsTemp.add(
+                packageInstance.fluxComponentId.commonButton()
+            )
+        }
+        if (FastKVConfigManager.settings.getBoolean(PlaybackComponentBlockKey.STICKER, false)) {
+            blockComponentIdsTemp.add(
+                packageInstance.fluxComponentId.sticker()
+            )
+        }
+        if (FastKVConfigManager.settings.getBoolean(PlaybackComponentBlockKey.AI_SEARCH, false)) {
+            blockComponentIdsTemp.add(
+                packageInstance.fluxComponentId.aiSearch()
+            )
+        }
+        if (FastKVConfigManager.settings.getBoolean(PlaybackComponentBlockKey.C2_FEED, false)) {
+            blockComponentIdsTemp.add(
+                packageInstance.fluxComponentId.c2Feed()
+            )
+        }
+        if (FastKVConfigManager.settings.getBoolean(PlaybackComponentBlockKey.FLOW, false)) {
+            blockComponentIdsTemp.add(
+                packageInstance.fluxComponentId.flow()
+            )
+        }
+        if (FastKVConfigManager.settings.getBoolean(PlaybackComponentBlockKey.NEARBY_HOT_COMMENT, false)) {
+            blockComponentIdsTemp.add(
+                packageInstance.fluxComponentId.nearbyHotComment()
+            )
+        }
+        if (FastKVConfigManager.settings.getBoolean(PlaybackComponentBlockKey.BUTTON_UNFOLLOW_FAMILIAR, false)) {
+            blockComponentIdsTemp.add(
+                packageInstance.fluxComponentId.buttonUnfollowFamiliar()
+            )
+        }
+        if (FastKVConfigManager.settings.getBoolean(PlaybackComponentBlockKey.BUTTON_UNFOLLOW_FAMILIAR_REC, false)) {
+            blockComponentIdsTemp.add(
+                packageInstance.fluxComponentId.buttonUnfollowFamiliarRec()
+            )
+        }
+        if (FastKVConfigManager.settings.getBoolean(PlaybackComponentBlockKey.CO_CREATOR_AUTHOR, false)) {
+            blockComponentIdsTemp.add(
+                packageInstance.fluxComponentId.coCreatorAuthor()
+            )
+        }
+        if (FastKVConfigManager.settings.getBoolean(PlaybackComponentBlockKey.CHAPTER_TAG, false)) {
+            blockComponentIdsTemp.add(
+                packageInstance.fluxComponentId.chapterTag()
+            )
+        }
+        if (FastKVConfigManager.settings.getBoolean(PlaybackComponentBlockKey.ECOM_TAG_FRIEND, false)) {
+            blockComponentIdsTemp.add(
+                packageInstance.fluxComponentId.ecomTagFriend()
+            )
+        }
+        if (FastKVConfigManager.settings.getBoolean(PlaybackComponentBlockKey.SOCIAL_NEW_STYLE_POST_TIME_BOTTOM, false)) {
+            blockComponentIdsTemp.add(
+                packageInstance.fluxComponentId.socialNewStylePostTimeBottom()
+            )
+        }
+        if (FastKVConfigManager.settings.getBoolean(PlaybackComponentBlockKey.SOCIAL_NEW_STYLE_MUSIC_BELOW, false)) {
+            blockComponentIdsTemp.add(
+                packageInstance.fluxComponentId.socialNewStyleMusicBelow()
+            )
+        }
+        if (FastKVConfigManager.settings.getBoolean(PlaybackComponentBlockKey.CHAPTER_DETAIL, false)) {
+            blockComponentIdsTemp.add(
+                packageInstance.fluxComponentId.chapterDetail()
+            )
+        }
+        if (FastKVConfigManager.settings.getBoolean(PlaybackComponentBlockKey.TITLE_TAG_CONTAINER, false)) {
+            blockComponentIdsTemp.add(
+                packageInstance.fluxComponentId.titleTagContainer()
+            )
+        }
+        if (FastKVConfigManager.settings.getBoolean(PlaybackComponentBlockKey.RIGHT_MENU_LL, false)) {
+            blockComponentIdsTemp.add(
+                packageInstance.fluxComponentId.rightMenuLl()
+            )
+        }
+        if (FastKVConfigManager.settings.getBoolean(PlaybackComponentBlockKey.MUSIC_MUTE_COVER, false)) {
+            blockComponentIdsTemp.add(
+                packageInstance.fluxComponentId.musicMuteCover()
+            )
+        }
+        if (FastKVConfigManager.settings.getBoolean(PlaybackComponentBlockKey.JX_LEFT_BOTTOM_LONG_VIDEO_PLUS_TITLE_TAG, false)) {
+            blockComponentIdsTemp.add(
+                packageInstance.fluxComponentId.jxLeftBottomLongVideoPlusTitleTag()
+            )
+        }
+        if (FastKVConfigManager.settings.getBoolean(PlaybackComponentBlockKey.BOTTOM_BAR_MIX, false)) {
+            blockComponentIdsTemp.add(
+                packageInstance.fluxComponentId.bottomBarMix()
+            )
+        }
+        if (FastKVConfigManager.settings.getBoolean(PlaybackComponentBlockKey.BOTTOM_BAR_NORMAL_SEARCH, false)) {
+            blockComponentIdsTemp.add(
+                packageInstance.fluxComponentId.bottomBarNormalSearch()
+            )
+        }
+        if (FastKVConfigManager.settings.getBoolean(PlaybackComponentBlockKey.BOTTOM_BAR_COMMON_PRIORITY_SEARCH, false)) {
+            blockComponentIdsTemp.add(
+                packageInstance.fluxComponentId.bottomBarCommonPrioritySearch()
+            )
+        }
+        if (FastKVConfigManager.settings.getBoolean(PlaybackComponentBlockKey.JX_PICK, false)) {
+            blockComponentIdsTemp.add(
+                packageInstance.fluxComponentId.jxPick()
+            )
+        }
+        if (FastKVConfigManager.settings.getBoolean(PlaybackComponentBlockKey.BOTTOM_BAR_CONTAINER, false)) {
+            blockComponentIdsTemp.add(
+                packageInstance.fluxComponentId.bottomBarContainer()
+            )
+        }
+        if (FastKVConfigManager.settings.getBoolean(PlaybackComponentBlockKey.AI_CO_CREATORS_THREE, false)) {
+            blockComponentIdsTemp.add(
+                packageInstance.fluxComponentId.aiCoCreatorsThree()
+            )
+        }
+        if (FastKVConfigManager.settings.getBoolean(PlaybackComponentBlockKey.AIGC_COCREATE_STATUS_TITLE, false)) {
+            blockComponentIdsTemp.add(
+                packageInstance.fluxComponentId.aigcCocreateStatusTitle()
+            )
+        }
         blockComponentIdsTemp.toSet()
     }
 

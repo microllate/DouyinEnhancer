@@ -2902,6 +2902,87 @@ class DouyinPackage(classLoader: ClassLoader, context: Context) {
                     collect = field {
                         name = "COLLECT"
                     }
+                    anchorFramework = field {
+                        name = "ANCHOR_FRAMEWORK"
+                    }
+                    bottomBarCommon = field {
+                        name = "BOTTOM_BAR_COMMON"
+                    }
+                    commonButton = field {
+                        name = "COMMON_BUTTON"
+                    }
+                    sticker = field {
+                        name = "STICKER"
+                    }
+                    aiSearch = field {
+                        name = "AI_SEARCH"
+                    }
+                    c2Feed = field {
+                        name = "C2_FEED"
+                    }
+                    flow = field {
+                        name = "FLOW"
+                    }
+                    nearbyHotComment = field {
+                        name = "NEARBY_HOT_COMMENT"
+                    }
+                    buttonUnfollowFamiliar = field {
+                        name = "BUTTON_UNFOLLOW_FAMILIAR"
+                    }
+                    buttonUnfollowFamiliarRec = field {
+                        name = "BUTTON_UNFOLLOW_FAMILIAR_REC"
+                    }
+                    coCreatorAuthor = field {
+                        name = "CO_CREATOR_AUTHOR"
+                    }
+                    chapterTag = field {
+                        name = "CHAPTER_TAG"
+                    }
+                    ecomTagFriend = field {
+                        name = "ECOM_TAG_FRIEND"
+                    }
+                    socialNewStylePostTimeBottom = field {
+                        name = "SOCIAL_NEW_STYLE_POST_TIME_BOTTOM"
+                    }
+                    socialNewStyleMusicBelow = field {
+                        name = "SOCIAL_NEW_STYLE_MUSIC_BELOW"
+                    }
+                    chapterDetail = field {
+                        name = "CHAPTER_DETAIL"
+                    }
+                    titleTagContainer = field {
+                        name = "TITLE_TAG_CONTAINER"
+                    }
+                    rightMenuLl = field {
+                        name = "RIGHT_MENU_LL"
+                    }
+                    musicMuteCover = field {
+                        name = "MUSIC_MUTE_COVER"
+                    }
+                    jxLeftBottomLongVideoPlusTitleTag = field {
+                        name = "JX_LEFT_BOTTOM_LONG_VIDEO_PLUS_TITLE_TAG"
+                    }
+                    bottomBarMix = field {
+                        name = "BOTTOM_BAR_MIX"
+                    }
+                    bottomBarNormalSearch = field {
+                        name = "BOTTOM_BAR_NORMAL_SEARCH"
+                    }
+                    bottomBarCommonPrioritySearch = field {
+                        name = "BOTTOM_BAR_COMMON_PRIORITY_SEARCH"
+                    }
+                    jxPick = field {
+                        name = "JX_PICK"
+                    }
+                    bottomBarContainer = field {
+                        name = "BOTTOM_BAR_CONTAINER"
+                    }
+                    aiCoCreatorsThree = field {
+                        name = "AI_CO_CREATORS_THREE"
+                    }
+                    aigcCocreateStatusTitle = field {
+                        name = "AIGC_COCREATE_STATUS_TITLE"
+                    }
                 }
 
                 fluxComponentDataAction = fluxComponentDataAction {

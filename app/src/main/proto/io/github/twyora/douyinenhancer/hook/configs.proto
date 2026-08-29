@@ -344,6 +344,33 @@ message FluxComponentId {
   optional Field reply = 29;
   optional Field share = 30;
   optional Field collect = 31;
+  optional Field anchor_framework = 32;
+  optional Field bottom_bar_common = 33;
+  optional Field common_button = 34;
+  optional Field sticker = 35;
+  optional Field ai_search = 36;
+  optional Field c2_feed = 37;
+  optional Field flow = 38;
+  optional Field nearby_hot_comment = 39;
+  optional Field button_unfollow_familiar = 40;
+  optional Field button_unfollow_familiar_rec = 41;
+  optional Field co_creator_author = 42;
+  optional Field chapter_tag = 43;
+  optional Field ecom_tag_friend = 44;
+  optional Field social_new_style_post_time_bottom = 45;
+  optional Field social_new_style_music_below = 46;
+  optional Field chapter_detail = 47;
+  optional Field title_tag_container = 48;
+  optional Field right_menu_ll = 49;
+  optional Field music_mute_cover = 50;
+  optional Field jx_left_bottom_long_video_plus_title_tag = 51;
+  optional Field bottom_bar_mix = 52;
+  optional Field bottom_bar_normal_search = 53;
+  optional Field bottom_bar_common_priority_search = 54;
+  optional Field jx_pick = 55;
+  optional Field bottom_bar_container = 56;
+  optional Field ai_co_creators_three = 57;
+  optional Field aigc_cocreate_status_title = 58;
 }
 
 message FluxComponentDataAction {

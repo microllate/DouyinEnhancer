@@ -84,6 +84,19 @@
             android:background="?android:attr/selectableItemBackground" />
 
         <CheckBox
+            android:id="@+id/co_creator_author"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center_vertical"
+            android:text="@string/playback_component_block_co_creator_author"
+            android:textAppearance="?android:attr/textAppearanceListItem"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?android:attr/selectableItemBackground" />
+
+        <CheckBox
             android:id="@+id/digg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -135,6 +148,19 @@
             android:background="?android:attr/selectableItemBackground" />
 
         <CheckBox
+            android:id="@+id/right_menu_ll"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center_vertical"
+            android:text="@string/playback_component_block_right_menu_ll"
+            android:textAppearance="?android:attr/textAppearanceListItem"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?android:attr/selectableItemBackground" />
+
+        <CheckBox
             android:id="@+id/music_cover"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -155,6 +181,45 @@
             android:layout_marginBottom="8dp"
             android:gravity="center_vertical"
             android:text="@string/playback_component_block_title"
+            android:textAppearance="?android:attr/textAppearanceListItem"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?android:attr/selectableItemBackground" />
+
+        <CheckBox
+            android:id="@+id/title_tag_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center_vertical"
+            android:text="@string/playback_component_block_title_tag_container"
+            android:textAppearance="?android:attr/textAppearanceListItem"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?android:attr/selectableItemBackground" />
+
+        <CheckBox
+            android:id="@+id/chapter_tag"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center_vertical"
+            android:text="@string/playback_component_block_chapter_tag"
+            android:textAppearance="?android:attr/textAppearanceListItem"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?android:attr/selectableItemBackground" />
+
+        <CheckBox
+            android:id="@+id/chapter_detail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center_vertical"
+            android:text="@string/playback_component_block_chapter_detail"
             android:textAppearance="?android:attr/textAppearanceListItem"
             android:clickable="true"
             android:focusable="true"
@@ -200,6 +265,32 @@
             android:background="?android:attr/selectableItemBackground" />
 
         <CheckBox
+            android:id="@+id/music_mute_cover"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center_vertical"
+            android:text="@string/playback_component_block_music_mute_cover"
+            android:textAppearance="?android:attr/textAppearanceListItem"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?android:attr/selectableItemBackground" />
+
+        <CheckBox
+            android:id="@+id/social_new_style_music_below"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center_vertical"
+            android:text="@string/playback_component_block_social_new_style_music_below"
+            android:textAppearance="?android:attr/textAppearanceListItem"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?android:attr/selectableItemBackground" />
+
+        <CheckBox
             android:id="@+id/post_time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -226,6 +317,19 @@
             android:background="?android:attr/selectableItemBackground" />
 
         <CheckBox
+            android:id="@+id/social_new_style_post_time_bottom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center_vertical"
+            android:text="@string/playback_component_block_social_new_style_post_time_bottom"
+            android:textAppearance="?android:attr/textAppearanceListItem"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?android:attr/selectableItemBackground" />
+
+        <CheckBox
             android:id="@+id/reply"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -233,6 +337,32 @@
             android:layout_marginBottom="8dp"
             android:gravity="center_vertical"
             android:text="@string/playback_component_block_reply"
+            android:textAppearance="?android:attr/textAppearanceListItem"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?android:attr/selectableItemBackground" />
+
+        <CheckBox
+            android:id="@+id/button_unfollow_familiar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center_vertical"
+            android:text="@string/playback_component_block_button_unfollow_familiar"
+            android:textAppearance="?android:attr/textAppearanceListItem"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?android:attr/selectableItemBackground" />
+
+        <CheckBox
+            android:id="@+id/button_unfollow_familiar_rec"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center_vertical"
+            android:text="@string/playback_component_block_button_unfollow_familiar_rec"
             android:textAppearance="?android:attr/textAppearanceListItem"
             android:clickable="true"
             android:focusable="true"
@@ -252,6 +382,19 @@
             android:background="?android:attr/selectableItemBackground" />
 
         <CheckBox
+            android:id="@+id/ai_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center_vertical"
+            android:text="@string/playback_component_block_ai_search"
+            android:textAppearance="?android:attr/textAppearanceListItem"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?android:attr/selectableItemBackground" />
+
+        <CheckBox
             android:id="@+id/nearby_identity_tag"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -265,6 +408,19 @@
             android:background="?android:attr/selectableItemBackground" />
 
         <CheckBox
+            android:id="@+id/nearby_hot_comment"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center_vertical"
+            android:text="@string/playback_component_block_nearby_hot_comment"
+            android:textAppearance="?android:attr/textAppearanceListItem"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?android:attr/selectableItemBackground" />
+
+        <CheckBox
             android:id="@+id/ecom_store"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -272,6 +428,19 @@
             android:layout_marginBottom="8dp"
             android:gravity="center_vertical"
             android:text="@string/playback_component_block_ecom_store"
+            android:textAppearance="?android:attr/textAppearanceListItem"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?android:attr/selectableItemBackground" />
+
+        <CheckBox
+            android:id="@+id/ecom_tag_friend"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center_vertical"
+            android:text="@string/playback_component_block_ecom_tag_friend"
             android:textAppearance="?android:attr/textAppearanceListItem"
             android:clickable="true"
             android:focusable="true"
@@ -317,6 +486,97 @@
             android:background="?android:attr/selectableItemBackground" />
 
         <CheckBox
+            android:id="@+id/bottom_bar_common"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center_vertical"
+            android:text="@string/playback_component_block_bottom_bar_common"
+            android:textAppearance="?android:attr/textAppearanceListItem"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?android:attr/selectableItemBackground" />
+
+        <CheckBox
+            android:id="@+id/bottom_bar_mix"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center_vertical"
+            android:text="@string/playback_component_block_bottom_bar_mix"
+            android:textAppearance="?android:attr/textAppearanceListItem"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?android:attr/selectableItemBackground" />
+
+        <CheckBox
+            android:id="@+id/bottom_bar_normal_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center_vertical"
+            android:text="@string/playback_component_block_bottom_bar_normal_search"
+            android:textAppearance="?android:attr/textAppearanceListItem"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?android:attr/selectableItemBackground" />
+
+        <CheckBox
+            android:id="@+id/bottom_bar_common_priority_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center_vertical"
+            android:text="@string/playback_component_block_bottom_bar_common_priority_search"
+            android:textAppearance="?android:attr/textAppearanceListItem"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?android:attr/selectableItemBackground" />
+
+        <CheckBox
+            android:id="@+id/bottom_bar_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center_vertical"
+            android:text="@string/playback_component_block_bottom_bar_container"
+            android:textAppearance="?android:attr/textAppearanceListItem"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?android:attr/selectableItemBackground" />
+
+        <CheckBox
+            android:id="@+id/jx_pick"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center_vertical"
+            android:text="@string/playback_component_block_jx_pick"
+            android:textAppearance="?android:attr/textAppearanceListItem"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?android:attr/selectableItemBackground" />
+
+        <CheckBox
+            android:id="@+id/common_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center_vertical"
+            android:text="@string/playback_component_block_common_button"
+            android:textAppearance="?android:attr/textAppearanceListItem"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?android:attr/selectableItemBackground" />
+
+        <CheckBox
             android:id="@+id/general_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -337,6 +597,58 @@
             android:layout_marginBottom="8dp"
             android:gravity="center_vertical"
             android:text="@string/playback_component_block_feed_label_container"
+            android:textAppearance="?android:attr/textAppearanceListItem"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?android:attr/selectableItemBackground" />
+
+        <CheckBox
+            android:id="@+id/sticker"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center_vertical"
+            android:text="@string/playback_component_block_sticker"
+            android:textAppearance="?android:attr/textAppearanceListItem"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?android:attr/selectableItemBackground" />
+
+        <CheckBox
+            android:id="@+id/anchor_framework"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center_vertical"
+            android:text="@string/playback_component_block_anchor_framework"
+            android:textAppearance="?android:attr/textAppearanceListItem"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?android:attr/selectableItemBackground" />
+
+        <CheckBox
+            android:id="@+id/c2_feed"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center_vertical"
+            android:text="@string/playback_component_block_c2_feed"
+            android:textAppearance="?android:attr/textAppearanceListItem"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?android:attr/selectableItemBackground" />
+
+        <CheckBox
+            android:id="@+id/flow"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center_vertical"
+            android:text="@string/playback_component_block_flow"
             android:textAppearance="?android:attr/textAppearanceListItem"
             android:clickable="true"
             android:focusable="true"
@@ -421,6 +733,19 @@
             android:background="?android:attr/selectableItemBackground" />
 
         <CheckBox
+            android:id="@+id/jx_left_bottom_long_video_plus_title_tag"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center_vertical"
+            android:text="@string/playback_component_block_jx_left_bottom_long_video_plus_title_tag"
+            android:textAppearance="?android:attr/textAppearanceListItem"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?android:attr/selectableItemBackground" />
+
+        <CheckBox
             android:id="@+id/social_new_comment_guide_bubble"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -446,7 +771,31 @@
             android:focusable="true"
             android:background="?android:attr/selectableItemBackground" />
 
-        <!-- APPEND_MARKER -->
+        <CheckBox
+            android:id="@+id/ai_co_creators_three"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center_vertical"
+            android:text="@string/playback_component_block_ai_co_creators_three"
+            android:textAppearance="?android:attr/textAppearanceListItem"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?android:attr/selectableItemBackground" />
+
+        <CheckBox
+            android:id="@+id/aigc_cocreate_status_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="8dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center_vertical"
+            android:text="@string/playback_component_block_aigc_cocreate_status_title"
+            android:textAppearance="?android:attr/textAppearanceListItem"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?android:attr/selectableItemBackground" />
 
     </LinearLayout>
 </ScrollView>
