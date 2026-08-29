@@ -117,6 +117,8 @@ class DouyinPackage(classLoader: ClassLoader, context: Context) {
     val videoEvent = VideoEventModule(hookInfo.videoEvent, classLoader)
     val cleanModePresenter = CleanModePresenterModule(hookInfo.cleanModePresenter, classLoader)
     val danmakuView = DanmakuViewModule(hookInfo.danmakuView, classLoader)
+    val fluxComponentId = FluxComponentIdModule(hookInfo.fluxComponentId, classLoader)
+    val fluxComponentDataAction = FluxComponentDataActionModule(hookInfo.fluxComponentDataAction, classLoader)
 
     class CommentImageStructModule internal constructor(
         private val configs: Configs.CommentImageStruct,
@@ -622,8 +624,6 @@ class DouyinPackage(classLoader: ClassLoader, context: Context) {
 
         fun buttonForceFeedImShareGuide() = Field(configs.buttonForceFeedImShareGuide.nameOrNull)
 
-        fun shareCompleteNotice() = Field(configs.shareCompleteNotice.nameOrNull)
-
         fun socialNewCommentGuideBubble() = Field(configs.socialNewCommentGuideBubble.nameOrNull)
 
         fun commentBottomAnimation() = Field(configs.commentBottomAnimation.nameOrNull)
@@ -657,6 +657,60 @@ class DouyinPackage(classLoader: ClassLoader, context: Context) {
         fun share() = Field(configs.share.nameOrNull)
 
         fun collect() = Field(configs.collect.nameOrNull)
+
+        fun anchorFramework() = Field(configs.anchorFramework.nameOrNull)
+
+        fun bottomBarCommon() = Field(configs.bottomBarCommon.nameOrNull)
+
+        fun commonButton() = Field(configs.commonButton.nameOrNull)
+
+        fun sticker() = Field(configs.sticker.nameOrNull)
+
+        fun aiSearch() = Field(configs.aiSearch.nameOrNull)
+
+        fun c2Feed() = Field(configs.c2Feed.nameOrNull)
+
+        fun flow() = Field(configs.flow.nameOrNull)
+
+        fun nearbyHotComment() = Field(configs.nearbyHotComment.nameOrNull)
+
+        fun buttonUnfollowFamiliar() = Field(configs.buttonUnfollowFamiliar.nameOrNull)
+
+        fun buttonUnfollowFamiliarRec() = Field(configs.buttonUnfollowFamiliarRec.nameOrNull)
+
+        fun coCreatorAuthor() = Field(configs.coCreatorAuthor.nameOrNull)
+
+        fun chapterTag() = Field(configs.chapterTag.nameOrNull)
+
+        fun ecomTagFriend() = Field(configs.ecomTagFriend.nameOrNull)
+
+        fun socialNewStylePostTimeBottom() = Field(configs.socialNewStylePostTimeBottom.nameOrNull)
+
+        fun socialNewStyleMusicBelow() = Field(configs.socialNewStyleMusicBelow.nameOrNull)
+
+        fun chapterDetail() = Field(configs.chapterDetail.nameOrNull)
+
+        fun titleTagContainer() = Field(configs.titleTagContainer.nameOrNull)
+
+        fun rightMenuLl() = Field(configs.rightMenuLl.nameOrNull)
+
+        fun musicMuteCover() = Field(configs.musicMuteCover.nameOrNull)
+
+        fun jxLeftBottomLongVideoPlusTitleTag() = Field(configs.jxLeftBottomLongVideoPlusTitleTag.nameOrNull)
+
+        fun bottomBarMix() = Field(configs.bottomBarMix.nameOrNull)
+
+        fun bottomBarNormalSearch() = Field(configs.bottomBarNormalSearch.nameOrNull)
+
+        fun bottomBarCommonPrioritySearch() = Field(configs.bottomBarCommonPrioritySearch.nameOrNull)
+
+        fun jxPick() = Field(configs.jxPick.nameOrNull)
+
+        fun bottomBarContainer() = Field(configs.bottomBarContainer.nameOrNull)
+
+        fun aiCoCreatorsThree() = Field(configs.aiCoCreatorsThree.nameOrNull)
+
+        fun aigcCocreateStatusTitle() = Field(configs.aigcCocreateStatusTitle.nameOrNull)
     }
 
     class FluxComponentDataActionModule internal constructor(
