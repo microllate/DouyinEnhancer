@@ -45,6 +45,9 @@ object FeedDoubleTapOpenCommentHooker : YukiBaseHooker() {
                 }
 
                 performOpenComment(rootView)
+                
+                // Truncate original double-tap digg execution
+                resultNull()
             }
         }?.result {
             onConductFailure { _, throwable ->
