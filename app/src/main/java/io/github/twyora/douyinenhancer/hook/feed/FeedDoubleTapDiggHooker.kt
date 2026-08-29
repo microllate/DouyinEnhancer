@@ -31,6 +31,12 @@ object FeedDoubleTapDiggHooker : YukiBaseHooker() {
             packageInstance.baseListFragmentPanel.handleDoubleClick()
         )?.hook {
             before {
+                // If open comment is enabled, let FeedDoubleTapOpenCommentHooker handle the truncation
+                val openCommentEnabled = FastKVConfigManager.settings.getBoolean(FeedKey.FEED_DOUBLE_TAP_OPEN_COMMENT, false)
+                if (openCommentEnabled) {
+                    return@before
+                }
+
                 if (verbose) {
                     YLog.debug("$TAG: intercepting double-tap digg")
                 }
