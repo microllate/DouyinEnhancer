@@ -429,7 +429,7 @@ class SettingsDialog(context: Context) : AlertDialog.Builder(ContextThemeWrapper
             if (verbose) {
                 YLog.debug("$TAG: night mode on, recoloring settings text white")
             }
-            Preference::class.resolveMethod(
+            Preference::class.java.resolveMethod(
                 Method(name = "onBindView", parameters = null)
             )?.hook {
                 after {
