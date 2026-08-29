@@ -1,23 +1,26 @@
 package io.github.twyora.douyinenhancer.hook.feed
 
 import android.os.SystemClock
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.log.YLog
-import com.highcapable.yukihookapi.hook.type.android.MotionEventClass
 import io.github.twyora.douyinenhancer.config.FastKVConfigManager
 import io.github.twyora.douyinenhancer.config.key.FeedKey
 import io.github.twyora.douyinenhancer.config.key.ModuleKey
+import io.github.twyora.douyinenhancer.hook.DouyinPackage
 import io.github.twyora.douyinenhancer.hook.HookOnMainProcess
+import io.github.twyora.douyinenhancer.utils.resolveMethod
 
 @HookOnMainProcess
 object FeedDoubleTapOpenCommentHooker : YukiBaseHooker() {
     private val TAG = this::class.simpleName
 
     private var lastClickTime = 0L
+
+    private val packageInstance
+        get() = DouyinPackage.instance
 
     private val verbose
         get() = !FastKVConfigManager.module.getBoolean(ModuleKey.DISABLE_VERBOSE_LOGS, false)
@@ -30,38 +33,46 @@ object FeedDoubleTapOpenCommentHooker : YukiBaseHooker() {
             return
         }
 
-        findClass("com.ss.android.ugc.aweme.feed.ui.LongPressLayout").hook {
-            injectMember {
-                method {
-                    name = "onTouchEvent"
-                    param(MotionEventClass)
+        packageInstance.baseListFragmentPanel.selfClass?.resolveMethod(
+            packageInstance.baseListFragmentPanel.handleDoubleClick()
+        )?.hook {
+            after {
+                val currentTime = SystemClock.uptimeMillis()
+                if (currentTime - lastClickTime < 500) {
+                    return@after
                 }
-                after {
-                    val event = args[0] as? MotionEvent ?: return@after
-                    val view = instance as? View ?: return@after
+                lastClickTime = currentTime
 
-                    if (event.action == MotionEvent.ACTION_UP) {
-                        val currentTime = SystemClock.uptimeMillis()
-                        if (currentTime - lastClickTime < 300) {
-                            if (verbose) {
-                                YLog.debug("$TAG: detected double tap gesture on LongPressLayout, searching comment view...")
-                            }
+                val instanceView = findViewFromInstance(instance) ?: return@after
+                val holderRootView = findHolderRootView(instanceView) ?: instanceView.rootView
 
-                            val holderRootView = findHolderRootView(view) ?: view.rootView
-                            if (performOpenComment(holderRootView)) {
-                                lastClickTime = 0L
-                            }
-                        } else {
-                            lastClickTime = currentTime
-                        }
-                    }
+                if (verbose) {
+                    YLog.debug("$TAG: double-tap triggered, searching for comment button...")
                 }
+
+                performOpenComment(holderRootView)
             }
-        }.result {
+        }?.result {
             onConductFailure { _, throwable ->
-                YLog.error("$TAG: failed to hook LongPressLayout", throwable)
+                YLog.error("$TAG: failed to conduct double-tap hook", throwable)
+            }
+            onHookingFailure { throwable ->
+                YLog.error("$TAG: failed to hook double-tap handle", throwable)
             }
         }
+    }
+
+    private fun findViewFromInstance(panelInstance: Any): View? {
+        panelInstance.javaClass.declaredFields.forEach { field ->
+            if (View::class.java.isAssignableFrom(field.type)) {
+                runCatching {
+                    field.isAccessible = true
+                    val view = field.get(panelInstance) as? View
+                    if (view != null) return view
+                }
+            }
+        }
+        return null
     }
 
     private fun findHolderRootView(view: View): View? {
