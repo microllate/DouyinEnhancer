@@ -1,4 +1,4 @@
-name: Build freedom+ APK
+name: Build douyin APK
 
 on:
   push:
