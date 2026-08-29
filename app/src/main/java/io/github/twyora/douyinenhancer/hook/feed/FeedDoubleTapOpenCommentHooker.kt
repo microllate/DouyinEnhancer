@@ -4,7 +4,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
-import com.highcapable.yukihookapi.hook.factory.currentActivity
 import com.highcapable.yukihookapi.hook.log.YLog
 import io.github.twyora.douyinenhancer.config.FastKVConfigManager
 import io.github.twyora.douyinenhancer.config.key.FeedKey
@@ -39,13 +38,12 @@ object FeedDoubleTapOpenCommentHooker : YukiBaseHooker() {
                     YLog.debug("$TAG: double-tap detected, executing open comment logic...")
                 }
 
-                val activity = appClassLoader?.currentActivity
-                if (activity == null) {
-                    if (verbose) YLog.error("$TAG: currentActivity is null, cannot search view tree")
+                val instanceView = findViewFromInstance(instance)
+                val rootView = instanceView?.rootView ?: run {
+                    if (verbose) YLog.error("$TAG: failed to find rootView from panel instance")
                     return@before
                 }
 
-                val rootView = activity.window.decorView
                 performOpenComment(rootView)
             }
         }?.result {
@@ -56,6 +54,19 @@ object FeedDoubleTapOpenCommentHooker : YukiBaseHooker() {
                 YLog.error("$TAG: failed to hook double-tap handle for comment", throwable)
             }
         }
+    }
+
+    private fun findViewFromInstance(panelInstance: Any): View? {
+        panelInstance.javaClass.declaredFields.forEach { field ->
+            if (View::class.java.isAssignableFrom(field.type)) {
+                runCatching {
+                    field.isAccessible = true
+                    val view = field.get(panelInstance) as? View
+                    if (view != null) return view
+                }
+            }
+        }
+        return null
     }
 
     private fun performOpenComment(parent: View): Boolean {
@@ -83,7 +94,7 @@ object FeedDoubleTapOpenCommentHooker : YukiBaseHooker() {
         search(parent)
 
         val target = targetView ?: run {
-            YLog.error("$TAG: comment view with matching contentDescription not found in DecorView")
+            YLog.error("$TAG: comment view with matching contentDescription not found in rootView")
             return false
         }
 
