@@ -38,8 +38,6 @@ class PlaybackComponentBlockDialog(context: Context) : AlertDialog.Builder(Conte
             prefs.getBoolean(PlaybackComponentBlockKey.BUTTON_FEED_IM_SHARE_GUIDE_V2, false)
         playbackComponentBlockDialogBinding.buttonForceFeedImShareGuide.isChecked =
             prefs.getBoolean(PlaybackComponentBlockKey.BUTTON_FORCE_FEED_IM_SHARE_GUIDE, false)
-        playbackComponentBlockDialogBinding.shareCompleteNotice.isChecked =
-            prefs.getBoolean(PlaybackComponentBlockKey.SHARE_COMPLETE_NOTICE, false)
         playbackComponentBlockDialogBinding.socialNewCommentGuideBubble.isChecked =
             prefs.getBoolean(PlaybackComponentBlockKey.SOCIAL_NEW_COMMENT_GUIDE_BUBBLE, false)
         playbackComponentBlockDialogBinding.commentBottomAnimation.isChecked =
@@ -93,10 +91,6 @@ class PlaybackComponentBlockDialog(context: Context) : AlertDialog.Builder(Conte
                 putBoolean(
                     PlaybackComponentBlockKey.BUTTON_FORCE_FEED_IM_SHARE_GUIDE,
                     playbackComponentBlockDialogBinding.buttonForceFeedImShareGuide.isChecked
-                )
-                putBoolean(
-                    PlaybackComponentBlockKey.SHARE_COMPLETE_NOTICE,
-                    playbackComponentBlockDialogBinding.shareCompleteNotice.isChecked
                 )
                 putBoolean(
                     PlaybackComponentBlockKey.SOCIAL_NEW_COMMENT_GUIDE_BUBBLE,

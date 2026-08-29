@@ -2851,9 +2851,6 @@ class DouyinPackage(classLoader: ClassLoader, context: Context) {
                     buttonForceFeedImShareGuide = field {
                         name = "BUTTON_FORCE_FEED_IM_SHARE_GUIDE"
                     }
-                    shareCompleteNotice = field {
-                        name = "SHARE_COMPLETE_NOTICE"
-                    }
                     socialNewCommentGuideBubble = field {
                         name = "SOCIAL_NEW_COMMENT_GUIDE_BUBBLE"
                     }

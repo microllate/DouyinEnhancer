@@ -88,11 +88,6 @@ object FeedComponentHooker : YukiBaseHooker() {
                 packageInstance.fluxComponentId.buttonForceFeedImShareGuide()
             )
         }
-        if (FastKVConfigManager.settings.getBoolean(PlaybackComponentBlockKey.SHARE_COMPLETE_NOTICE, false)) {
-            blockComponentIdsTemp.add(
-                packageInstance.fluxComponentId.shareCompleteNotice()
-            )
-        }
         if (FastKVConfigManager.settings.getBoolean(PlaybackComponentBlockKey.SOCIAL_NEW_COMMENT_GUIDE_BUBBLE, false)) {
             blockComponentIdsTemp.add(
                 packageInstance.fluxComponentId.socialNewCommentGuideBubble()

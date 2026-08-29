@@ -81,7 +81,8 @@
     <PreferenceCategory android:title="@string/pref_category_ui">
         <Preference
             android:key="playback_component_block"
-            android:title="@string/playback_component_block_dialog_title" />
+            android:title="@string/playback_component_block_dialog_title"
+            android:summary="@string/playback_component_block_dialog_summary" />
 
         <SwitchPreference
             android:defaultValue="false"

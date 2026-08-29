@@ -327,24 +327,23 @@ message FluxComponentId {
   optional Field button_im_quick_share = 12;
   optional Field button_feed_im_share_guide_v2 = 13;
   optional Field button_force_feed_im_share_guide = 14;
-  optional Field share_complete_notice = 15;
-  optional Field social_new_comment_guide_bubble = 16;
-  optional Field comment_bottom_animation = 17;
-  optional Field nearby_identity_tag = 18;
-  optional Field live_photo_tag = 19;
-  optional Field photos_tag = 20;
-  optional Field story24_tag = 21;
-  optional Field social_new_style_story_tag = 22;
-  optional Field long_video_highlight_tag = 23;
-  optional Field danmaku_vertical = 24;
-  optional Field avatar = 25;
-  optional Field nickname = 26;
-  optional Field post_time = 27;
-  optional Field bellow_desc_time = 28;
-  optional Field comment = 29;
-  optional Field reply = 30;
-  optional Field share = 31;
-  optional Field collect = 32;
+  optional Field social_new_comment_guide_bubble = 15;
+  optional Field comment_bottom_animation = 16;
+  optional Field nearby_identity_tag = 17;
+  optional Field live_photo_tag = 18;
+  optional Field photos_tag = 19;
+  optional Field story24_tag = 20;
+  optional Field social_new_style_story_tag = 21;
+  optional Field long_video_highlight_tag = 22;
+  optional Field danmaku_vertical = 23;
+  optional Field avatar = 24;
+  optional Field nickname = 25;
+  optional Field post_time = 26;
+  optional Field bellow_desc_time = 27;
+  optional Field comment = 28;
+  optional Field reply = 29;
+  optional Field share = 30;
+  optional Field collect = 31;
 }
 
 message FluxComponentDataAction {

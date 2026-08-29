@@ -15,7 +15,6 @@ object PlaybackComponentBlockKey {
     const val BUTTON_IM_QUICK_SHARE = "playback_component_block_button_im_quick_share"
     const val BUTTON_FEED_IM_SHARE_GUIDE_V2 = "playback_component_block_button_feed_im_share_guide_v2"
     const val BUTTON_FORCE_FEED_IM_SHARE_GUIDE = "playback_component_block_button_force_feed_im_share_guide"
-    const val SHARE_COMPLETE_NOTICE = "playback_component_block_share_complete_notice"
     const val SOCIAL_NEW_COMMENT_GUIDE_BUBBLE = "playback_component_block_social_new_comment_guide_bubble"
     const val COMMENT_BOTTOM_ANIMATION = "playback_component_block_comment_bottom_animation"
     const val NEARBY_IDENTITY_TAG = "playback_component_block_nearby_identity_tag"
