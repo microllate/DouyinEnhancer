@@ -1,10 +1,10 @@
 package io.github.twyora.douyinenhancer.hook.feed
 
-import android.os.SystemClock
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
+import com.highcapable.yukihookapi.hook.factory.currentActivity
 import com.highcapable.yukihookapi.hook.log.YLog
 import io.github.twyora.douyinenhancer.config.FastKVConfigManager
 import io.github.twyora.douyinenhancer.config.key.FeedKey
@@ -16,8 +16,6 @@ import io.github.twyora.douyinenhancer.utils.resolveMethod
 @HookOnMainProcess
 object FeedDoubleTapOpenCommentHooker : YukiBaseHooker() {
     private val TAG = this::class.simpleName
-
-    private var lastClickTime = 0L
 
     private val packageInstance
         get() = DouyinPackage.instance
@@ -36,54 +34,28 @@ object FeedDoubleTapOpenCommentHooker : YukiBaseHooker() {
         packageInstance.baseListFragmentPanel.selfClass?.resolveMethod(
             packageInstance.baseListFragmentPanel.handleDoubleClick()
         )?.hook {
-            after {
-                val currentTime = SystemClock.uptimeMillis()
-                if (currentTime - lastClickTime < 500) {
-                    return@after
-                }
-                lastClickTime = currentTime
-
-                val instanceView = findViewFromInstance(instance) ?: return@after
-                val holderRootView = findHolderRootView(instanceView) ?: instanceView.rootView
-
+            before {
                 if (verbose) {
-                    YLog.debug("$TAG: double-tap triggered, searching for comment button...")
+                    YLog.debug("$TAG: double-tap detected, executing open comment logic...")
                 }
 
-                performOpenComment(holderRootView)
+                val activity = appClassLoader?.currentActivity
+                if (activity == null) {
+                    if (verbose) YLog.error("$TAG: currentActivity is null, cannot search view tree")
+                    return@before
+                }
+
+                val rootView = activity.window.decorView
+                performOpenComment(rootView)
             }
         }?.result {
             onConductFailure { _, throwable ->
-                YLog.error("$TAG: failed to conduct double-tap hook", throwable)
+                YLog.error("$TAG: failed to conduct double-tap open comment hook", throwable)
             }
             onHookingFailure { throwable ->
-                YLog.error("$TAG: failed to hook double-tap handle", throwable)
+                YLog.error("$TAG: failed to hook double-tap handle for comment", throwable)
             }
         }
-    }
-
-    private fun findViewFromInstance(panelInstance: Any): View? {
-        panelInstance.javaClass.declaredFields.forEach { field ->
-            if (View::class.java.isAssignableFrom(field.type)) {
-                runCatching {
-                    field.isAccessible = true
-                    val view = field.get(panelInstance) as? View
-                    if (view != null) return view
-                }
-            }
-        }
-        return null
-    }
-
-    private fun findHolderRootView(view: View): View? {
-        var current: View? = view
-        while (current != null) {
-            if (current.javaClass.name.contains("VideoViewHolderRootView")) {
-                return current
-            }
-            current = current.parent as? View
-        }
-        return null
     }
 
     private fun performOpenComment(parent: View): Boolean {
@@ -111,7 +83,7 @@ object FeedDoubleTapOpenCommentHooker : YukiBaseHooker() {
         search(parent)
 
         val target = targetView ?: run {
-            YLog.error("$TAG: comment view with matching contentDescription not found")
+            YLog.error("$TAG: comment view with matching contentDescription not found in DecorView")
             return false
         }
 
