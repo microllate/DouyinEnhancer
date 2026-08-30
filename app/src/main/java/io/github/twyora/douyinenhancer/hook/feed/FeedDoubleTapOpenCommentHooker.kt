@@ -1,8 +1,6 @@
 package io.github.twyora.douyinenhancer.hook.feed
 
-import android.view.View
-import android.view.ViewGroup
-import android.widget.TextView
+import com.highcapable.kavaref.extension.createInstance
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.log.YLog
 import io.github.twyora.douyinenhancer.config.FastKVConfigManager
@@ -10,6 +8,9 @@ import io.github.twyora.douyinenhancer.config.key.FeedKey
 import io.github.twyora.douyinenhancer.config.key.ModuleKey
 import io.github.twyora.douyinenhancer.hook.DouyinPackage
 import io.github.twyora.douyinenhancer.hook.HookOnMainProcess
+import io.github.twyora.douyinenhancer.utils.getField
+import io.github.twyora.douyinenhancer.utils.invokeMethod
+import io.github.twyora.douyinenhancer.utils.invokeMethodOnly
 import io.github.twyora.douyinenhancer.utils.resolveMethod
 
 @HookOnMainProcess
@@ -33,89 +34,41 @@ object FeedDoubleTapOpenCommentHooker : YukiBaseHooker() {
         packageInstance.baseListFragmentPanel.selfClass?.resolveMethod(
             packageInstance.baseListFragmentPanel.handleDoubleClick()
         )?.hook {
-            before {
+            after {
+                val aweme = instance.invokeMethod<Any>(
+                    packageInstance.baseListFragmentPanel.getCurrentAweme()
+                ) ?: run {
+                    YLog.error("$TAG: unable to get current aweme")
+                    return@after
+                }
+
+                val openCommentPanelEvent = packageInstance.videoEvent.selfClass?.createInstance(
+                    DouyinPackage.VideoEventModule.EVENT_OPEN_COMMENT_PANEL,
+                    aweme
+                ) ?: run {
+                    YLog.error("$TAG: unable to build open-comment-panel event")
+                    return@after
+                }
+
                 if (verbose) {
-                    YLog.debug("$TAG: double-tap detected, executing open comment logic...")
+                    val awemeId = aweme.getField<String>(
+                        packageInstance.aweme.aid()
+                    )
+                    YLog.debug("$TAG: dispatching open-comment-panel event for current aweme, aid: $awemeId")
                 }
 
-                val instanceView = findViewFromInstance(instance)
-                val rootView = instanceView?.rootView ?: run {
-                    if (verbose) YLog.error("$TAG: failed to find rootView from panel instance")
-                    return@before
-                }
-
-                performOpenComment(rootView)
-                
-                // Truncate original double-tap digg execution
-                resultNull()
+                instance.invokeMethodOnly(
+                    packageInstance.baseListFragmentPanel.handleVideoEvent(),
+                    openCommentPanelEvent
+                )
             }
         }?.result {
             onConductFailure { _, throwable ->
-                YLog.error("$TAG: failed to conduct double-tap open comment hook", throwable)
+                YLog.error("$TAG: failed to dispatch open-comment-panel event for current aweme", throwable)
             }
             onHookingFailure { throwable ->
-                YLog.error("$TAG: failed to hook double-tap handle for comment", throwable)
+                YLog.error("$TAG: failed to hook double-tap handle for opening comment panel", throwable)
             }
-        }
-    }
-
-    private fun findViewFromInstance(panelInstance: Any): View? {
-        panelInstance.javaClass.declaredFields.forEach { field ->
-            if (View::class.java.isAssignableFrom(field.type)) {
-                runCatching {
-                    field.isAccessible = true
-                    val view = field.get(panelInstance) as? View
-                    if (view != null) return view
-                }
-            }
-        }
-        return null
-    }
-
-    private fun performOpenComment(parent: View): Boolean {
-        val commentRegex = Regex("评论(.*?)，按钮")
-        var targetView: View? = null
-
-        fun search(v: View) {
-            if (targetView != null) return
-
-            val contentDesc = v.contentDescription?.toString() ?: ""
-            val text = (v as? TextView)?.text?.toString() ?: ""
-
-            if (commentRegex.containsMatchIn(contentDesc) || commentRegex.containsMatchIn(text)) {
-                targetView = v
-                return
-            }
-
-            if (v is ViewGroup) {
-                for (i in 0 until v.childCount) {
-                    search(v.getChildAt(i))
-                }
-            }
-        }
-
-        search(parent)
-
-        val target = targetView ?: run {
-            YLog.error("$TAG: comment view with matching contentDescription not found in rootView")
-            return false
-        }
-
-        return try {
-            val listenerField = View::class.java.getDeclaredField("mListenerInfo").apply { isAccessible = true }
-            val listenerInfo = listenerField.get(target)
-            val onClickListenerField = listenerInfo?.javaClass?.getDeclaredField("mOnClickListener")?.apply { isAccessible = true }
-            val onClickListener = onClickListenerField?.get(listenerInfo) as? View.OnClickListener
-
-            if (onClickListener != null) {
-                onClickListener.onClick(target)
-                if (verbose) YLog.debug("$TAG: successfully triggered OnClickListener directly")
-                true
-            } else {
-                target.performClick()
-            }
-        } catch (e: Throwable) {
-            target.performClick()
         }
     }
 }
