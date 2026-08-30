@@ -34,20 +34,22 @@ object FeedDoubleTapOpenCommentHooker : YukiBaseHooker() {
         packageInstance.baseListFragmentPanel.selfClass?.resolveMethod(
             packageInstance.baseListFragmentPanel.handleDoubleClick()
         )?.hook {
-            after {
+            before {
+                // 1. 获取当前正在播放/展示的视频 Aweme 对象
                 val aweme = instance.invokeMethod<Any>(
                     packageInstance.baseListFragmentPanel.getCurrentAweme()
                 ) ?: run {
                     YLog.error("$TAG: unable to get current aweme")
-                    return@after
+                    return@before
                 }
 
+                // 2. 构建打开评论区的 VideoEvent 事件
                 val openCommentPanelEvent = packageInstance.videoEvent.selfClass?.createInstance(
                     DouyinPackage.VideoEventModule.EVENT_OPEN_COMMENT_PANEL,
                     aweme
                 ) ?: run {
                     YLog.error("$TAG: unable to build open-comment-panel event")
-                    return@after
+                    return@before
                 }
 
                 if (verbose) {
@@ -57,10 +59,14 @@ object FeedDoubleTapOpenCommentHooker : YukiBaseHooker() {
                     YLog.debug("$TAG: dispatching open-comment-panel event for current aweme, aid: $awemeId")
                 }
 
+                // 3. 分发事件打开评论区
                 instance.invokeMethodOnly(
                     packageInstance.baseListFragmentPanel.handleVideoEvent(),
                     openCommentPanelEvent
                 )
+
+                // 4. 关键：拦截原生的双击点赞逻辑
+                resultNull()
             }
         }?.result {
             onConductFailure { _, throwable ->
