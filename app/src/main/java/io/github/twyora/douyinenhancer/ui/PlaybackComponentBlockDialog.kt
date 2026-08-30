@@ -8,6 +8,7 @@ import android.content.Context
 import android.os.Bundle
 import android.preference.PreferenceFragment
 import android.view.ContextThemeWrapper
+import androidx.core.content.edit
 import com.highcapable.yukihookapi.hook.factory.injectModuleAppResources
 import com.highcapable.yukihookapi.hook.log.YLog
 import io.github.twyora.douyinenhancer.R
@@ -48,7 +49,16 @@ class PlaybackComponentBlockDialog(context: Context) : AlertDialog.Builder(Conte
         setView(prefsFragment.view)
         setTitle(R.string.playback_component_block_dialog_title)
         setNegativeButton(android.R.string.cancel, null)
-        setPositiveButton(android.R.string.ok, null)
+        setPositiveButton(android.R.string.ok) { _, _ ->
+            val prefs = FastKVConfigManager.settings
+            if (!prefs.getBoolean(MiscKey.ENABLE_HIDDEN_FEATURES, false)) {
+                HIDDEN_KEYS.forEach { key ->
+                    prefs.edit(true) {
+                        putBoolean(key, false)
+                    }
+                }
+            }
+        }
         setOnDismissListener {
             activity.fragmentManager.beginTransaction().remove(prefsFragment).commitAllowingStateLoss()
         }
