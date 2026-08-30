@@ -31,7 +31,7 @@
     <string name="pref_feed_block_auto_replay_title">阻止自动重播</string>
     <string name="pref_feed_block_auto_replay_summary">在视频播放完毕之后自动暂停视频</string>
     <string name="pref_feed_block_resume_playback_title">阻止恢复播放</string>
-    <string name="pref_feed_block_resume_playback_summary">返回前台时不主动恢复视频播放</string>
+    <string name="pref_feed_block_resume_playback_summary">返回前台时自动暂停视频</string>
     <string name="pref_ui_keep_danmaku_visible_title">阻止弹幕隐藏</string>
     <string name="pref_ui_keep_danmaku_visible_summary">使弹幕在清屏模式下仍然保持可见</string>
     <string name="recommended_feed_filter_main_switch_title">总开关</string>
