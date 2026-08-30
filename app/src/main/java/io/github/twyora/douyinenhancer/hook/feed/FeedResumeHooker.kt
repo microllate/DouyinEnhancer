@@ -8,7 +8,6 @@ import io.github.twyora.douyinenhancer.config.key.ModuleKey
 import io.github.twyora.douyinenhancer.hook.DouyinPackage
 import io.github.twyora.douyinenhancer.hook.HookOnMainProcess
 import io.github.twyora.douyinenhancer.utils.getField
-import io.github.twyora.douyinenhancer.utils.invokeMethodOnly
 import io.github.twyora.douyinenhancer.utils.resolveMethod
 
 @HookOnMainProcess
@@ -31,32 +30,27 @@ object FeedResumeHooker : YukiBaseHooker() {
 
         // I have another choice: intercept FeedPanelProxy.handleTextureAvailable,
         // (the name "FeedPanelProxy" is given by me; it is obfuscated by the host and owned by BaseListFragmentPanel.basePanelProxy)
-        // instead of checking videoType inside BaseListFragmentPanel.handleVideoEvent.
+        // instead of checking videoType using a magic number inside BaseListFragmentPanel.handleVideoEvent.
         // The reason I ultimately chose this strategy is that I cannot confirm whether FeedPanelProxy
         // will be removed or obfuscated into another name. If this functionality breaks,
         // maintaining extra hook points becomes an additional maintenance burden
         packageInstance.baseListFragmentPanel.selfClass?.resolveMethod(
             packageInstance.baseListFragmentPanel.handleVideoEvent()
         )?.hook {
-            after {
+            before {
                 val videoType = args[0]?.getField<Int>(
                     packageInstance.videoEvent.videoType()
                 ) ?: run {
                     YLog.error("$TAG: video type is null")
-                    return@after
+                    return@before
                 }
 
                 if (videoType != DouyinPackage.VideoEventModule.EVENT_TEXTURE_AVAILABLE) {
-                    return@after
+                    return@before
                 } else if (verbose) {
-                    YLog.debug("$TAG: pause playback on resume")
+                    YLog.debug("$TAG: intercepting resume of video playback on surface created")
                 }
-                instance.invokeMethodOnly(
-                    packageInstance.baseListFragmentPanel.pauseCurrentPlayerWithListener()
-                )
-                instance.invokeMethodOnly(
-                    packageInstance.baseListFragmentPanel.showIvWhenPause()
-                )
+                resultNull()
             }
         }?.result {
             onConductFailure { _, throwable ->
