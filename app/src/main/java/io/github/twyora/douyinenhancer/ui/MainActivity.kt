@@ -61,7 +61,7 @@ class MainActivity : Activity() {
                 SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(BuildConfig.BUILD_TIMESTAMP)
             if (YukiHookAPI.Status.isModuleActive) {
                 val activationStatus = findPreference("activation_status")
-                activationStatus?.title = context.getString(R.string.pref_about_activation_status_enabled_title)
+                activationStatus?.title = context.getString(R.string.pref_about_activation_status_activated_title)
                 activationStatus?.summary = context.getString(R.string.pref_about_activation_status_activated_summary)
             }
 
