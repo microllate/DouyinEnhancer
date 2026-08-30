@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="playback_component_block_main_switch"
+        android:summary="@string/playback_component_block_main_switch_summary"
+        android:title="@string/playback_component_block_main_switch_title" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="playback_component_block_avatar"
+        android:title="@string/playback_component_block_avatar" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="playback_component_block_nickname"
+        android:title="@string/playback_component_block_nickname" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="playback_component_block_co_creator_author"
+        android:title="@string/playback_component_block_co_creator_author" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="playback_component_block_digg"
+        android:title="@string/playback_component_block_digg" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="playback_component_block_comment"
+        android:title="@string/playback_component_block_comment" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="playback_component_block_share"
+        android:title="@string/playback_component_block_share" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="playback_component_block_collect"
+        android:title="@string/playback_component_block_collect" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="playback_component_block_right_menu_ll"
+        android:title="@string/playback_component_block_right_menu_ll" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="playback_component_block_music_cover"
+        android:title="@string/playback_component_block_music_cover" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="playback_component_block_title"
+        android:title="@string/playback_component_block_title" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="playback_component_block_title_tag_container"
+        android:title="@string/playback_component_block_title_tag_container" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="playback_component_block_chapter_tag"
+        android:title="@string/playback_component_block_chapter_tag" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="playback_component_block_chapter_detail"
+        android:title="@string/playback_component_block_chapter_detail" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="playback_component_block_music_title"
+        android:title="@string/playback_component_block_music_title" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="playback_component_block_music_listen_cover"
+        android:title="@string/playback_component_block_music_listen_cover" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="playback_component_block_music_cover_block"
+        android:title="@string/playback_component_block_music_cover_block" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="playback_component_block_music_mute_cover"
+        android:title="@string/playback_component_block_music_mute_cover" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="playback_component_block_social_new_style_music_below"
+        android:title="@string/playback_component_block_social_new_style_music_below" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="playback_component_block_post_time"
+        android:title="@string/playback_component_block_post_time" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="playback_component_block_bellow_desc_time"
+        android:title="@string/playback_component_block_bellow_desc_time" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="playback_component_block_social_new_style_post_time_bottom"
+        android:title="@string/playback_component_block_social_new_style_post_time_bottom" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="playback_component_block_reply"
+        android:title="@string/playback_component_block_reply" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="playback_component_block_button_unfollow_familiar"
+        android:title="@string/playback_component_block_button_unfollow_familiar" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="playback_component_block_danmaku_vertical"
+        android:title="@string/playback_component_block_danmaku_vertical" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="playback_component_block_ai_search"
+        android:title="@string/playback_component_block_ai_search" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="playback_component_block_nearby_identity_tag"
+        android:title="@string/playback_component_block_nearby_identity_tag" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="playback_component_block_button_im_quick_share"
+        android:title="@string/playback_component_block_button_im_quick_share" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="playback_component_block_button_feed_im_share_guide_v2"
+        android:title="@string/playback_component_block_button_feed_im_share_guide_v2" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="playback_component_block_button_force_feed_im_share_guide"
+        android:title="@string/playback_component_block_button_force_feed_im_share_guide" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="playback_component_block_bottom_bar_common"
+        android:title="@string/playback_component_block_bottom_bar_common" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="playback_component_block_bottom_bar_mix"
+        android:title="@string/playback_component_block_bottom_bar_mix" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="playback_component_block_bottom_bar_normal_search"
+        android:title="@string/playback_component_block_bottom_bar_normal_search" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="playback_component_block_bottom_bar_common_priority_search"
+        android:title="@string/playback_component_block_bottom_bar_common_priority_search" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="playback_component_block_bottom_bar_container"
+        android:title="@string/playback_component_block_bottom_bar_container" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="playback_component_block_common_button"
+        android:title="@string/playback_component_block_common_button" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="playback_component_block_general_label"
+        android:title="@string/playback_component_block_general_label" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="playback_component_block_feed_label_container"
+        android:title="@string/playback_component_block_feed_label_container" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="playback_component_block_sticker"
+        android:title="@string/playback_component_block_sticker" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="playback_component_block_anchor_framework"
+        android:title="@string/playback_component_block_anchor_framework" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="playback_component_block_c2_feed"
+        android:title="@string/playback_component_block_c2_feed" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="playback_component_block_live_photo_tag"
+        android:title="@string/playback_component_block_live_photo_tag" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="playback_component_block_photos_tag"
+        android:title="@string/playback_component_block_photos_tag" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="playback_component_block_story24_tag"
+        android:title="@string/playback_component_block_story24_tag" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="playback_component_block_story_25_diverse_digg"
+        android:title="@string/playback_component_block_story_25_diverse_digg" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="playback_component_block_social_new_style_story_tag"
+        android:title="@string/playback_component_block_social_new_style_story_tag" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="playback_component_block_long_video_highlight_tag"
+        android:title="@string/playback_component_block_long_video_highlight_tag" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="playback_component_block_comment_bottom_animation"
+        android:title="@string/playback_component_block_comment_bottom_animation" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="playback_component_block_button_unfollow_familiar_rec"
+        android:title="@string/playback_component_block_button_unfollow_familiar_rec" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="playback_component_block_nearby_hot_comment"
+        android:title="@string/playback_component_block_nearby_hot_comment" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="playback_component_block_ecom_store"
+        android:title="@string/playback_component_block_ecom_store" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="playback_component_block_ecom_tag_friend"
+        android:title="@string/playback_component_block_ecom_tag_friend" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="playback_component_block_jx_pick"
+        android:title="@string/playback_component_block_jx_pick" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="playback_component_block_flow"
+        android:title="@string/playback_component_block_flow" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="playback_component_block_jx_left_bottom_long_video_plus_title_tag"
+        android:title="@string/playback_component_block_jx_left_bottom_long_video_plus_title_tag" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="playback_component_block_social_new_comment_guide_bubble"
+        android:title="@string/playback_component_block_social_new_comment_guide_bubble" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="playback_component_block_ai_co_creators_three"
+        android:title="@string/playback_component_block_ai_co_creators_three" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="playback_component_block_aigc_cocreate_status_title"
+        android:title="@string/playback_component_block_aigc_cocreate_status_title" />
+
+</PreferenceScreen>
