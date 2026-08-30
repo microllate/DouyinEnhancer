@@ -31,9 +31,10 @@ object FeedDoubleTapDiggHooker : YukiBaseHooker() {
             packageInstance.baseListFragmentPanel.handleDoubleClick()
         )?.hook {
             before {
-                // If open comment is enabled, let FeedDoubleTapOpenCommentHooker handle the truncation
-                val openCommentEnabled = FastKVConfigManager.settings.getBoolean(FeedKey.FEED_DOUBLE_TAP_OPEN_COMMENT, false)
-                if (openCommentEnabled) {
+                // 如果开启了双击打开评论，不要在 before 中 resultNull()
+                // 否则会截断方法，导致 OpenCommentHooker 的 after 无法触发
+                val isCommentEnabled = FastKVConfigManager.settings.getBoolean(FeedKey.FEED_DOUBLE_TAP_OPEN_COMMENT, false)
+                if (isCommentEnabled) {
                     return@before
                 }
 
