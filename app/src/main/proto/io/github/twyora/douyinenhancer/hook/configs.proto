@@ -258,10 +258,11 @@ message ActionCheckResult {
 
 message ActionStatus {
   optional Class class = 1;
-  optional Method value_of = 2;
   optional Field grayed = 3;
   optional Field hidden = 4;
   optional Field normal = 5;
+
+  reserved 2;
 }
 
 message GalleryShareHelper {

@@ -974,11 +974,6 @@ class DouyinPackage(classLoader: ClassLoader, context: Context) {
             configs.class_.nameOrNull?.toClass(classLoader)
         }
 
-        fun valueOf() = Method(
-            configs.valueOf.nameOrNull,
-            configs.valueOf.parameters.valuesListOrNull
-        )
-
         fun grayed() = Field(configs.grayed.nameOrNull)
 
         fun hidden() = Field(configs.hidden.nameOrNull)
@@ -2390,9 +2385,6 @@ class DouyinPackage(classLoader: ClassLoader, context: Context) {
                 actionStatus = actionStatus {
                     class_ = class_ {
                         name = "com.ss.android.ugc.aweme.privacy.model.ActionStatus"
-                    }
-                    valueOf = method {
-                        name = "valueOf"
                     }
                     grayed = field {
                         name = "GRAYED"
