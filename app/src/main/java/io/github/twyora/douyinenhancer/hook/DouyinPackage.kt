@@ -50,10 +50,9 @@ val Configs.Method.nameOrNull
     }
 
 val Configs.Method.Parameters.valuesListOrNull
-    get() =
-        valuesList.ifEmpty {
-            null
-        }
+    get() = valuesList.ifEmpty {
+        null
+    }
 
 class DouyinPackage(classLoader: ClassLoader, context: Context) {
     private val hookInfo: Configs.HookInfo = run {
