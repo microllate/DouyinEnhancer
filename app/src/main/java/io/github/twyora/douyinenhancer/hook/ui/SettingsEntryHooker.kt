@@ -1,4 +1,4 @@
-package io.github.twyora.douyinenhancer.hook.settings
+package io.github.twyora.douyinenhancer.hook.ui
 
 import android.app.Activity
 import android.view.View
@@ -21,7 +21,7 @@ import io.github.twyora.douyinenhancer.utils.invokeMethodOnly
 import io.github.twyora.douyinenhancer.utils.resolveMethod
 
 @HookOnMainProcess
-object SettingsHooker : YukiBaseHooker() {
+object SettingsEntryHooker : YukiBaseHooker() {
     private val TAG = this::class.simpleName
 
     private val packageInstance
@@ -59,10 +59,11 @@ object SettingsHooker : YukiBaseHooker() {
                 }
 
                 val moduleSettingsCommonItemView =
-                    packageInstance.commonItemView.selfClass?.createInstance(activity, null) as? ViewGroup ?: run {
-                        YLog.error("$TAG: failed to create module settings entry")
-                        return@after
-                    }
+                    packageInstance.commonItemView.selfClass?.createInstance(activity, null) as? ViewGroup
+                        ?: run {
+                            YLog.error("$TAG: failed to create module settings entry")
+                            return@after
+                        }
 
                 moduleSettingsCommonItemView.apply {
                     tag = moduleSettingsTag
@@ -88,7 +89,7 @@ object SettingsHooker : YukiBaseHooker() {
                 )
 
                 moduleSettingsCommonItemView.setOnClickListener {
-                    SettingsDialog.show(activity)
+                    SettingsDialog.Companion.show(activity)
                 }
 
                 // prefer inserting above the logout button; fallback to direct insert
@@ -145,7 +146,7 @@ object SettingsHooker : YukiBaseHooker() {
                     YLog.debug("$TAG: attaching long click listener on about_ame view to open settings dialog")
                 }
                 aboutAwemeView.setOnLongClickListener {
-                    SettingsDialog.show(activity)
+                    SettingsDialog.Companion.show(activity)
                     true
                 }
             }
