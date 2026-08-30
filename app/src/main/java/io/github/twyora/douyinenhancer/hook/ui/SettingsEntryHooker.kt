@@ -89,7 +89,7 @@ object SettingsEntryHooker : YukiBaseHooker() {
                 )
 
                 moduleSettingsCommonItemView.setOnClickListener {
-                    SettingsDialog.Companion.show(activity)
+                    SettingsDialog.show(activity)
                 }
 
                 // prefer inserting above the logout button; fallback to direct insert
@@ -146,7 +146,7 @@ object SettingsEntryHooker : YukiBaseHooker() {
                     YLog.debug("$TAG: attaching long click listener on about_ame view to open settings dialog")
                 }
                 aboutAwemeView.setOnLongClickListener {
-                    SettingsDialog.Companion.show(activity)
+                    SettingsDialog.show(activity)
                     true
                 }
             }
