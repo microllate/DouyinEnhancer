@@ -77,7 +77,7 @@ class PlaybackComponentBlockDialog(context: Context) : AlertDialog.Builder(Conte
             PlaybackComponentBlockKey.JX_LEFT_BOTTOM_LONG_VIDEO_PLUS_TITLE_TAG,
             PlaybackComponentBlockKey.SOCIAL_NEW_COMMENT_GUIDE_BUBBLE,
             PlaybackComponentBlockKey.AI_CO_CREATORS_THREE,
-            PlaybackComponentBlockKey.AIGC_COCREATE_STATUS_TITLE,
+            PlaybackComponentBlockKey.AIGC_COCREATE_STATUS_TITLE
         )
 
         fun show(context: Context) {

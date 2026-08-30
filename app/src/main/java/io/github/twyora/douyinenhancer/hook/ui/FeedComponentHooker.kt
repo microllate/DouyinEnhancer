@@ -72,7 +72,8 @@ object FeedComponentHooker : YukiBaseHooker() {
             PlaybackComponentBlockKey.TITLE_TAG_CONTAINER to packageInstance.fluxComponentId.titleTagContainer(),
             PlaybackComponentBlockKey.RIGHT_MENU_LL to packageInstance.fluxComponentId.rightMenuLl(),
             PlaybackComponentBlockKey.MUSIC_MUTE_COVER to packageInstance.fluxComponentId.musicMuteCover(),
-            PlaybackComponentBlockKey.JX_LEFT_BOTTOM_LONG_VIDEO_PLUS_TITLE_TAG to packageInstance.fluxComponentId.jxLeftBottomLongVideoPlusTitleTag(),
+            PlaybackComponentBlockKey.JX_LEFT_BOTTOM_LONG_VIDEO_PLUS_TITLE_TAG to
+                packageInstance.fluxComponentId.jxLeftBottomLongVideoPlusTitleTag(),
             PlaybackComponentBlockKey.BOTTOM_BAR_MIX to packageInstance.fluxComponentId.bottomBarMix(),
             PlaybackComponentBlockKey.BOTTOM_BAR_NORMAL_SEARCH to packageInstance.fluxComponentId.bottomBarNormalSearch(),
             PlaybackComponentBlockKey.BOTTOM_BAR_COMMON_PRIORITY_SEARCH to packageInstance.fluxComponentId.bottomBarCommonPrioritySearch(),
