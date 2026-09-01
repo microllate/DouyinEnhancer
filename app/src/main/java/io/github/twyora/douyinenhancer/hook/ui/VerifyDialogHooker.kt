@@ -3,7 +3,6 @@ package io.github.twyora.douyinenhancer.hook.ui
 import android.app.Activity
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.log.YLog
-import io.github.twyora.douyinenhancer.BuildConfig
 import io.github.twyora.douyinenhancer.config.FastKVConfigManager
 import io.github.twyora.douyinenhancer.config.key.ModuleKey
 import io.github.twyora.douyinenhancer.hook.DouyinPackage
@@ -22,9 +21,9 @@ object VerifyDialogHooker : YukiBaseHooker() {
         get() = !FastKVConfigManager.module.getBoolean(ModuleKey.DISABLE_VERBOSE_LOGS, false)
 
     override fun onHook() {
-        if (BuildConfig.DEBUG) {
+        if (!VerifyDialog.shouldVerify()) {
             if (verbose) {
-                YLog.debug("$TAG: debug build, skipping verification check")
+                YLog.debug("$TAG: no verification required, skipping verification check")
             }
             return
         }
@@ -37,14 +36,8 @@ object VerifyDialogHooker : YukiBaseHooker() {
                     YLog.error("$TAG: ${instance::class.qualifiedName} is not an Activity")
                     return@after
                 }
+                VerifyDialog.show(activity)
 
-                val lastVerifiedVersion = FastKVConfigManager.module.getInt(
-                    ModuleKey.LAST_VERIFIED_VERSION,
-                    0
-                )
-                if (BuildConfig.VERSION_CODE != lastVerifiedVersion) {
-                    VerifyDialog.show(activity)
-                }
                 removeSelf {
                     if (verbose) {
                         YLog.debug("$TAG: verification check hook removed to prevent duplicate check")
