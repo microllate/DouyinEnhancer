@@ -62,19 +62,24 @@ class VerifyDialog(private val hostContext: Context) : AlertDialog.Builder(Conte
             get() = FastKVConfigManager.module
 
         fun show(context: Context) {
-            val lastVerifiedVersion = moduleConfig.getInt(
-                ModuleKey.LAST_VERIFIED_VERSION,
-                0
-            )
-            if (BuildConfig.DEBUG || BuildConfig.VERSION_CODE == lastVerifiedVersion) {
+            if (!shouldVerify()) {
                 return
             }
+
             runCatching {
                 (context as? Activity)?.injectModuleAppResources()
                 VerifyDialog(context).show()
             }.onFailure {
                 YLog.error("$TAG: failed to show verify dialog", it)
             }
+        }
+
+        fun shouldVerify(): Boolean {
+            val lastVerifiedVersion = moduleConfig.getInt(
+                ModuleKey.LAST_VERIFIED_VERSION,
+                0
+            )
+            return !(BuildConfig.DEBUG || BuildConfig.VERSION_CODE == lastVerifiedVersion)
         }
     }
 }

@@ -480,20 +480,16 @@ class SettingsDialog(context: Context) : AlertDialog.Builder(ContextThemeWrapper
         private const val IMPORT_CONFIG = 1
 
         fun show(context: Context) {
-            val lastVerifiedVersion = FastKVConfigManager.module.getInt(
-                ModuleKey.LAST_VERIFIED_VERSION,
-                0
-            )
-            (context as? Activity)?.injectModuleAppResources()
-            if (BuildConfig.DEBUG || BuildConfig.VERSION_CODE == lastVerifiedVersion) {
+            if (VerifyDialog.shouldVerify()) {
+                YLog.info("$TAG: unverified version, redirecting to verify dialog")
+                VerifyDialog.show(context)
+            } else {
                 runCatching {
+                    (context as? Activity)?.injectModuleAppResources()
                     SettingsDialog(context).show()
                 }.onFailure {
                     YLog.error("$TAG: failed to show settings dialog", it)
                 }
-            } else {
-                YLog.info("$TAG: unverified version, redirecting to verify dialog")
-                VerifyDialog.show(context)
             }
         }
 
