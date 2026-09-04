@@ -67,6 +67,68 @@
     <string name="recommended_feed_filter_hide_by_share_count_min">Hide fewer than</string>
     <string name="recommended_feed_filter_hide_by_share_count_max">Hide more than</string>
     <string name="save_failed_invalid_bounds">Save failed, invalid bounds</string>
+    <string name="playback_component_block_dialog_title">Playback Purifier</string>
+    <string name="playback_component_block_dialog_summary">Hide specific components on the playback page</string>
+    <string name="playback_component_block_main_switch_title">Main switch</string>
+    <string name="playback_component_block_main_switch_summary">Enable to use the playback purify feature</string>
+    <string name="playback_component_block_avatar">Avatar</string>
+    <string name="playback_component_block_nickname">Nickname</string>
+    <string name="playback_component_block_co_creator_author">Co-Creator</string>
+    <string name="playback_component_block_digg">Like Icon</string>
+    <string name="playback_component_block_comment">Comment Icon</string>
+    <string name="playback_component_block_share">Share Icon</string>
+    <string name="playback_component_block_collect">Favorite</string>
+    <string name="playback_component_block_right_menu_ll">Right Interaction Area</string>
+    <string name="playback_component_block_music_cover">Music Disc</string>
+    <string name="playback_component_block_title">Title &amp; Description</string>
+    <string name="playback_component_block_title_tag_container">Title Tag Container</string>
+    <string name="playback_component_block_chapter_tag">Chapter Tag</string>
+    <string name="playback_component_block_chapter_detail">Chapter Details</string>
+    <string name="playback_component_block_music_title">Marquee</string>
+    <string name="playback_component_block_music_listen_cover">Listen Mode Music Disc</string>
+    <string name="playback_component_block_music_cover_block">Music Disc Container</string>
+    <string name="playback_component_block_music_mute_cover">Muted Music Disc</string>
+    <string name="playback_component_block_social_new_style_music_below">Social 25 New Story Music Marquee</string>
+    <string name="playback_component_block_post_time">Nickname Post Timestamp</string>
+    <string name="playback_component_block_bellow_desc_time">Description Post Timestamp</string>
+    <string name="playback_component_block_social_new_style_post_time_bottom">Social 25 New Story Timestamp</string>
+    <string name="playback_component_block_reply">Message Icon</string>
+    <string name="playback_component_block_button_unfollow_familiar">Unfollowed Familiar Button</string>
+    <string name="playback_component_block_button_unfollow_familiar_rec">Follow Recommendation Guide Button</string>
+    <string name="playback_component_block_danmaku_vertical">Danmaku Entry</string>
+    <string name="playback_component_block_ai_search">AI Search</string>
+    <string name="playback_component_block_nearby_identity_tag">Nearby Tag</string>
+    <string name="playback_component_block_nearby_hot_comment">✦ Nearby Hot Comments</string>
+    <string name="playback_component_block_ecom_store">✦ Store Component</string>
+    <string name="playback_component_block_ecom_tag_friend">✦ Friend Purchased Tag</string>
+    <string name="playback_component_block_button_im_quick_share">Quick IM Share Button</string>
+    <string name="playback_component_block_button_feed_im_share_guide_v2">✦ Quick IM Share Button V2</string>
+    <string name="playback_component_block_button_force_feed_im_share_guide">External Quick Share Button</string>
+    <string name="playback_component_block_bottom_bar_common">Template Bottom Bar</string>
+    <string name="playback_component_block_bottom_bar_mix">Collection Bottom Bar</string>
+    <string name="playback_component_block_bottom_bar_normal_search">Legacy Search Bottom Bar</string>
+    <string name="playback_component_block_bottom_bar_common_priority_search">New Search Bottom Bar</string>
+    <string name="playback_component_block_bottom_bar_container">Bottom Bar Container</string>
+    <string name="playback_component_block_jx_pick">✦ Featured Component</string>
+    <string name="playback_component_block_common_button">Template Button</string>
+    <string name="playback_component_block_general_label">Template Tag</string>
+    <string name="playback_component_block_feed_label_container">Action Tag Container</string>
+    <string name="playback_component_block_sticker">Sticker</string>
+    <string name="playback_component_block_anchor_framework">Anchor Template</string>
+    <string name="playback_component_block_c2_feed">Two-Column Entry</string>
+    <string name="playback_component_block_flow">✦ Doubao Entry</string>
+    <string name="playback_component_block_live_photo_tag">GIF Tag</string>
+    <string name="playback_component_block_photos_tag">Image-Text Tag</string>
+    <string name="playback_component_block_story24_tag">24h Story Tag</string>
+    <string name="playback_component_block_story_25_diverse_digg">25 New Story Multi-Like</string>
+    <string name="playback_component_block_social_new_style_story_tag">Social 25 New Story Tag</string>
+    <string name="playback_component_block_long_video_highlight_tag">Long Video Highlight Tag</string>
+    <string name="playback_component_block_jx_left_bottom_long_video_plus_title_tag">✦ Featured Bottom Left Long Video + Title Tag</string>
+    <string name="playback_component_block_social_new_comment_guide_bubble">✦ Social Story Comment Guide Bubble</string>
+    <string name="playback_component_block_comment_bottom_animation">Quick Comment Animation</string>
+    <string name="playback_component_block_ai_co_creators_three">✦ AI Duet Creator Avatar</string>
+    <string name="playback_component_block_aigc_cocreate_status_title">✦ AI Co-Creation Tag</string>
+
 
     <string name="pref_category_backup">Backup &amp; Restore</string>
     <string name="pref_backup_export_title">Export Config</string>
@@ -91,6 +153,12 @@
     <string name="pref_module_disable_verbose_logs_title">Disable verbose logs</string>
     <string name="pref_module_disable_verbose_logs_summary">Report issues request to include verbose logs</string>
 
+    <string name="verify_dialog_title">Verification</string>
+    <string name="verify_dialog_description">This module is released only on GitHub. To respect the developer’s work, enter the module download URL for verification. Please read the repository README carefully before use.</string>
+    <string name="verify_dialog_input_hint">GitHub address</string>
+    <string name="verify_toast_success">Verified</string>
+    <string name="verify_toast_failure">Incorrect input, please try again</string>
+
     <string name="pref_category_about">About</string>
     <string name="pref_about_version_title">Version</string>
     <string name="pref_about_version_summary">0.0.1</string>
@@ -107,7 +175,7 @@
     <string name="pref_about_build_time_title">Build Time</string>
     <string name="unknown">Unknown</string>
     <string name="pref_about_back_then_title">Back Then🎵</string>
-    <string name="pref_about_back_then_summary">白鸽脱离手掌飞向穹苍\n声浪追逐热情汇成海洋\n红蓝白绿黄\n\n地板影印着悬挂灯火\n映出疲惫与坚强\n挥手之间便可让欢呼绽放\n就像玫瑰一样🎵</string>
+    <string name="pref_about_back_then_summary">惟愿执长剑，孤身入人烟\n悯 芸芸众生 有情念\n是耶非焉，道无言，梦大千\n今我流连，浮光浅，照心鉴\n与君问剑，清万籁，荡玄天\n并肩回看 灯火翩\n蓦然见 长风昭人间🎵</string>
 
     <string name="add">Add</string>
     <string name="delete">Delete</string>
@@ -123,6 +191,6 @@
     <string name="pref_settings_hide_launcher_icon_summary">Don\'t show this app\'s icon in the launcher</string>
     <string name="pref_about_activation_status_disabled_title">Not enabled</string>
     <string name="pref_about_activation_status_deactivated_summary">Douyin Enhancer not activated</string>
-    <string name="pref_about_activation_status_enabled_title">Enabled</string>
+    <string name="pref_about_activation_status_activated_title">Enabled</string>
     <string name="pref_about_activation_status_activated_summary">Douyin Enhancer activated</string>
 </resources>

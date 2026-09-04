@@ -12,7 +12,7 @@ import io.github.twyora.douyinenhancer.ui.SettingsDialog
 import io.github.twyora.douyinenhancer.utils.resolveMethod
 
 @HookOnMainProcess
-object MainActivityHooker : YukiBaseHooker() {
+object SettingsEntryIntentHooker : YukiBaseHooker() {
     private val TAG = this::class.simpleName
 
     private val packageInstance

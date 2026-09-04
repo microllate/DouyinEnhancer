@@ -258,10 +258,11 @@ message ActionCheckResult {
 
 message ActionStatus {
   optional Class class = 1;
-  optional Method value_of = 2;
   optional Field grayed = 3;
   optional Field hidden = 4;
   optional Field normal = 5;
+
+  reserved 2;
 }
 
 message GalleryShareHelper {
@@ -310,6 +311,72 @@ message BaseListFragmentPanel {
 message VideoPlayerEvent {
   optional Class class = 1;
   optional Field code = 2;
+}
+
+message FluxComponentId {
+  optional Class class = 1;
+  optional Field music_cover_block = 2;
+  optional Field music_listen_cover = 3;
+  optional Field digg = 4;
+  optional Field title = 5;
+  optional Field music_cover = 6;
+  optional Field general_label = 7;
+  optional Field feed_label_container = 8;
+  optional Field music_title = 9;
+  optional Field story_25_diverse_digg = 10;
+  optional Field ecom_store = 11;
+  optional Field button_im_quick_share = 12;
+  optional Field button_feed_im_share_guide_v2 = 13;
+  optional Field button_force_feed_im_share_guide = 14;
+  optional Field social_new_comment_guide_bubble = 15;
+  optional Field comment_bottom_animation = 16;
+  optional Field nearby_identity_tag = 17;
+  optional Field live_photo_tag = 18;
+  optional Field photos_tag = 19;
+  optional Field story24_tag = 20;
+  optional Field social_new_style_story_tag = 21;
+  optional Field long_video_highlight_tag = 22;
+  optional Field danmaku_vertical = 23;
+  optional Field avatar = 24;
+  optional Field nickname = 25;
+  optional Field post_time = 26;
+  optional Field bellow_desc_time = 27;
+  optional Field comment = 28;
+  optional Field reply = 29;
+  optional Field share = 30;
+  optional Field collect = 31;
+  optional Field anchor_framework = 32;
+  optional Field bottom_bar_common = 33;
+  optional Field common_button = 34;
+  optional Field sticker = 35;
+  optional Field ai_search = 36;
+  optional Field c2_feed = 37;
+  optional Field flow = 38;
+  optional Field nearby_hot_comment = 39;
+  optional Field button_unfollow_familiar = 40;
+  optional Field button_unfollow_familiar_rec = 41;
+  optional Field co_creator_author = 42;
+  optional Field chapter_tag = 43;
+  optional Field ecom_tag_friend = 44;
+  optional Field social_new_style_post_time_bottom = 45;
+  optional Field social_new_style_music_below = 46;
+  optional Field chapter_detail = 47;
+  optional Field title_tag_container = 48;
+  optional Field right_menu_ll = 49;
+  optional Field music_mute_cover = 50;
+  optional Field jx_left_bottom_long_video_plus_title_tag = 51;
+  optional Field bottom_bar_mix = 52;
+  optional Field bottom_bar_normal_search = 53;
+  optional Field bottom_bar_common_priority_search = 54;
+  optional Field jx_pick = 55;
+  optional Field bottom_bar_container = 56;
+  optional Field ai_co_creators_three = 57;
+  optional Field aigc_cocreate_status_title = 58;
+}
+
+message FluxComponentDataAction {
+  optional Class class = 1;
+  optional Method get_set = 2;
 }
 
 message VideoEvent {
@@ -381,6 +448,8 @@ message HookInfo {
   optional CleanModePresenter clean_mode_presenter = 53;
   optional DanmakuView danmaku_view = 54;
   optional VideoPlayerEvent video_player_event = 55;
+  optional FluxComponentId flux_component_id = 56;
+  optional FluxComponentDataAction flux_component_data_action = 57;
 
   reserved 13, 18, 32;
 }

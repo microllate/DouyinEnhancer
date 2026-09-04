@@ -67,7 +67,67 @@
     <string name="recommended_feed_filter_hide_by_digg_count_max">隐藏内容点赞数大于</string>
     <string name="recommended_feed_filter_hide_by_share_count_min">隐藏内容分享数小于</string>
     <string name="recommended_feed_filter_hide_by_share_count_max">隐藏内容分享数大于</string>
-    <string name="save_failed_invalid_bounds">保存失败，上下限设置错误</string>
+    <string name="playback_component_block_dialog_title">净化播放页</string>
+    <string name="playback_component_block_dialog_summary">隐藏播放页上的特定组件</string>
+    <string name="playback_component_block_main_switch_title">总开关</string>
+    <string name="playback_component_block_main_switch_summary">开启后可以使用播放页净化功能</string>
+    <string name="playback_component_block_avatar">头像</string>
+    <string name="playback_component_block_nickname">昵称</string>
+    <string name="playback_component_block_co_creator_author">共创作者</string>
+    <string name="playback_component_block_digg">点赞图标</string>
+    <string name="playback_component_block_comment">评论图标</string>
+    <string name="playback_component_block_share">分享图标</string>
+    <string name="playback_component_block_collect">收藏</string>
+    <string name="playback_component_block_right_menu_ll">右侧互动区</string>
+    <string name="playback_component_block_music_cover">音乐转盘</string>
+    <string name="playback_component_block_title">标题和描述</string>
+    <string name="playback_component_block_title_tag_container">标题标签容器</string>
+    <string name="playback_component_block_chapter_tag">章节标签</string>
+    <string name="playback_component_block_chapter_detail">章节详情</string>
+    <string name="playback_component_block_music_title">跑马灯</string>
+    <string name="playback_component_block_music_listen_cover">听抖音转盘</string>
+    <string name="playback_component_block_music_cover_block">音乐转盘容器</string>
+    <string name="playback_component_block_music_mute_cover">静音转盘</string>
+    <string name="playback_component_block_social_new_style_music_below">社交25新日常音乐跑马灯</string>
+    <string name="playback_component_block_post_time">昵称后面的发布时间戳</string>
+    <string name="playback_component_block_bellow_desc_time">发布时间戳</string>
+    <string name="playback_component_block_social_new_style_post_time_bottom">社交25新日常时间戳</string>
+    <string name="playback_component_block_reply">私信图标</string>
+    <string name="playback_component_block_button_unfollow_familiar">未关注熟人按钮</string>
+    <string name="playback_component_block_button_unfollow_familiar_rec">✦ 推荐引导关注按钮</string>
+    <string name="playback_component_block_danmaku_vertical">弹幕入口</string>
+    <string name="playback_component_block_ai_search">AI搜索</string>
+    <string name="playback_component_block_nearby_identity_tag">同城标签</string>
+    <string name="playback_component_block_nearby_hot_comment">✦ 同城热评</string>
+    <string name="playback_component_block_ecom_store">✦ 店铺组件</string>
+    <string name="playback_component_block_ecom_tag_friend">✦ 朋友买过标签</string>
+    <string name="playback_component_block_button_im_quick_share">IM快捷分享按钮</string>
+    <string name="playback_component_block_button_feed_im_share_guide_v2">IM快捷分享按钮V2</string>
+    <string name="playback_component_block_button_force_feed_im_share_guide">分享至站外快捷分享按钮</string>
+    <string name="playback_component_block_bottom_bar_common">模版底栏</string>
+    <string name="playback_component_block_bottom_bar_mix">合集底栏</string>
+    <string name="playback_component_block_bottom_bar_normal_search">旧版搜索底栏</string>
+    <string name="playback_component_block_bottom_bar_common_priority_search">新版搜索底栏</string>
+    <string name="playback_component_block_bottom_bar_container">底部栏容器</string>
+    <string name="playback_component_block_jx_pick">✦ 精选组件</string>
+    <string name="playback_component_block_common_button">模版按钮</string>
+    <string name="playback_component_block_general_label">模版标签</string>
+    <string name="playback_component_block_feed_label_container">行为标签容器</string>
+    <string name="playback_component_block_sticker">贴纸</string>
+    <string name="playback_component_block_anchor_framework">锚点模版</string>
+    <string name="playback_component_block_c2_feed">双列入口</string>
+    <string name="playback_component_block_flow">✦ 豆包入口</string>
+    <string name="playback_component_block_live_photo_tag">动图标签</string>
+    <string name="playback_component_block_photos_tag">图文标签</string>
+    <string name="playback_component_block_story24_tag">24日常标签</string>
+    <string name="playback_component_block_story_25_diverse_digg">25新日常多态赞</string>
+    <string name="playback_component_block_social_new_style_story_tag">社交25新日常标签</string>
+    <string name="playback_component_block_long_video_highlight_tag">长视频高光标签</string>
+    <string name="playback_component_block_jx_left_bottom_long_video_plus_title_tag">✦ 精选左下长视频和标题标签</string>
+    <string name="playback_component_block_social_new_comment_guide_bubble">✦ 社交新日常评论引导气泡</string>
+    <string name="playback_component_block_comment_bottom_animation">快捷评论动画</string>
+    <string name="playback_component_block_ai_co_creators_three">✦ AI合拍作者头像</string>
+    <string name="playback_component_block_aigc_cocreate_status_title">✦ AI共创标签</string>
 
     <string name="pref_category_backup">备份和还原</string>
     <string name="pref_backup_export_title">导出配置</string>
@@ -92,6 +152,12 @@
     <string name="pref_module_disable_verbose_logs_title">禁用详细日志</string>
     <string name="pref_module_disable_verbose_logs_summary">报告问题要求包含详细日志</string>
 
+    <string name="verify_dialog_title">验证</string>
+    <string name="verify_dialog_description">模块仅在 GitHub 发布！为了尊重开发者的劳动成果，请输入模块下载地址进行验证。使用前请认真阅读仓库 README。</string>
+    <string name="verify_dialog_input_hint">GitHub 地址</string>
+    <string name="verify_toast_success">验证成功</string>
+    <string name="verify_toast_failure">输入内容不正确，请重试</string>
+
     <string name="pref_category_about">关于</string>
     <string name="pref_about_version_title">版本</string>
     <string name="pref_about_version_summary">0.0.1</string>
@@ -107,7 +173,7 @@
     <string name="pref_about_telegram_summary">点击加入 TG 频道</string>
     <string name="pref_about_build_time_title">构建时间</string>
     <string name="pref_about_back_then_title">作者当时🎵</string>
-    <string name="pref_about_back_then_summary">白鸽脱离手掌飞向穹苍\n声浪追逐热情汇成海洋\n红蓝白绿黄\n\n地板影印着悬挂灯火\n映出疲惫与坚强\n挥手之间便可让欢呼绽放\n就像玫瑰一样🎵</string>
+    <string name="pref_about_back_then_summary">惟愿执长剑，孤身入人烟\n悯 芸芸众生 有情念\n是耶非焉，道无言，梦大千\n今我流连，浮光浅，照心鉴\n与君问剑，清万籁，荡玄天\n并肩回看 灯火翩\n蓦然见 长风昭人间🎵</string>
 
     <string name="add">添加</string>
     <string name="delete">删除</string>
@@ -116,6 +182,7 @@
     <string name="save_success_restart_required">保存成功，部分配置重启应用后生效</string>
     <string name="restart_required">部分功能需重启应用后生效</string>
     <string name="notify_update_available">抖柚更新啦</string>
+    <string name="save_failed_invalid_bounds">保存失败，上下限设置错误</string>
 
     <string name="pref_category_settings">设置</string>
     <string name="pref_settings_open_module_settings_title">打开模块设置</string>
@@ -124,6 +191,6 @@
     <string name="pref_settings_hide_launcher_icon_summary">不显示本应用在启动器中的图标</string>
     <string name="pref_about_activation_status_disabled_title">未启用</string>
     <string name="pref_about_activation_status_deactivated_summary">抖柚未激活</string>
-    <string name="pref_about_activation_status_enabled_title">已启用</string>
+    <string name="pref_about_activation_status_activated_title">已启用</string>
     <string name="pref_about_activation_status_activated_summary">抖柚已激活</string>
 </resources>

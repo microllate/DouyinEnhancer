@@ -11,6 +11,7 @@ import io.github.twyora.douyinenhancer.hook.DouyinPackage
 import io.github.twyora.douyinenhancer.hook.HookOnMainProcess
 import io.github.twyora.douyinenhancer.utils.HookTransaction
 import io.github.twyora.douyinenhancer.utils.getField
+import io.github.twyora.douyinenhancer.utils.getStaticField
 import io.github.twyora.douyinenhancer.utils.invokeMethod
 import io.github.twyora.douyinenhancer.utils.invokeStaticMethod
 import io.github.twyora.douyinenhancer.utils.resolveMethod
@@ -66,9 +67,8 @@ object FeedDownloadHooker : YukiBaseHooker() {
                     return@after
                 }
 
-                val normalStatus = packageInstance.actionStatus.selfClass?.invokeStaticMethod<Any>(
-                    packageInstance.actionStatus.valueOf(),
-                    packageInstance.actionStatus.normal().name
+                val normalStatus = packageInstance.actionStatus.selfClass?.getStaticField<Any>(
+                    packageInstance.actionStatus.normal()
                 )
 
                 if (actionStatus != normalStatus) {
